@@ -182,3 +182,137 @@ Phase 1 is complete: baseline operational dashboard and API connection.
 
 Next recommended phase:
 - virtual pixel-art office visualization layer reusing the same data/API foundations.
+
+## API Contract (Frontend Expectations)
+
+The frontend is intentionally resilient, but these are the expected semantic contracts for best UX.
+
+### Tasks
+
+- Endpoint: `GET /api/tasks`
+- Preferred response shape:
+
+```json
+{
+	"tasks": [
+		{
+			"id": "uuid",
+			"title": "string",
+			"status": "IN_PROGRESS",
+			"priority": 1,
+			"assignedAgent": { "id": "uuid", "name": "Claudio" },
+			"assignedAgentId": "uuid",
+			"updatedAt": "ISO date",
+			"description": "optional"
+		}
+	]
+}
+```
+
+### Subtasks
+
+- Endpoint: `GET /api/tasks/:id/subtasks`
+- Preferred response shape:
+
+```json
+{
+	"subtasks": [
+		{
+			"id": "uuid",
+			"title": "string",
+			"status": "TODO",
+			"position": 1,
+			"ownerAgent": { "id": "uuid", "name": "Lucy" },
+			"updatedAt": "ISO date"
+		}
+	]
+}
+```
+
+### Agents
+
+- Endpoint: `GET /api/agents`
+- Preferred response shape:
+
+```json
+{
+	"agents": [
+		{
+			"id": "uuid",
+			"name": "Lucy",
+			"role": "Planner",
+			"status": "IDLE",
+			"statusMessage": "optional",
+			"heartbeat": "ISO date"
+		}
+	]
+}
+```
+
+### Activity
+
+- Endpoint: `GET /api/activity`
+- Supported response keys by frontend: `activity`, `items`, `logs`, `events`
+- Supported timestamp keys: `createdAt`, `timestamp`, `updatedAt`, `occurredAt`
+
+### KPIs
+
+- Endpoint: `GET /api/supervisor/kpis`
+- Frontend renders all keys dynamically (record/object style)
+
+### SSE
+
+- Endpoint: `GET /api/events`
+- Expected content-type: `text/event-stream`
+- Tracked event names:
+	- `activity.logged`
+	- `task.updated`
+	- `run.updated`
+	- `supervisor.kpis`
+
+## Office Page Plan (Phase 2)
+
+The upcoming Office page should be a separate visual route that reuses this exact data layer.
+
+Recommended route:
+- `app/office/page.tsx`
+
+Recommended module split:
+- `components/office/OfficeCanvas.tsx`
+- `components/office/OfficeAgentSprite.tsx`
+- `components/office/OfficeTaskOverlay.tsx`
+- `components/office/OfficeActivityTicker.tsx`
+- `lib/office/sceneModel.ts`
+- `lib/office/mappers.ts`
+
+### Data Mapping Rules (Dashboard -> Office)
+
+- Agent status -> sprite state (idle, working, blocked, offline)
+- Task priority -> urgency marker (P1 red, P2 amber, P3 cyan)
+- Task assignment -> desk ownership / room lane
+- Activity event -> motion pulse / floating log chip
+- KPI anomalies -> ambient warning indicators
+
+### Non-goals for first Office iteration
+
+- No backend mutation yet (read-only is fine)
+- No heavy game engine dependency
+- No authentication flow changes
+
+## Definition Of Done
+
+Phase 1 is considered done when all are true:
+
+- `npm run build` succeeds
+- Dashboard loads with data from remote API
+- Filters update tasks and activity meaningfully
+- Agent detail modal shows profile + assigned tasks + recent activity
+- SSE panel shows connection state and events (when available)
+
+## Suggested Next Execution Order
+
+1. Add `app/office/page.tsx` with static layout shell and navigation entry
+2. Build scene model from existing queries (agents, tasks, activity)
+3. Render first visual office with placeholder sprites and status coloring
+4. Add live motion hooks from SSE events
+5. Add interaction (click desk -> open existing AgentDetailModal-style panel)
