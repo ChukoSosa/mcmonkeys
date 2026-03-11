@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import type { Agent, Task } from "@/types";
@@ -13,6 +13,7 @@ interface AgentBubbleProps {
   x: number;
   y: number;
   avatarUrl?: string;
+  isGenerating?: boolean;
   state: NormalizedSceneState;
   onClick: () => void;
   onReachedPosition: () => void;
@@ -24,10 +25,17 @@ function AgentBubbleComponent({
   x,
   y,
   avatarUrl,
+  isGenerating,
   state,
   onClick,
   onReachedPosition,
 }: AgentBubbleProps) {
+  const [imageFailed, setImageFailed] = useState(false);
+
+  useEffect(() => {
+    setImageFailed(false);
+  }, [avatarUrl, agent.id]);
+
   return (
     <motion.button
       type="button"
@@ -46,18 +54,25 @@ function AgentBubbleComponent({
           state.pulse && "animate-pulse-slow",
         )}
       >
-        {avatarUrl ? (
+        {avatarUrl && !imageFailed ? (
           <Image
             src={avatarUrl}
             alt={`${agent.name} avatar`}
             width={56}
             height={112}
             unoptimized
+            onError={() => setImageFailed(true)}
             className="h-full w-full rounded-full object-cover object-top image-rendering-pixelated"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center rounded-full bg-surface-800 text-xs font-bold text-cyan-300">
             {agent.name.slice(0, 2).toUpperCase()}
+          </div>
+        )}
+
+        {isGenerating && (
+          <div className="absolute inset-0 flex items-center justify-center rounded-full bg-surface-900/75">
+            <span className="h-5 w-5 rounded-full border-2 border-cyan-400/30 border-t-cyan-300 animate-spin" />
           </div>
         )}
       </div>

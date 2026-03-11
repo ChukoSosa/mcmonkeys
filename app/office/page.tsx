@@ -21,6 +21,7 @@ import {
   generateAvatar,
   persistAvatar,
   readAvatarMappingFromStorage,
+  resolveAgentAvatarUrl,
   saveAvatarMappingToStorage,
 } from "@/lib/office/avatarGenerator";
 import type { Agent, Task } from "@/types";
@@ -60,6 +61,24 @@ export default function OfficePage() {
     hydrateAvatarMapping(readAvatarMappingFromStorage());
   }, [hydrateAvatarMapping]);
 
+  useEffect(() => {
+    let changed = false;
+    const nextMapping = { ...avatarMapping };
+
+    agents.forEach((agent) => {
+      const apiAvatarUrl = resolveAgentAvatarUrl(agent);
+      // Keep local/generated avatar as source of truth; only hydrate from API if missing.
+      if (apiAvatarUrl && !nextMapping[agent.id]) {
+        nextMapping[agent.id] = apiAvatarUrl;
+        changed = true;
+      }
+    });
+
+    if (!changed) return;
+    hydrateAvatarMapping(nextMapping);
+    saveAvatarMappingToStorage(nextMapping);
+  }, [agents, avatarMapping, hydrateAvatarMapping]);
+
   const seatAssignments = useMemo(() => resolveSeatAssignments(agents), [agents]);
 
   const derived = useMemo(() => {
@@ -91,11 +110,12 @@ export default function OfficePage() {
         task: item.task,
         x: zoneConfig.x,
         y: zoneConfig.y,
-        avatarUrl: avatarMapping[item.agent.id],
+        avatarUrl: avatarMapping[item.agent.id] ?? resolveAgentAvatarUrl(item.agent),
+        isGenerating: generatingAgentId === item.agent.id,
         state: item.sceneState,
       };
     });
-  }, [agentPositions, avatarMapping, derived]);
+  }, [agentPositions, avatarMapping, derived, generatingAgentId]);
 
   const selected = useMemo(() => {
     if (!selectedAgentId) return null;
@@ -143,8 +163,8 @@ export default function OfficePage() {
   };
 
   return (
-    <DashboardShell>
-      <div className="h-full grid grid-cols-1 gap-4 lg:grid-cols-[2fr_1fr_1fr]">
+    <DashboardShell showFilters={false}>
+      <div className="h-full grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,2fr)_300px_minmax(0,1fr)] xl:grid-cols-[minmax(0,2fr)_320px_minmax(0,1fr)]">
         <section className="min-h-0 lg:h-full lg:min-h-[560px]">
           {agentsLoading ? (
             <div className="flex h-full items-center justify-center rounded-xl border border-surface-700 bg-surface-900 text-sm text-slate-400">
@@ -166,7 +186,7 @@ export default function OfficePage() {
             assignedTasks={selectedAssignedTasks}
             zone={selectedZone}
             state={selected?.sceneState ?? null}
-            avatarUrl={selected ? avatarMapping[selected.agent.id] : undefined}
+            avatarUrl={selected ? avatarMapping[selected.agent.id] ?? resolveAgentAvatarUrl(selected.agent) : undefined}
             generating={generatingAgentId === selected?.agent.id}
             avatarError={avatarError}
             onGenerateAvatar={handleGenerateAvatar}

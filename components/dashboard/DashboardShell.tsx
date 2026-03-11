@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils/cn";
 
 interface DashboardShellProps {
   children: React.ReactNode;
+  showFilters?: boolean;
 }
 
 const NAV_ITEMS = [
@@ -18,7 +19,7 @@ const NAV_ITEMS = [
   { href: "/office", label: "Office" },
 ];
 
-export function DashboardShell({ children }: DashboardShellProps) {
+export function DashboardShell({ children, showFilters = true }: DashboardShellProps) {
   const pathname = usePathname();
 
   return (
@@ -55,7 +56,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
 
       <div className="shrink-0 px-6 pt-4">
         <SummaryBar />
-        <FiltersBar />
+        {showFilters && <FiltersBar />}
       </div>
 
       <main className="flex-1 min-h-0 p-6 overflow-hidden">{children}</main>
