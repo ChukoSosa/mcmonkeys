@@ -8,6 +8,12 @@
 - `POST /api/tasks` → body `{ title, description?, assignedAgentId?, status? }`
 - `PATCH /api/tasks/:id` → body `{ status?, assignedAgentId? }`
 
+## Comments
+- `GET /api/tasks/:id/comments` → `{ comments: Comment[], nextCursor: string | null, openCount: number }`
+- `POST /api/tasks/:id/comments` → body `{ body, authorType, authorId?, requiresResponse?, inReplyToId? }`
+- `POST /api/tasks/:id/comments/:commentId/reply` → body `{ body, authorType, authorId? }`
+- `POST /api/tasks/:id/comments/:commentId/resolve` → body `{ resolvedBy?, authorType? }`
+
 ## Agents
 - `GET /api/agents` → `{ agents: Agent[] }`
 - `POST /api/agents/heartbeat` → body `{ agentId, status?, statusMessage? }`

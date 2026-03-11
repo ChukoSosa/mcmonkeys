@@ -99,7 +99,7 @@ export function AgentDetailModal({ agent, open, onClose }: AgentDetailModalProps
                     </p>
                     <p className="text-[10px] text-slate-500 flex items-center gap-1">
                       <FontAwesomeIcon icon={faClock} />
-                      {fromNow(lastActivity.createdAt ?? lastActivity.timestamp ?? lastActivity.updatedAt ?? lastActivity.occurredAt)}
+                      {fromNow(lastActivity.occurredAt ?? lastActivity.createdAt ?? lastActivity.timestamp ?? lastActivity.updatedAt)}
                     </p>
                   </div>
                 )}

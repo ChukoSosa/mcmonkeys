@@ -89,10 +89,10 @@ export function ActivityFeedPanel() {
                 {item.runId && (
                   <span className="truncate max-w-[100px]">run: {item.runId.slice(0, 8)}…</span>
                 )}
-                {(item.createdAt || item.timestamp || item.updatedAt || item.occurredAt) && (
+                {(item.occurredAt || item.createdAt || item.timestamp || item.updatedAt) && (
                   <span className="flex items-center gap-1 ml-auto">
                     <FontAwesomeIcon icon={faClock} />
-                    {fromNow(item.createdAt ?? item.timestamp ?? item.updatedAt ?? item.occurredAt)}
+                    {fromNow(item.occurredAt ?? item.createdAt ?? item.timestamp ?? item.updatedAt)}
                   </span>
                 )}
               </div>

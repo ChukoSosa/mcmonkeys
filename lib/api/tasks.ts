@@ -1,6 +1,6 @@
 import { apiFetch } from "./client";
-import { TasksResponseSchema, SubtasksResponseSchema } from "@/lib/schemas";
-import type { Task, Subtask } from "@/lib/schemas";
+import { TasksResponseSchema, SubtasksResponseSchema, CommentsResponseSchema } from "@/lib/schemas";
+import type { Task, Subtask, Comment } from "@/lib/schemas";
 
 export async function getTasks(): Promise<Task[]> {
   const raw = await apiFetch<unknown>("/api/tasks");
@@ -20,4 +20,14 @@ export async function getTaskSubtasks(taskId: string): Promise<Subtask[]> {
     return [];
   }
   return parsed.data.subtasks;
+}
+
+export async function getTaskComments(taskId: string): Promise<Comment[]> {
+  const raw = await apiFetch<unknown>(`/api/tasks/${taskId}/comments`);
+  const parsed = CommentsResponseSchema.safeParse(raw);
+  if (!parsed.success) {
+    console.warn("[getTaskComments] schema mismatch", parsed.error.flatten());
+    return [];
+  }
+  return parsed.data.comments;
 }

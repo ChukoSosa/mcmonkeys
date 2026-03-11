@@ -75,6 +75,23 @@ interface ActivityEntry {
 }
 ```
 
+### 3.5 Comment
+```ts
+interface Comment {
+  id: string;
+  taskId: string;
+  authorType: "agent" | "human" | "system";
+  authorId?: string | null;
+  body: string;
+  requiresResponse?: boolean;
+  status?: "open" | "answered" | "resolved";
+  inReplyToId?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  resolvedAt?: string | null;
+}
+```
+
 ## 4. Endpoints
 
 ### 4.1 Health
@@ -148,6 +165,49 @@ Respuesta:
 | POST | `/api/tasks/:id/subtasks` | Crea subtask (`title`, `status?`, `position?`, `ownerAgentId?`). |
 | PATCH | `/api/subtasks/:id` | Actualiza subtask (`title`, `status`, `position`, `ownerAgentId`). |
 | DELETE | `/api/subtasks/:id` | Elimina subtask. |
+
+### 4.2.2 Comments
+| Método | Ruta | Descripción |
+| --- | --- | --- |
+| GET | `/api/tasks/:id/comments` | Lista comments de la task (soporta `limit`, `cursor`). |
+| POST | `/api/tasks/:id/comments` | Crea un comment. |
+| POST | `/api/tasks/:id/comments/:commentId/reply` | Responde a un comment existente. |
+| POST | `/api/tasks/:id/comments/:commentId/resolve` | Marca el comment como resuelto. |
+
+**GET /api/tasks/:id/comments**
+```bash
+curl "http://localhost:3000/api/tasks/<taskId>/comments?limit=20"
+```
+Respuesta:
+```json
+{
+  "comments": [
+    {
+      "id": "uuid",
+      "taskId": "uuid",
+      "authorType": "agent",
+      "authorId": "uuid",
+      "body": "¿Por qué está bloqueada esta task?",
+      "requiresResponse": true,
+      "status": "open",
+      "inReplyToId": null,
+      "createdAt": "2026-03-11T10:00:00.000Z",
+      "updatedAt": "2026-03-11T10:00:00.000Z",
+      "resolvedAt": null
+    }
+  ],
+  "nextCursor": null,
+  "openCount": 1
+}
+```
+
+**POST /api/tasks/:id/comments** — Body: `{ body, authorType, authorId?, requiresResponse?, inReplyToId? }`
+
+**POST /api/tasks/:id/comments/:commentId/reply** — Body: `{ body, authorType, authorId? }`
+
+**POST /api/tasks/:id/comments/:commentId/resolve** — Body opcional: `{ resolvedBy?, authorType? }`
+
+> Cada operación genera un registro en Activity: `task.comment.created`, `task.comment.replied`, `task.comment.resolved`. Las escalaciones del sentinel aparecen como `task.comment.escalated` con `payload: { commentId, minutesPending }`.
 
 ### 4.3 Activity
 `GET /api/activity?taskId=...&agentId=...&limit=50&cursor=...`

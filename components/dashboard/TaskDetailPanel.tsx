@@ -3,11 +3,37 @@
 import { useQuery } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faClock, faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { getTasks, getTaskSubtasks } from "@/lib/api/tasks";
+import { getTasks, getTaskSubtasks, getTaskComments } from "@/lib/api/tasks";
 import { useDashboardStore } from "@/store/dashboardStore";
 import { Card, StatusBadge, SkeletonList, EmptyState, ErrorMessage } from "@/components/ui";
 import { fromNow } from "@/lib/utils/formatDate";
 import { priorityLabel, priorityVariant } from "@/lib/utils/formatStatus";
+
+const AUTHOR_STYLE: Record<string, string> = {
+  agent: "rounded px-1.5 py-0.5 bg-purple-900/50 text-purple-300",
+  human: "rounded px-1.5 py-0.5 bg-emerald-900/50 text-emerald-300",
+  system: "rounded px-1.5 py-0.5 bg-slate-700/50 text-slate-400",
+};
+
+function getCommentStatus(comment: {
+  status?: string;
+  resolvedAt?: string | null;
+  requiresResponse?: boolean;
+}) {
+  if (comment.resolvedAt || (comment.status ?? "").toLowerCase() === "resolved") {
+    return { label: "resolved", variant: "green" as const };
+  }
+
+  if ((comment.status ?? "").toLowerCase() === "answered") {
+    return { label: "answered", variant: "cyan" as const };
+  }
+
+  if (comment.requiresResponse) {
+    return { label: "needs_response", variant: "amber" as const };
+  }
+
+  return { label: comment.status ?? "open", variant: "purple" as const };
+}
 
 export function TaskDetailPanel() {
   const selectedTaskId = useDashboardStore((s) => s.selectedTaskId);
@@ -24,6 +50,18 @@ export function TaskDetailPanel() {
     queryFn: () => getTaskSubtasks(selectedTaskId!),
     enabled: !!selectedTaskId,
   });
+
+  const {
+    data: comments = [],
+    isLoading: commentsLoading,
+    isError: commentsError,
+  } = useQuery({
+    queryKey: ["comments", selectedTaskId],
+    queryFn: () => getTaskComments(selectedTaskId!),
+    enabled: !!selectedTaskId,
+  });
+
+  const sortedComments = [...comments].reverse();
 
   return (
     <Card title="Task Detail" className="h-full">
@@ -109,6 +147,57 @@ export function TaskDetailPanel() {
                     <StatusBadge status={sub.status} />
                   </div>
                 ))}
+              </div>
+            )}
+          </div>
+
+          {/* Comments */}
+          <div>
+            <div className="flex items-center gap-1.5 mb-2">
+              <FontAwesomeIcon icon={faChevronDown} className="text-[10px] text-slate-500" />
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+                Comments {comments.length > 0 && `(${comments.length})`}
+              </span>
+            </div>
+
+            {commentsLoading && <SkeletonList rows={3} />}
+            {commentsError && <ErrorMessage message="Failed to load comments" />}
+            {!commentsLoading && !commentsError && sortedComments.length === 0 && (
+              <EmptyState message="No comments on this task" />
+            )}
+
+            {sortedComments.length > 0 && (
+              <div className="space-y-1.5">
+                {sortedComments.map((comment) => {
+                  const derivedStatus = getCommentStatus(comment);
+
+                  return (
+                    <div
+                      key={comment.id}
+                      className="rounded border border-surface-700 bg-surface-800 px-3 py-2.5 space-y-1.5"
+                    >
+                      <p className="text-xs text-slate-200 leading-snug">{comment.body}</p>
+                      <div className="flex items-center gap-2 text-[10px]">
+                        <span className={AUTHOR_STYLE[comment.authorType] ?? AUTHOR_STYLE.system}>
+                          {comment.authorType}
+                        </span>
+                        <StatusBadge status={derivedStatus.label} variant={derivedStatus.variant} />
+                        {comment.requiresResponse && (
+                          <span className="rounded px-1.5 py-0.5 bg-amber-900/40 text-amber-300">
+                            requires response
+                          </span>
+                        )}
+                        {comment.inReplyToId && (
+                          <span className="text-slate-600">↩ reply</span>
+                        )}
+                        <span className="ml-auto text-slate-500 flex items-center gap-1">
+                          <FontAwesomeIcon icon={faClock} />
+                          {fromNow(comment.resolvedAt ?? comment.updatedAt ?? comment.createdAt)}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
