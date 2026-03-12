@@ -19,6 +19,139 @@ const AUTHOR_STYLE: Record<string, string> = {
   system: "rounded px-1.5 py-0.5 bg-slate-700/50 text-slate-400",
 };
 
+// ─── Main-agent structured comment renderer ──────────────────────────────────
+
+function parseMainAgentComment(body: string) {
+  const lines = body.split("\n");
+  const rawTitle = lines[0] ?? "";
+  const title = rawTitle.startsWith("[Main] ") ? rawTitle.slice(7) : rawTitle;
+
+  const message: string[] = [];
+  const bullets: string[] = [];
+  const questions: string[] = [];
+
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i];
+    if (line.startsWith("• ")) bullets.push(line.slice(2));
+    else if (line.startsWith("? ")) questions.push(line.slice(2));
+    else if (line.trim()) message.push(line);
+  }
+
+  return { title, message: message.join(" "), bullets, questions };
+}
+
+const MAIN_TOOLTIPS: Array<{ match: RegExp; tip: string }> = [
+  {
+    match: /nada para hacer|registrado/i,
+    tip: "Main analizó tu mensaje y no encontró ninguna acción concreta para crear como tarea. Cuando quieras crear algo, describí qué debe hacerse.",
+  },
+  {
+    match: /cu[eé]ntame|m[aá]s info|m[aá]s detalle/i,
+    tip: "Main recibió tu mensaje pero necesita más contexto para armar la tarea bien. Respondé las preguntas para que pueda continuar.",
+  },
+  {
+    match: /borrador|revis[aá]/i,
+    tip: "Main preparó un borrador basado en tu mensaje, pero encontró puntos a revisar antes de ejecutarlo. Corregí lo que necesites y confirmá.",
+  },
+  {
+    match: /tarea creada exitosamente/i,
+    tip: "Main procesó tu solicitud con éxito y creó la tarea en MC LUCY.",
+  },
+  {
+    match: /errores parciales/i,
+    tip: "La tarea fue creada pero algunas subtareas fallaron. Revisá los detalles para hacer seguimiento.",
+  },
+  {
+    match: /lista para crear/i,
+    tip: "Main validó tu solicitud y puede crear la tarea en MC LUCY.",
+  },
+];
+
+function getMainTooltip(title: string): string {
+  const entry = MAIN_TOOLTIPS.find((t) => t.match.test(title));
+  return entry?.tip ?? "Respuesta automática del agente Main de MC LUCY.";
+}
+
+const TONE_TITLE_STYLE: Record<string, string> = {
+  "nada": "text-slate-300",
+  "cuéntame": "text-amber-300",
+  "borrador": "text-amber-300",
+  "creada": "text-emerald-300",
+  "errores": "text-rose-300",
+  "lista": "text-cyan-300",
+};
+
+function getMainTitleColor(title: string): string {
+  const t = title.toLowerCase();
+  for (const [key, cls] of Object.entries(TONE_TITLE_STYLE)) {
+    if (t.includes(key)) return cls;
+  }
+  return "text-purple-300";
+}
+
+function MainAgentBubble({ body }: { body: string }) {
+  const { title, message, bullets, questions } = parseMainAgentComment(body);
+  const tooltip = getMainTooltip(title);
+  const titleColor = getMainTitleColor(title);
+
+  return (
+    <div>
+      {/* Header row: label + title + tooltip */}
+      <div className="flex items-start gap-1.5 mb-1.5 flex-wrap">
+        <span className="rounded px-1.5 py-0.5 bg-purple-900/50 text-purple-300 text-[10px] font-medium shrink-0">
+          Main
+        </span>
+        <span className={`text-xs font-semibold leading-snug ${titleColor}`}>{title}</span>
+        {/* Tooltip trigger */}
+        <div className="relative group/tip flex-shrink-0 self-center">
+          <button
+            type="button"
+            className="w-4 h-4 rounded-full bg-slate-700 text-slate-400 text-[9px] font-bold flex items-center justify-center hover:bg-slate-600 hover:text-slate-200 transition-colors"
+            aria-label="Qué significa esto"
+          >
+            ?
+          </button>
+          <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-60 rounded bg-slate-900 border border-surface-600 px-3 py-2 text-[11px] text-slate-300 leading-snug opacity-0 group-hover/tip:opacity-100 transition-opacity z-50 shadow-xl">
+            <p className="font-semibold text-slate-200 mb-1">¿Qué significa esto?</p>
+            {tooltip}
+          </div>
+        </div>
+      </div>
+
+      {/* Message */}
+      {message && (
+        <p className="text-xs text-slate-300 leading-snug">{message}</p>
+      )}
+
+      {/* Bullet points */}
+      {bullets.length > 0 && (
+        <ul className="mt-1.5 space-y-1">
+          {bullets.map((b, i) => (
+            <li key={i} className="flex gap-1.5 text-xs text-slate-400 leading-snug">
+              <span className="text-surface-600 mt-0.5 shrink-0">•</span>
+              <span>{b}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* Follow-up questions */}
+      {questions.length > 0 && (
+        <div className="mt-2 rounded border border-amber-800/40 bg-amber-950/20 px-2.5 py-2 space-y-1">
+          <p className="text-[10px] text-amber-500 font-semibold uppercase tracking-wide mb-1">
+            Respondé esto para continuar
+          </p>
+          {questions.map((q, i) => (
+            <p key={i} className="text-xs text-amber-300 leading-snug">
+              <span className="font-bold mr-1">→</span>{q}
+            </p>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function getCommentStatus(comment: {
   status?: string;
   resolvedAt?: string | null;
@@ -47,7 +180,7 @@ export function TaskDetailPanel() {
     const [confirmArchive, setConfirmArchive] = useState(false);
     const [isArchiving, setIsArchiving] = useState(false);
 
-  const { data: tasks = [] } = useQuery({ queryKey: ["tasks"], queryFn: getTasks });
+  const { data: tasks = [] } = useQuery({ queryKey: ["tasks"], queryFn: () => getTasks() });
   const selectedTask = tasks.find((t) => t.id === selectedTaskId);
 
   const {
@@ -276,7 +409,11 @@ export function TaskDetailPanel() {
                       key={comment.id}
                       className="rounded border border-surface-700 bg-surface-800 px-3 py-2.5 space-y-1.5"
                     >
-                      <p className="text-xs text-slate-200 leading-snug">{comment.body}</p>
+                      {comment.authorId === "main-openclaw-agent" && comment.body.startsWith("[Main] ") ? (
+                        <MainAgentBubble body={comment.body} />
+                      ) : (
+                        <p className="text-xs text-slate-200 leading-snug whitespace-pre-wrap">{comment.body}</p>
+                      )}
                       <div className="flex items-center gap-2 text-[10px]">
                         <span className={AUTHOR_STYLE[comment.authorType] ?? AUTHOR_STYLE.system}>
                           {comment.authorType}

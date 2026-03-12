@@ -146,7 +146,7 @@ export function assessActionability(
 
   if (needsHumanReview(normalized.rawText)) {
     reasons.push("Request contains policy-sensitive keywords requiring human review.");
-    warnings.push("Human review is recommended before automatic task execution.");
+    warnings.push("Este tipo de solicitud necesita revisión manual antes de ejecutarse automáticamente.");
     return {
       kind: "needs_human_review",
       isActionable: false,
@@ -161,7 +161,7 @@ export function assessActionability(
 
   if (brief && !hasAction) {
     reasons.push("Request is too short and lacks an explicit action signal.");
-    warnings.push("Add objective, scope, and expected outcome.");
+    warnings.push("Agregá el objetivo, alcance y resultado esperado.");
     return {
       kind: "too_vague",
       isActionable: false,
@@ -174,7 +174,7 @@ export function assessActionability(
   reasons.push("Request includes actionable intent suitable for task creation.");
 
   if (!hasAction) {
-    warnings.push("Action verb not explicit; inferred intent may need confirmation.");
+    warnings.push("No detecté un verbo de acción claro — si podés incluir qué debe hacerse (crear, implementar, revisar…) sería mejor.");
   }
 
   return {
@@ -242,11 +242,10 @@ export function buildMainAgentResponseDraft(
 
   if (decision.decision === "ignore_or_log_only") {
     return {
-      title: "No task created",
-      message: "This message appears non-actionable, so it was logged without creating a task.",
+      title: "Nada para hacer por ahora",
+      message: "Vi tu mensaje y lo registré, pero parece informativo — no encontré ninguna acción concreta para convertirlo en tarea.",
       bulletPoints: [
-        "No executable work item detected.",
-        "You can send a specific action request to create a task.",
+        "Cuando quieras crear algo, describí la acción con verbos como crear, implementar, revisar, configurar, etc.",
       ],
       tone: "informational",
     };
@@ -254,13 +253,13 @@ export function buildMainAgentResponseDraft(
 
   if (decision.decision === "ask_for_clarification") {
     return {
-      title: "Clarification needed",
-      message: "I need more details before creating a reliable task in MC LUCY.",
-      bulletPoints: warnings.length > 0 ? warnings : ["The request is currently too ambiguous."],
+      title: "Cuéntame un poco más",
+      message: "Recibí tu mensaje pero necesito más detalle para crear la tarea correctamente. Respondé estas preguntas:",
+      bulletPoints: warnings.length > 0 ? warnings : ["El pedido es ambiguo sin más contexto."],
       followUpQuestions: [
-        "What is the concrete objective?",
-        "What is the expected output or done criteria?",
-        "Who should own this task?",
+        "¿Cuál es el objetivo concreto?",
+        "¿Cuál es el resultado esperado o criterio de completitud?",
+        "¿Quién debería encargarse de esto?",
       ],
       tone: "clarifying",
     };
@@ -268,9 +267,9 @@ export function buildMainAgentResponseDraft(
 
   if (decision.decision === "create_draft_task_with_warnings") {
     return {
-      title: "Draft task prepared with warnings",
-      message: "I prepared a draft task, but it should be reviewed before full execution.",
-      bulletPoints: warnings.length > 0 ? warnings : ["Review the draft title, scope, and subtasks."],
+      title: "Borrador listo — revisá estos puntos",
+      message: "Armé una tarea en borrador basada en tu mensaje. Hay algunas cosas para revisar antes de ejecutarla:",
+      bulletPoints: warnings.length > 0 ? warnings : ["Revisá el título, alcance y subtareas del borrador."],
       tone: "warning",
     };
   }
@@ -278,11 +277,11 @@ export function buildMainAgentResponseDraft(
   if (executionResult) {
     if (executionResult.stage === "subtasks_created" && executionResult.success) {
       return {
-        title: "Task created successfully",
-        message: "The task and subtasks were created in MC LUCY.",
+        title: "¡Tarea creada exitosamente!",
+        message: "La tarea y sus subtareas fueron creadas en MC LUCY.",
         bulletPoints: [
-          `Task ID: ${executionResult.taskId ?? "n/a"}`,
-          `Subtasks created: ${executionResult.subtasksCreatedCount}`,
+          `ID de tarea: ${executionResult.taskId ?? "n/a"}`,
+          `Subtareas creadas: ${executionResult.subtasksCreatedCount}`,
         ],
         tone: "confirming",
       };
@@ -290,11 +289,11 @@ export function buildMainAgentResponseDraft(
 
     if (executionResult.stage === "partial_failure") {
       return {
-        title: "Task created with partial subtask failures",
-        message: "The task was created, but some subtasks failed and need follow-up.",
+        title: "Tarea creada con errores parciales",
+        message: "La tarea se creó, pero algunas subtareas fallaron y necesitan seguimiento.",
         bulletPoints: [
-          `Task ID: ${executionResult.taskId ?? "n/a"}`,
-          `Subtasks created: ${executionResult.subtasksCreatedCount}`,
+          `ID de tarea: ${executionResult.taskId ?? "n/a"}`,
+          `Subtareas creadas: ${executionResult.subtasksCreatedCount}`,
           ...executionResult.errors.slice(0, 3),
         ],
         tone: "warning",
@@ -303,9 +302,9 @@ export function buildMainAgentResponseDraft(
   }
 
   return {
-    title: "Task ready for creation",
-    message: "This request is actionable and can be created in MC LUCY.",
-    bulletPoints: warnings.length > 0 ? warnings : ["No policy warnings detected."],
+    title: "Tarea lista para crear",
+    message: "El pedido es válido y puede procesarse en MC LUCY.",
+    bulletPoints: warnings.length > 0 ? warnings : ["Sin advertencias detectadas."],
     tone: "confirming",
   };
 }
