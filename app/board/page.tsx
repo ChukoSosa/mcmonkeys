@@ -126,7 +126,7 @@ export default function BoardPage() {
 
         {!isLoading && !isError && filteredTasks.length > 0 && (
           <div className="h-full min-h-0 overflow-x-auto">
-            <div className="grid h-full min-w-[980px] grid-flow-col auto-cols-[280px] gap-3">
+            <div className="grid h-full min-w-[980px] grid-flow-col auto-cols-[280px] gap-3 justify-between">
               {boardColumns.map((status) => (
                 <Card
                   key={status}
