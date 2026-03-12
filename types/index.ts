@@ -17,3 +17,19 @@ export type {
   CardSourceContext,
   NewCardInput,
 } from "@/types/cards";
+
+export type {
+  MissionTaskStatus,
+  MissionTaskPriority,
+  MissionSubtaskStatus,
+  MissionCommentAuthorType,
+  MissionAgent,
+  MissionTask,
+  MissionSubtask,
+  MissionComment,
+  MissionActivity,
+  MissionRun,
+  MissionTaskDetail,
+  MissionTaskProgress,
+  MissionSubtaskStatusCounts,
+} from "@/types/mission";
