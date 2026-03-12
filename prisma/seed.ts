@@ -1,6 +1,9 @@
-import { PrismaClient, AgentStatus, TaskStatus, RunStatus } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
+
+const OPENCLAW_AGENT_ID = "agent-openclaw";
+const ONBOARDING_TASK_ID = "task-onboarding-installation";
 
 async function main() {
   const operator = await prisma.operator.upsert({
@@ -13,79 +16,99 @@ async function main() {
     },
   });
 
-  const [codi, ninja] = await Promise.all([
-    prisma.agent.upsert({
-      where: { id: "00000000-0000-4000-8000-00000000c0d1" },
-      update: {},
-      create: {
-        id: "00000000-0000-4000-8000-00000000c0d1",
-        name: "Codi",
-        role: "Frontend Implementation",
-        status: AgentStatus.THINKING,
-        statusMessage: "Reviewing UI shell",
-        heartbeatAt: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    }),
-    prisma.agent.upsert({
-      where: { id: "00000000-0000-4000-8000-00000000d00d" },
-      update: {},
-      create: {
-        id: "00000000-0000-4000-8000-00000000d00d",
-        name: "Ninja",
-        role: "Backend & Systems",
-        status: AgentStatus.WORKING,
-        statusMessage: "Scaffolding Prisma schema",
-        heartbeatAt: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    }),
-  ]);
+  // Keep seed deterministic: one visible agent and one onboarding task.
+  await prisma.systemEvent.deleteMany();
+  await prisma.run.deleteMany();
+  await prisma.taskComment.deleteMany();
+  await prisma.subtask.deleteMany();
+  await prisma.taskActivity.deleteMany();
+  await prisma.task.deleteMany();
+  await prisma.agentRoutine.deleteMany();
+  await prisma.agent.deleteMany({});
 
-  await prisma.task.createMany({
-    data: [
-      {
-        title: "Wire Mission Control shell",
-        description: "Create AppShell layout and navigation placeholders",
-        status: TaskStatus.IN_PROGRESS,
-        createdById: operator.id,
-        createdByType: "operator",
-        assignedAgentId: codi.id,
-      },
-      {
-        title: "Define Prisma schema",
-        description: "Model tasks, agents, runs, knowledge",
-        status: TaskStatus.REVIEW,
-        createdById: operator.id,
-        createdByType: "operator",
-        assignedAgentId: ninja.id,
-      },
-      {
-        title: "Draft API contracts",
-        description: "Enumerate payloads + events",
-        status: TaskStatus.BACKLOG,
-        createdById: operator.id,
-        createdByType: "operator",
-      },
-    ],
+  const openClaw = await prisma.agent.upsert({
+    where: { id: OPENCLAW_AGENT_ID },
+    update: {
+      name: "OpenClaw",
+      role: "Primary Mission Operator",
+      status: "WORKING",
+      statusMessage: "Handling installation onboarding",
+      heartbeatAt: new Date(),
+    },
+    create: {
+      id: OPENCLAW_AGENT_ID,
+      name: "OpenClaw",
+      role: "Primary Mission Operator",
+      status: "WORKING",
+      statusMessage: "Handling installation onboarding",
+      heartbeatAt: new Date(),
+    },
   });
 
-  await prisma.run.createMany({
+  await prisma.task.upsert({
+    where: { id: ONBOARDING_TASK_ID },
+    update: {
+      title: "Installation / Onboarding",
+      description: "Track initial setup and onboarding steps performed by OpenClaw.",
+      status: "IN_PROGRESS",
+      priority: 1,
+      createdById: operator.id,
+      createdByType: "operator",
+      assignedAgentId: openClaw.id,
+    },
+    create: {
+      id: ONBOARDING_TASK_ID,
+      title: "Installation / Onboarding",
+      description: "Track initial setup and onboarding steps performed by OpenClaw.",
+      status: "IN_PROGRESS",
+      priority: 1,
+      createdById: operator.id,
+      createdByType: "operator",
+      assignedAgentId: openClaw.id,
+    },
+  });
+
+  await prisma.subtask.createMany({
     data: [
       {
-        type: "pipeline.bootstrap",
-        source: "manual",
-        status: RunStatus.SUCCEEDED,
-        triggeredBy: operator.id,
-        resultSummary: "Initialized repo",
+        id: "subtask-onboarding-1",
+        taskId: ONBOARDING_TASK_ID,
+        title: "Verify API and database connectivity",
+        status: "TODO",
+        position: 1,
+        ownerAgentId: openClaw.id,
       },
       {
-        type: "pipeline.generate-contracts",
-        source: "manual",
-        status: RunStatus.RUNNING,
-        triggeredBy: operator.id,
+        id: "subtask-onboarding-2",
+        taskId: ONBOARDING_TASK_ID,
+        title: "Create initial workspace configuration",
+        status: "TODO",
+        position: 2,
+        ownerAgentId: openClaw.id,
+      },
+      {
+        id: "subtask-onboarding-3",
+        taskId: ONBOARDING_TASK_ID,
+        title: "Register additional assistant profiles",
+        status: "TODO",
+        position: 3,
+        ownerAgentId: openClaw.id,
+      },
+      {
+        id: "subtask-onboarding-4",
+        taskId: ONBOARDING_TASK_ID,
+        title: "Validate board and office views",
+        status: "TODO",
+        position: 4,
+        ownerAgentId: openClaw.id,
+      },
+      {
+        id: "subtask-onboarding-5",
+        taskId: ONBOARDING_TASK_ID,
+        title: "Finalize onboarding checklist",
+        status: "TODO",
+        position: 5,
+        ownerAgentId: openClaw.id,
       },
     ],
   });

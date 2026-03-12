@@ -6,7 +6,7 @@ import { useOnboardingState } from "@/lib/utils/useOnboardingState";
 
 export default function Home() {
   const router = useRouter();
-  const { hasSeenOnboarding, isReady } = useOnboardingState();
+  const { isReady } = useOnboardingState();
 
   useEffect(() => {
     if (!isReady) return;

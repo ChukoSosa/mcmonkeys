@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBullseye } from "@fortawesome/free-solid-svg-icons";
 import { SummaryBar } from "@/components/dashboard/SummaryBar";
@@ -24,15 +24,11 @@ const NAV_ITEMS = [
 
 export function DashboardShell({ children, showFilters = true, topBar }: DashboardShellProps) {
   const pathname = usePathname();
-  const router = useRouter();
-  const { hasSeenOnboarding, isReady } = useOnboardingState();
+  const { isReady } = useOnboardingState();
 
   useEffect(() => {
     if (!isReady) return;
-
-    if (hasSeenOnboarding) return;
-    router.replace("/welcome");
-  }, [hasSeenOnboarding, isReady, router]);
+  }, [isReady]);
 
   if (!isReady) {
     return (
