@@ -12,16 +12,21 @@ export function statusVariant(status: string | null | undefined): StatusVariant 
   switch ((status ?? "").toUpperCase()) {
     case "DONE":
     case "COMPLETED":
-    case "IDLE":
+      return "green";
+    case "WORKING":
       return "green";
     case "IN_PROGRESS":
     case "RUNNING":
     case "ACTIVE":
       return "cyan";
+    case "THINKING":
+      return "amber";
     case "PENDING":
     case "QUEUED":
     case "WAITING":
       return "amber";
+    case "IDLE":
+      return "slate";
     case "BLOCKED":
     case "ERROR":
     case "FAILED":

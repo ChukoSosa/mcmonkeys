@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faXmark,
-  faRobot,
   faListCheck,
   faBolt,
   faClock,
@@ -20,6 +19,17 @@ interface AgentDetailModalProps {
   agent: Agent | null;
   open: boolean;
   onClose: () => void;
+}
+
+function getAgentAvatarUrl(agent: Agent): string {
+  if (agent.avatarUrl) return agent.avatarUrl;
+  if (typeof agent.avatar === "string") return agent.avatar;
+  if (agent.avatar && typeof agent.avatar === "object" && "url" in agent.avatar) {
+    const url = (agent.avatar as { url?: string }).url;
+    if (url) return url;
+  }
+
+  return `https://api.dicebear.com/9.x/bottts/svg?seed=${encodeURIComponent(agent.name)}`;
 }
 
 export function AgentDetailModal({ agent, open, onClose }: AgentDetailModalProps) {
@@ -59,7 +69,12 @@ export function AgentDetailModal({ agent, open, onClose }: AgentDetailModalProps
       <div className="w-full max-w-3xl max-h-[90vh] overflow-hidden rounded-xl border border-surface-700 bg-surface-900 shadow-2xl">
         <div className="flex items-center justify-between border-b border-surface-700 px-4 py-3">
           <div className="flex items-center gap-2 min-w-0">
-            <FontAwesomeIcon icon={faRobot} className="text-purple-400" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={getAgentAvatarUrl(agent)}
+              alt={`${agent.name} avatar`}
+              className="h-7 w-7 shrink-0 rounded-full border border-surface-700 bg-surface-900 object-cover"
+            />
             <h2 className="truncate text-sm font-semibold text-slate-100">{agent.name}</h2>
             <StatusBadge status={agent.status} pulse={agent.status?.toUpperCase() === "RUNNING"} />
           </div>
