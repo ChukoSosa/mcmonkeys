@@ -7,3 +7,13 @@ export type {
   SupervisorKpis,
   SSEEventData,
 } from "@/lib/schemas";
+
+export type {
+  Card,
+  CardRequester,
+  CardBlocker,
+  CardEvidence,
+  CardEvidenceKind,
+  CardSourceContext,
+  NewCardInput,
+} from "@/types/cards";
