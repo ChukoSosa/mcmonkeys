@@ -10,6 +10,8 @@ import { TaskDetailPanel } from "@/components/dashboard/TaskDetailPanel";
 import { CreateTaskModal } from "@/components/dashboard/CreateTaskModal";
 import { Card, EmptyState, ErrorMessage, SkeletonList, StatusBadge } from "@/components/ui";
 import { deleteTask, archiveTask, getTasks } from "@/lib/api/tasks";
+import { getSlaAlerts } from "@/lib/api/sla";
+import type { SlaTaskAlert } from "@/lib/api/sla";
 import { useDashboardStore } from "@/store/dashboardStore";
 import { fromNow } from "@/lib/utils/formatDate";
 import { priorityLabel, priorityVariant } from "@/lib/utils/formatStatus";
@@ -79,6 +81,17 @@ export default function BoardPage() {
     queryFn: () => getTasks({ includeArchived: showArchived }),
     refetchInterval: 20_000,
   });
+
+  const { data: slaAlerts = [] } = useQuery<SlaTaskAlert[]>({
+    queryKey: ["sla-alerts"],
+    queryFn: getSlaAlerts,
+    refetchInterval: 60_000,
+  });
+
+  const slaByTaskId = useMemo(
+    () => new Map(slaAlerts.map((a) => [a.taskId, a])),
+    [slaAlerts],
+  );
 
     const selectedTask = tasks.find((t) => t.id === selectedTaskId);
 
@@ -170,7 +183,29 @@ export default function BoardPage() {
                         onClick={() => setSelectedTaskId(selectedTaskId === task.id ? null : task.id)}
                         className="w-full rounded border border-surface-700 bg-surface-800 p-2 text-left hover:bg-surface-700"
                       >
-                        <p className="text-xs text-slate-100 line-clamp-2">{task.title}</p>
+                        <div className="flex items-start justify-between gap-1.5">
+                          <p className="text-xs text-slate-100 line-clamp-2 flex-1">{task.title}</p>
+                          {slaByTaskId.has(task.id) && (() => {
+                            const alert = slaByTaskId.get(task.id)!;
+                            const oldest = alert.breachedComments[0];
+                            const count = alert.breachedComments.length;
+                            return (
+                              <div className="relative group/sla shrink-0">
+                                <span className="inline-flex items-center gap-1 rounded border border-red-500/50 bg-red-500/15 px-1.5 py-0.5 text-[10px] font-bold text-red-400">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
+                                  SLA
+                                </span>
+                                <div className="pointer-events-none absolute right-0 top-full mt-1.5 w-56 rounded border border-red-500/30 bg-slate-900 px-3 py-2 text-[11px] text-slate-300 leading-snug opacity-0 group-hover/sla:opacity-100 transition-opacity z-50 shadow-xl">
+                                  <p className="font-semibold text-red-400 mb-1">⏱ SLA vencido</p>
+                                  <p>{count === 1 ? "1 comentario" : `${count} comentarios`} sin respuesta.</p>
+                                  {oldest && (
+                                    <p className="mt-1 text-slate-500">El más antiguo lleva <span className="text-red-300 font-semibold">{oldest.ageMinutes} min</span> abierto (límite: 30 min).</p>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })()}
+                        </div>
                         <div className="mt-2 flex flex-wrap gap-1">
                           <StatusBadge status={status} />
                           {task.priority != null && (
