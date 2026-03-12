@@ -1,8 +1,8 @@
-# Mission Control Office
+# MC Lucy
 
-Operational dashboard for Mission Control API.
+Dashboard operativo de agentes de IA con API local integrada.
 
-This project is the Phase 1 foundation for a future virtual office UI. It provides a production-minded frontend baseline with typed API integration, runtime validation, live updates via SSE, and filterable operational views.
+Front + API en un solo repo. Levantás con un comando y ya tenés agentes, tareas, actividad en tiempo real y oficina virtual — todo local, sin dependencias externas.
 
 ## Stack
 
@@ -18,15 +18,13 @@ This project is the Phase 1 foundation for a future virtual office UI. It provid
 
 ## Features
 
-- Dashboard with agents, tasks, task detail/subtasks, activity feed, KPIs, and SSE event panel
-- Global filters for search, agent, task status, and activity limit
-- Clickable agent cards with detail modal:
-	- Agent profile/status
-	- Assigned tasks
-	- Last and recent activity
-- API client layer with centralized proxy access
-- Resilient parsing for backend payload variations
-- Graceful error handling when upstream API is unavailable
+- Dashboard con agentes, tareas, subtareas, feed de actividad, KPIs y eventos SSE en tiempo real
+- Oficina virtual con agentes animados por zona
+- Board de tareas con drag & drop de estados
+- Filtros globales: búsqueda, agente, estado, límite de actividad
+- Modal de detalle por agente con historial y tareas asignadas
+- API local completa integrada (Next.js API Routes + Prisma + PostgreSQL)
+- Auto-setup en primer arranque: sin pasos manuales
 
 ## Project Structure
 
@@ -68,197 +66,81 @@ store/
 types/
 ```
 
-## Install & Run
+## Instalación
+
+**Prerequisito único**: PostgreSQL corriendo.
 
 ```bash
+# macOS
+brew install postgresql@16 && brew services start postgresql@16
+
+# Windows: https://www.postgresql.org/download/windows/
+# Linux
+apt-get install postgresql && service postgresql start
+```
+
+```bash
+git clone https://github.com/ChukoSosa/mclucy.git
+cd mclucy
 npm install
 npm run dev
 ```
 
-Eso es todo. `npm run dev` detecta el estado del entorno y se auto-configura:
-- Crea `.env` y `.env.local` si no existen
-- Genera el cliente Prisma
-- Aplica el schema a PostgreSQL
-- Seedea datos iniciales
-- Levanta Next.js en http://localhost:3001
+`npm run dev` hace todo el resto de forma automática:
+1. Crea `.env` y `.env.local` si no existen
+2. Genera el cliente Prisma
+3. Aplica el schema a PostgreSQL
+4. Seedea datos iniciales (agente OpenClaw + tarea de onboarding)
+5. Levanta Next.js en http://localhost:3001
+6. **Abre el browser automáticamente**
 
-> **Prerequisito**: PostgreSQL corriendo localmente.
-> - macOS: `brew install postgresql@16 && brew services start postgresql@16`
-> - Windows: https://www.postgresql.org/download/windows/
-> - Linux: `apt-get install postgresql && service postgresql start`
+> Si tus credenciales de Postgres son distintas a `postgres/postgres`, editá `.env` antes de correr:
+> ```env
+> DATABASE_URL="postgresql://TU_USUARIO:TU_PASSWORD@localhost:5432/mission_control"
+> ```
 
-Si tus credenciales de Postgres son distintas, editá `.env` antes de correr:
-
-```env
-DATABASE_URL="postgresql://TU_USUARIO:TU_PASSWORD@localhost:5432/mission_control"
-```
-
-Production build:
+### Comandos útiles
 
 ```bash
-npm run build
-npm run start
+npm run dev          # Auto-setup + levantar en modo desarrollo
+npm run build        # Build de producción
+npm start            # Levantar build de producción
+npm run db:push      # Aplicar schema de DB manualmente
+npm run db:seed      # Re-seedear datos iniciales
+npm run db:generate  # Regenerar cliente Prisma
 ```
 
-## API Integration Notes
+## Arquitectura
 
-All frontend calls go through Next route proxy:
-- Frontend calls: `/proxy/api/...`
-- Proxy forwards to `NEXT_PUBLIC_MISSION_CONTROL_API_BASE_URL`
+Front y API corren en el mismo proceso Next.js:
 
-This avoids browser-side CORS issues and gives clearer upstream errors.
-
-If upstream is down/unreachable, proxy returns:
-
-```json
-{
-	"error": "UPSTREAM_UNAVAILABLE",
-	"message": "fetch failed",
-	"apiBaseUrl": "..."
-}
+```
+Browser → /proxy/* → Next.js API Routes (/api/*) → Prisma → PostgreSQL
 ```
 
-## Activity Feed Compatibility
+No hay backend separado. Todo queda local.
 
-The activity integration accepts multiple backend shapes:
+### Endpoints principales
 
-- Array payload directly
-- Object payload with keys like:
-	- `activity`
-	- `items`
-	- `logs`
-	- `events`
+| Endpoint | Descripción |
+|---|---|
+| `GET /api/health` | Estado del servidor |
+| `GET /api/agents` | Lista de agentes |
+| `GET /api/tasks` | Lista de tareas |
+| `GET /api/tasks/:id` | Detalle de tarea + subtareas |
+| `GET /api/activity` | Feed de actividad |
+| `GET /api/events` | Stream SSE en tiempo real |
+| `GET /api/supervisor/kpis` | KPIs operativos |
 
-And supports timestamp field variants:
+## Troubleshooting rápido
 
-- `createdAt`
-- `timestamp`
-- `updatedAt`
-- `occurredAt`
+Ver [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) para soluciones detalladas.
 
-## Global Filters
+Los errores más comunes:
+- **ECONNREFUSED 5432** → Postgres no está corriendo
+- **role "postgres" does not exist** → Crear el rol manualmente (ver TROUBLESHOOTING.md)
+- **Puerto 3001 en uso** → `lsof -ti:3001 | xargs kill -9` (macOS/Linux)
 
-The filter bar supports:
-
-- Free text search (tasks + activity)
-- Agent filter
-- Task status filter
-- Activity limit selector
-- Reset all filters
-
-## Troubleshooting
-
-### 1) API returns 500/502 in dashboard
-
-Check backend reachability from frontend machine:
-
-```powershell
-Invoke-WebRequest -Uri "http://192.168.0.17:3000/api/tasks" -UseBasicParsing
-```
-
-If it fails:
-- ensure backend is running
-- ensure backend binds to `0.0.0.0`
-- ensure firewall allows port `3000`
-
-### 2) Port 3001 already in use
-
-```powershell
-$conn = Get-NetTCPConnection -LocalPort 3001 -State Listen -ErrorAction SilentlyContinue
-if ($conn) { Stop-Process -Id $conn.OwningProcess -Force }
-```
-
-### 3) Build fails with `.next/trace` EPERM
-
-Stop dev server first, then run `npm run build`.
-
-## Current Phase
-
-Phase 1 is complete: baseline operational dashboard and API connection.
-
-Next recommended phase:
-- virtual pixel-art office visualization layer reusing the same data/API foundations.
-
-## API Contract (Frontend Expectations)
-
-The frontend is intentionally resilient, but these are the expected semantic contracts for best UX.
-
-### Tasks
-
-- Endpoint: `GET /api/tasks`
-- Preferred response shape:
-
-```json
-{
-	"tasks": [
-		{
-			"id": "uuid",
-			"title": "string",
-			"status": "IN_PROGRESS",
-			"priority": 1,
-			"assignedAgent": { "id": "uuid", "name": "Claudio" },
-			"assignedAgentId": "uuid",
-			"updatedAt": "ISO date",
-			"description": "optional"
-		}
-	]
-}
-```
-
-### Subtasks
-
-- Endpoint: `GET /api/tasks/:id/subtasks`
-- Preferred response shape:
-
-```json
-{
-	"subtasks": [
-		{
-			"id": "uuid",
-			"title": "string",
-			"status": "TODO",
-			"position": 1,
-			"ownerAgent": { "id": "uuid", "name": "Lucy" },
-			"updatedAt": "ISO date"
-		}
-	]
-}
-```
-
-### Agents
-
-- Endpoint: `GET /api/agents`
-- Preferred response shape:
-
-```json
-{
-	"agents": [
-		{
-			"id": "uuid",
-			"name": "Lucy",
-			"role": "Planner",
-			"status": "IDLE",
-			"statusMessage": "optional",
-			"heartbeat": "ISO date"
-		}
-	]
-}
-```
-
-### Activity
-
-- Endpoint: `GET /api/activity`
-- Supported response keys by frontend: `activity`, `items`, `logs`, `events`
-- Supported timestamp keys: `createdAt`, `timestamp`, `updatedAt`, `occurredAt`
-
-### KPIs
-
-- Endpoint: `GET /api/supervisor/kpis`
-- Frontend renders all keys dynamically (record/object style)
-
-### SSE
-
-- Endpoint: `GET /api/events`
 - Expected content-type: `text/event-stream`
 - Tracked event names:
 	- `activity.logged`

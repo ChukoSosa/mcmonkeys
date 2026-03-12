@@ -162,8 +162,25 @@ async function main() {
   run("npx prisma db seed", "Database seeded");
 
   console.log(`\n${c.green}${"─".repeat(44)}`);
-  console.log(`✨  Setup complete — starting Next.js on http://localhost:3001`);
+  console.log(`✨  Setup complete — starting MC Lucy on http://localhost:3001`);
   console.log(`${"─".repeat(44)}${c.reset}\n`);
+
+  // Open browser after Next.js finishes booting (~12s).
+  // Spawned detached so predev can exit and let `next dev` start.
+  const { spawn } = require("child_process");
+  if (process.platform === "win32") {
+    spawn("cmd", ["/c", "timeout /t 12 >nul && start http://localhost:3001"], {
+      detached: true,
+      stdio: "ignore",
+      shell: true,
+    }).unref();
+  } else {
+    const openCmd = process.platform === "darwin" ? "open" : "xdg-open";
+    spawn("sh", ["-c", `sleep 12 && ${openCmd} http://localhost:3001`], {
+      detached: true,
+      stdio: "ignore",
+    }).unref();
+  }
 }
 
 main().catch((err) => {
