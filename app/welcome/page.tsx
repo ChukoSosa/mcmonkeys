@@ -211,12 +211,12 @@ export default function WelcomePage() {
 
   const enterMissionControl = () => {
     markOnboardingSeen();
-    router.push("/overview");
+    router.push("/app");
   };
 
   const handleChooseLicensePlan = () => {
     setShowLicenseModal(false);
-    router.push("/thank-you");
+    router.push("/web/thanks");
   };
 
   return (
