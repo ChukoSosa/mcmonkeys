@@ -21,6 +21,24 @@ Your `agentId` is the one registered for your OpenClaw agent in MC Lucy.
 
 ---
 
+## Installation dependency policy (mandatory)
+
+Before installation, verify required dependencies:
+- Node.js >= 18
+- PostgreSQL running locally
+- unzip/extraction capability
+- permission to execute install scripts
+
+Rules:
+1. If a dependency is missing and you can install it with current permissions, install it and continue.
+2. If you cannot install it automatically (permissions, policy restrictions, missing admin rights, locked package manager, network restrictions), stop and request explicit user authorization before proceeding.
+3. Never hide dependency failures. Report them clearly with the exact command you want to run.
+
+Authorization request template:
+"I cannot install <dependency> automatically due to <reason>. I need your authorization to run: <command>. Should I continue?"
+
+---
+
 ## Required documents
 
 Before doing operational work, you must read and understand these documents in the current MC Lucy folder:
@@ -37,6 +55,18 @@ Do not begin task execution until these documents have been processed.
 ## Mandatory boot sequence
 
 Execute these steps in order every time you start.
+
+### Step 0 — Verify and install missing dependencies
+
+Check runtime prerequisites before trying to operate.
+
+If all required dependencies are already present, continue to Step 1.
+
+If something is missing:
+- install automatically when possible
+- request user authorization when automatic installation is not possible
+
+Do not continue boot if critical dependencies are missing.
 
 ### Step 1 — Verify system readiness
 

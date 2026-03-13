@@ -162,6 +162,24 @@ install.bat
 El instalador crea la DB, corre el seed, levanta el servidor en `:3001` y abre el browser.
 También deja lista la carpeta `outputs/` y los documentos que OpenClaw debe leer antes de operar.
 
+### Regla de dependencias para OpenClaw
+
+Si usás el prompt de `thank-you` o `OPENCLAW-BOOTSTRAP.txt`, OpenClaw debe seguir esta política:
+
+1. Verificar dependencias mínimas: Node.js >= 18, PostgreSQL y utilidades necesarias de extracción/ejecución.
+2. Si falta una dependencia y puede instalarla con permisos actuales, debe instalarla y continuar.
+3. Si no puede instalarla automáticamente (falta privilegios, políticas de seguridad, repos bloqueados o error de permisos), debe pausar y pedir autorización explícita al usuario antes de seguir.
+4. No debe inventar workarounds silenciosos ni omitir prerequisitos críticos.
+
+Formato recomendado del pedido de autorización:
+- qué falta instalar
+- comando exacto que propone ejecutar
+- por qué es necesario
+- impacto esperado
+
+Ejemplo:
+"No pude instalar PostgreSQL automáticamente por permisos insuficientes. ¿Me autorizás a ejecutar el instalador oficial o preferís instalarlo manualmente y luego continúo?"
+
 ### Cómo testear el ZIP localmente
 
 ```bash
