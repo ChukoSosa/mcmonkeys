@@ -183,7 +183,7 @@ async function main() {
           authorId: comment.authorType === "human" ? operator.id : taskData.assignedAgentId,
           body: comment.body,
           status: comment.status,
-          requiresResponse: comment.requiresResponse ?? false,
+          requiresResponse: "requiresResponse" in comment ? comment.requiresResponse ?? false : false,
           resolvedAt: comment.status === "resolved" ? new Date() : null,
         },
       });

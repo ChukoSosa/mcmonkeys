@@ -50,7 +50,7 @@ export default function OfficePage() {
 
   const { data: tasksData } = useQuery({
     queryKey: ["office-tasks"],
-    queryFn: getTasks,
+    queryFn: () => getTasks(),
     refetchInterval: 12_000,
   });
 

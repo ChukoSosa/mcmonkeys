@@ -1,4 +1,4 @@
-export type MissionSystemLifecycleState = "BOOTSTRAPPING" | "READY";
+export type MissionSystemLifecycleState = "BOOTSTRAPPING" | "CONFIGURING" | "READY";
 
 export interface MissionSystemState {
   state: MissionSystemLifecycleState;
@@ -25,6 +25,20 @@ export function setMissionSystemState(next: MissionSystemState): MissionSystemSt
 export function markMissionSystemReady(): MissionSystemState {
   return setMissionSystemState({
     state: "READY",
+    version: MISSION_SYSTEM_STATE_VERSION,
+  });
+}
+
+export function markMissionSystemBootstrapping(): MissionSystemState {
+  return setMissionSystemState({
+    state: "BOOTSTRAPPING",
+    version: MISSION_SYSTEM_STATE_VERSION,
+  });
+}
+
+export function markMissionSystemConfiguring(): MissionSystemState {
+  return setMissionSystemState({
+    state: "CONFIGURING",
     version: MISSION_SYSTEM_STATE_VERSION,
   });
 }

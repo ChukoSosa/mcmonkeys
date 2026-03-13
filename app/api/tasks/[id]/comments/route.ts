@@ -13,13 +13,14 @@ function clampLimit(value: string | null, fallback = 50) {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const { id } = await params;
     const limit = clampLimit(request.nextUrl.searchParams.get("limit"), 50);
 
     const comments = await prisma.taskComment.findMany({
-      where: { taskId: params.id },
+      where: { taskId: id },
       orderBy: { createdAt: "asc" },
       take: limit,
     });
@@ -40,9 +41,10 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const { id } = await params;
     const payload = await request.json();
 
     const body = typeof payload?.body === "string" ? payload.body.trim() : "";
@@ -51,7 +53,7 @@ export async function POST(
     }
 
     const task = await prisma.task.findUnique({
-      where: { id: params.id },
+      where: { id },
       select: { id: true },
     });
 
@@ -67,7 +69,7 @@ export async function POST(
 
     const comment = await prisma.taskComment.create({
       data: {
-        taskId: params.id,
+        taskId: id,
         authorType,
         authorId: typeof payload?.authorId === "string" ? payload.authorId : null,
         body,
@@ -84,7 +86,7 @@ export async function POST(
       type: "task.comment.created",
       data: {
         commentId: comment.id,
-        taskId: params.id,
+        taskId: id,
         authorType: comment.authorType,
         authorId: comment.authorId ?? null,
         requiresResponse: comment.requiresResponse,
@@ -96,8 +98,8 @@ export async function POST(
     await activityService.log({
       kind: "task",
       action: "comment.created",
-      summary: `Comment added to task ${params.id}`,
-      taskId: params.id,
+      summary: `Comment added to task ${id}`,
+      taskId: id,
       payload: {
         commentId: comment.id,
         authorType: comment.authorType,
@@ -107,7 +109,7 @@ export async function POST(
 
     // Fire-and-forget: OpenClaw Main reviews comment and replies automatically
     dispatchCommentReview({
-      taskId: params.id,
+      taskId: id,
       commentId: comment.id,
       commentBody: comment.body,
       authorType: comment.authorType,

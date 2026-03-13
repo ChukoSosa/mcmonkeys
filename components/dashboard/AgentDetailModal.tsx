@@ -35,7 +35,7 @@ function getAgentAvatarUrl(agent: Agent): string {
 export function AgentDetailModal({ agent, open, onClose }: AgentDetailModalProps) {
   const { data: tasks = [], isLoading: tasksLoading, isError: tasksError } = useQuery({
     queryKey: ["tasks"],
-    queryFn: getTasks,
+    queryFn: () => getTasks(),
     enabled: open,
   });
 

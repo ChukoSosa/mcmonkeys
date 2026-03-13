@@ -31,7 +31,6 @@ export const runService = {
         type: "comment_review",
         source: "task_comment",
         targetRef: params.taskId,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         status: toPrismaRunStatus("PENDING") as any,
         triggeredBy: params.triggeredBy ?? "comment-automator",
         payload: {
@@ -73,7 +72,7 @@ export const runService = {
     const run = await prisma.run.update({
       where: { id },
       data: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         status: toPrismaRunStatus(status) as any,
         startedAt: status === "RUNNING" ? new Date() : undefined,
         finishedAt: terminal.includes(status) ? new Date() : undefined,

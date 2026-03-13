@@ -4,11 +4,12 @@ import { apiErrorResponse } from "@/app/api/server/api-error";
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const { id } = await params;
     const subtasks = await prisma.subtask.findMany({
-      where: { taskId: params.id },
+      where: { taskId: id },
       include: {
         ownerAgent: {
           select: { id: true, name: true },
@@ -25,10 +26,11 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const task = await prisma.task.findUnique({ where: { id: params.id } });
+    const { id } = await params;
+    const task = await prisma.task.findUnique({ where: { id } });
     if (!task) {
       return NextResponse.json({ error: "Task not found" }, { status: 404 });
     }
@@ -58,7 +60,7 @@ export async function POST(
         title,
         status,
         position,
-        taskId: params.id,
+        taskId: id,
         ownerAgentId,
       },
       include: {

@@ -46,7 +46,7 @@ export function SummaryBar({ sseStatus }: SummaryBarProps) {
   const { status: streamStatus } = useSSE();
   const effectiveSseStatus = sseStatus ?? streamStatus;
 
-  const { data: tasks = [] } = useQuery({ queryKey: ["tasks"], queryFn: getTasks });
+  const { data: tasks = [] } = useQuery({ queryKey: ["tasks"], queryFn: () => getTasks() });
   const { data: agents = [] } = useQuery({ queryKey: ["agents"], queryFn: getAgents });
   const { data: kpis = {} } = useQuery({ queryKey: ["kpis"], queryFn: getSupervisorKpis });
 
