@@ -20,7 +20,7 @@ Visión general de la arquitectura de Mission Control Office: componentes, flujo
 │   Next.js API Routes (/api)     │
 │  - /agents                      │
 │  - /tasks                       │
-│  - /runs                        │
+│  - /system                      │
 │  - /activity                    │
 │  - /events (SSE Stream)         │
 └────────────┬────────────────────┘
@@ -46,29 +46,44 @@ Visión general de la arquitectura de Mission Control Office: componentes, flujo
 ```
 app/
 ├── api/
-│   ├── server/          # Backend services & Prisma (task-service, event-bus, etc.)
-│   ├── agents/          # GET /api/agents, POST /api/agents
-│   ├── tasks/           # GET/POST /api/tasks, PATCH/DELETE /api/tasks/[id]
-│   │   ├── [id]/archive # POST /api/tasks/:id/archive
-│   │   ├── [id]/subtasks# GET/POST /api/tasks/:id/subtasks
-│   │   ├── [id]/comments# GET/POST comments, reply, resolve
-│   │   └── sla-alerts/  # GET /api/tasks/sla-alerts (SLA breach detector)
-│   ├── subtasks/        # PATCH/DELETE /api/subtasks/[id]
-│   ├── pipelines/       # GET /api/pipelines (with stages + tasks)
-│   ├── runs/            # GET/POST /api/runs
-│   ├── activity/        # GET /api/activity
-│   ├── events/          # GET /api/events (SSE Stream)
-│   ├── generate-avatar/ # POST /api/generate-avatar
-│   └── proxy/           # Proxy middleware for remote API
+│   ├── server/              # Backend services & Prisma (task-service, event-bus)
+│   ├── agents/              # GET /api/agents, POST /api/agents/heartbeat
+│   ├── tasks/               # GET/POST /api/tasks, PATCH/DELETE /api/tasks/[id]
+│   │   ├── [id]/archive     # POST /api/tasks/:id/archive
+│   │   ├── [id]/subtasks    # GET/POST /api/tasks/:id/subtasks
+│   │   ├── [id]/comments    # GET/POST comments, reply, resolve
+│   │   └── sla-alerts/      # GET /api/tasks/sla-alerts (SLA breach detector)
+│   ├── subtasks/            # PATCH/DELETE /api/subtasks/[id]
+│   ├── pipelines/           # GET /api/pipelines (with stages + tasks)
+│   ├── activity/            # GET /api/activity
+│   ├── comments/            # Shared comment utilities
+│   ├── events/              # GET /api/events (SSE Stream)
+│   ├── generate-avatar/     # POST /api/generate-avatar
+│   ├── health/              # GET /api/health
+│   ├── mc-monkeys/          # Avatar seed endpoint
+│   ├── supervisor/          # GET /api/supervisor/kpis, /api/supervisor/overview
+│   └── system/              # GET /api/system/state
 │
-├── dashboard-page.tsx   # Dashboard view
-├── board/
-│   └── page.tsx        # Board view
-├── office/
-│   └── page.tsx        # Office 3D scene
-├── layout.tsx          # Root layout
-├── page.tsx            # Home page
-└── providers.tsx       # React Query, Zustand providers
+├── (dashboard)/             # Dashboard route group
+│   ├── board/
+│   ├── office/
+│   └── overview/
+├── app/page.tsx             # /app — Mission Control (redirect)
+├── board/page.tsx           # /board — Board view
+├── initializing/page.tsx    # /initializing — Boot screen
+├── office/page.tsx          # /office — Office 3D scene
+├── overview/page.tsx        # /overview — Overview
+├── proxy/[...path]/         # Proxy passthrough
+├── thank-you/page.tsx       # /thank-you — Install prompt for OpenClaw
+├── web/                     # Marketing/public routes
+│   ├── landing/             # /web/landing
+│   ├── manual/              # /web/manual
+│   ├── payment/             # /web/payment
+│   └── story/               # /web/story
+├── dashboard-page.tsx       # Dashboard component
+├── layout.tsx               # Root layout
+├── page.tsx                 # Home (/)
+└── providers.tsx            # React Query, Zustand providers
 ```
 
 ### `/components` - React Components
@@ -249,30 +264,11 @@ Query params for GET `/api/tasks`:
 |---|---|---|
 | GET | `/api/pipelines` | List pipelines with stages and tasks |
 
-Response:
-```json
-{
-  "pipelines": [
-    {
-      "id": "pipeline-123",
-      "name": "Discovery",
-      "stages": [
-        { "id": "stage-1", "name": "Backlog", "position": 0, "tasks": [ ... ] },
-        { "id": "stage-2", "name": "In Progress", "position": 1, "tasks": [ ... ] }
-      ]
-    }
-  ]
-}
-```
-
-### **Runs**
+### **System**
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/api/runs` | List execution runs |
-| GET | `/api/runs/:id` | Get run details |
-| POST | `/api/runs` | Create new run |
-| PATCH | `/api/runs/:id` | Update run status |
+| GET | `/api/system/state` | Get system initialization state |
 
 ### **Activity**
 
@@ -320,8 +316,8 @@ Connection:
 const es = new EventSource('/api/events');
 es.onmessage = (e) => {
   const event = JSON.parse(e.data);
-  // Handle: agent.status, task.updated, task.archived, run.completed,
-  //         task.comment.created, task.comment.answered, task.comment.escalated,
+  // Handle: agent.status, task.updated, task.archived,
+  //         task.comment.created, task.comment.replied, task.comment.resolved, task.comment.escalated,
   //         activity.logged, supervisor.kpis, etc.
 };
 es.onerror = () => es.close();
@@ -332,6 +328,7 @@ es.onerror = () => es.close();
 | Method | Endpoint | Description |
 |---|---|---|
 | POST | `/api/generate-avatar` | Generate agent avatar via AI |
+| POST | `/api/mc-monkeys` | Generate pixel avatar (local, no AI key needed) |
 
 Payload:
 ```json

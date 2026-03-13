@@ -96,6 +96,9 @@ copy "prisma\seed.ts" "_setup\seed.ts" >nul
 .\_setup\node_modules\.bin\tsx .\_setup\seed.ts
 echo [OK] Database seeded
 
+if not exist "outputs" mkdir outputs
+echo [OK] Evidence folder ready: .\outputs
+
 REM ── Step 4: Start server ───────────────────────────────────────────────────
 echo.
 echo [4/5] Starting MC Lucy...
@@ -140,10 +143,17 @@ echo   Installation complete!
 echo   MC Lucy: http://localhost:3001
 echo   Logs:    mc-lucy.log
 echo   Stop:    taskkill /IM node.exe /F
+echo   Evidence: .\outputs
 echo.
 echo   OpenClaw automation:
 echo   Paste OPENCLAW-BOOTSTRAP.txt as the system prompt
 echo   for your OpenClaw agent.
+echo   Read before operating:
+echo     - MISSION_CONTROL_OVERVIEW.md
+echo     - WORKFLOW_GUIDE.md
+echo     - TASK_SYSTEM.md
+echo     - MCLUCY_API_MANUAL.md
+echo     - EVIDENCE_AND_OUTPUTS.md
 echo ============================================
 echo.
 pause

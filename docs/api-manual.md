@@ -1,6 +1,6 @@
 # Mission Control API Manual
 
-_Last updated: 2026-06-01 — v0.6.0_
+_Last updated: 2026-03-13 — v0.6.0_
 
 ## 1. Introducción
 El API de Mission Control permite leer y operar el estado del sistema (tasks, agentes, runs y eventos en tiempo real). Está pensado para:
@@ -12,7 +12,7 @@ El API de Mission Control permite leer y operar el estado del sistema (tasks, ag
 Este manual cubre la versión actual (sin auth externa) y describe endpoints, payloads, ejemplos `curl` y recomendaciones de uso.
 
 ## 2. Convenciones generales
-- **Base URL (local):** `http://localhost:3000` (ajustar según el deployment).
+- **Base URL (local):** `http://localhost:3001` (ajustar según el deployment).
 - **Prefijo:** todos los endpoints viven bajo `/api/...`.
 - **Formato:** JSON UTF-8, `Content-Type: application/json` para requests con cuerpo.
 - **Auth:** hoy es un API interno sin autenticación; si se expone públicamente se recomienda añadir un `Bearer token` o mTLS (ver mejoras).
@@ -150,7 +150,7 @@ Uso: monitoreo básico (uptime checks).
 
 **GET /api/tasks**
 ```bash
-curl "http://localhost:3000/api/tasks?status=BACKLOG&limit=50&cursor=<taskId>"
+curl "http://localhost:3001/api/tasks?status=BACKLOG&limit=50&cursor=<taskId>"
 ```
 Respuesta:
 ```json
@@ -159,7 +159,7 @@ Respuesta:
 
 **POST /api/tasks**
 ```bash
-curl -X POST http://localhost:3000/api/tasks \
+curl -X POST http://localhost:3001/api/tasks \
   -H 'Content-Type: application/json' \
   -d '{
         "title": "M2-011 Nueva tarea",
@@ -174,14 +174,14 @@ Respuesta: `{ "task": TaskSummary }` con `priority` en rango `1..5`.
 Campos permitidos: `title`, `description`, `status`, `assignedAgentId`, `priority`.
 
 ```bash
-curl -X PATCH http://localhost:3000/api/tasks/<taskId> \
+curl -X PATCH http://localhost:3001/api/tasks/<taskId> \
   -H 'Content-Type: application/json' \
   -d '{ "status": "IN_PROGRESS", "assignedAgentId": null }'
 ```
 
 **GET /api/tasks/:id**
 ```bash
-curl http://localhost:3000/api/tasks/<taskId>
+curl http://localhost:3001/api/tasks/<taskId>
 ```
 Respuesta:
 ```json
@@ -214,7 +214,7 @@ Respuesta:
 
 **GET /api/tasks/:id/comments**
 ```bash
-curl "http://localhost:3000/api/tasks/<taskId>/comments?limit=20"
+curl "http://localhost:3001/api/tasks/<taskId>/comments?limit=20"
 ```
 Respuesta:
 ```json
@@ -249,13 +249,13 @@ Respuesta:
 
 **POST /api/tasks/:id/archive**
 ```bash
-curl -X POST http://localhost:3000/api/tasks/<taskId>/archive
+curl -X POST http://localhost:3001/api/tasks/<taskId>/archive
 ```
 Solo funciona si el `status` de la task es `DONE`. Setea `archivedAt = now()`. Respuesta: `{ "task": TaskSummary }`.
 
 **GET /api/tasks/sla-alerts**
 ```bash
-curl http://localhost:3000/api/tasks/sla-alerts
+curl http://localhost:3001/api/tasks/sla-alerts
 ```
 Respuesta:
 ```json
@@ -276,7 +276,7 @@ Uso: polling con intervalo 60s para badge rojo en board y sección de alertas en
 ### 4.3 Pipelines
 `GET /api/pipelines`
 ```bash
-curl http://localhost:3000/api/pipelines
+curl http://localhost:3001/api/pipelines
 ```
 Respuesta:
 ```json
@@ -303,7 +303,7 @@ Solo incluye tasks con `archivedAt = null`.
 
 Permite filtrar por task o agent. Ejemplo:
 ```bash
-curl "http://localhost:3000/api/activity?taskId=<taskId>&limit=20"
+curl "http://localhost:3001/api/activity?taskId=<taskId>&limit=20"
 ```
 Respuesta: `{ "events": ActivityEntry[], "nextCursor": string | null }`
 
@@ -320,41 +320,37 @@ Respuesta: `{ "events": ActivityEntry[], "nextCursor": string | null }`
 
 **Heartbeat ejemplo**
 ```bash
-curl -X POST http://localhost:3000/api/agents/heartbeat \
+curl -X POST http://localhost:3001/api/agents/heartbeat \
   -H 'Content-Type: application/json' \
   -d '{ "agentId": "1111-...", "status": "WORKING", "statusMessage": "Auto-Executor" }'
 ```
 
-### 4.6 Runs
-| Método | Ruta | Descripción |
-| --- | --- | --- |
-| GET | `/api/runs` | Lista runs recientes. |
-| GET | `/api/runs/:id` | Detalle (payload, actividad). |
-| POST | `/api/runs` | Crea un run (tipo + agente objetivo). |
-| PATCH | `/api/runs/:id` | Actualiza estado/resultSummary. |
-
-Ejemplo creación:
-```bash
-curl -X POST http://localhost:3000/api/runs \
-  -H 'Content-Type: application/json' \
-  -d '{ "type": "auto-executor", "agentId": "0000-...", "targetRef": "task:<id>" }'
-```
-
-### 4.7 Supervisor / KPIs
+### 4.6 Supervisor / KPIs
 | Método | Ruta | Descripción |
 | --- | --- | --- |
 | GET | `/api/supervisor/overview` | Resumen (milestones, tareas por estado, workload de agentes, runs activos). |
 | GET | `/api/supervisor/kpis` | KPIs del supervisor (counts, cycle time, etc.). |
 
-### 4.8 Events (SSE)
+### 4.7 System
+| Método | Ruta | Descripción |
+| --- | --- | --- |
+| GET | `/api/system/state` | Estado global de inicialización del sistema. |
+
+### 4.8 Avatar Generation
+| Método | Ruta | Descripción |
+| --- | --- | --- |
+| POST | `/api/generate-avatar` | Genera avatar mediante proveedor AI. |
+| POST | `/api/mc-monkeys` | Genera avatar pixel local. |
+
+### 4.9 Events (SSE)
 `GET /api/events`
 
 - Conecta un stream SSE (`text/event-stream`).
-- Emite eventos: `run.updated`, `task.updated`, `task.archived`, `task.comment.created`, `task.comment.answered`, `task.comment.escalated`, `agent.status`, `activity.logged`, `supervisor.kpis`.
+- Emite eventos: `task.updated`, `task.archived`, `task.comment.created`, `task.comment.replied`, `task.comment.resolved`, `task.comment.escalated`, `agent.status`, `activity.logged`, `supervisor.kpis`.
 
 Ejemplo:
 ```bash
-curl -N http://localhost:3000/api/events
+curl -N http://localhost:3001/api/events
 ```
 
 Cada evento llega como:
@@ -366,16 +362,16 @@ data: {"type":"task.updated","data":{"id":"...","status":"IN_PROGRESS",...}}
 ## 5. Workflows recomendados
 1. **Crear task + asignar agente:** `POST /api/tasks` → `PATCH /api/tasks/:id` con `assignedAgentId`.
 2. **Actualizar status de agente:** usar heartbeat después de mover una card.
-3. **Registrar ejecución automatizada:** crear un run, consumir SSE para actualizaciones y adjuntar summary vía `PATCH /api/runs/:id`.
-4. **Monitorear actividad:** usar `/api/activity` para auditorías o `GET /api/events` para real-time dashboards.
+3. **Monitorear actividad:** usar `/api/activity` para auditorías o `GET /api/events` para real-time dashboards.
+4. **Verificar estado del sistema:** usar `/api/system/state` antes de iniciar automatizaciones.
 
 ## 6. Errores comunes
 | Código | Caso | Resolución |
 | --- | --- | --- |
 | 400 | Payload inválido | Revisar campos requeridos. |
-| 404 | Task/Agent/Run inexistente | Verificar `id`. |
+| 404 | Task/Agent inexistente | Verificar `id`. |
 | 409 | Restricción de negocio (p.ej. borrar task en `IN_PROGRESS` o `DONE`) | Ajustar workflow antes de reintentar. |
-| 500 | Error interno | Consultar logs del servidor (`apps/web`) |
+| 500 | Error interno | Consultar logs del servidor (`app/api/server`) |
 
 Ejemplo de error:
 ```json
@@ -386,9 +382,9 @@ Ejemplo de error:
 ```
 
 ## 7. Scripts útiles
-- `scripts/log-activity.ts` — para registrar hitos manuales en Activity.
-- `scripts/auto-nudge.ts` — ejerce presión sobre tasks sin movimiento.
-- `scripts/status-report.mjs` — genera snapshots del board (se puede extender con el API).
+- `scripts/predev.js` — bootstrap local y preparación de entorno.
+- `scripts/setup.js` — setup de base de datos.
+- `scripts/build-dist.js` — build del ZIP distribuible.
 
 ## 8. Dashboard de automatizaciones
 - La UI incluye un dashboard/timeline de automatizaciones en la sección `Activity`.
@@ -397,16 +393,12 @@ Ejemplo de error:
 
 ## 9. Futuras mejoras / pendientes
 1. **Autenticación y scopes**: hoy el API está abierto dentro de la LAN; al exponerlo debería agregarse OAuth2/Bearer token y scopes por agente.
-2. **Paginación y filtros**: `/api/tasks` y `/api/activity` devuelven todo; conviene añadir `cursor/limit` y filtros por estado/priority.
+2. **Paginación y filtros**: reforzar límites y filtros por estado/priority en todos los listados.
 3. **Webhooks**: actualmente sólo existe SSE; se podría sumar webhooks firmados para integraciones que no soporten conexiones persistentes.
 4. **Versionado del API**: añadir prefijo (`/api/v1`) para evolucionar sin romper clientes.
 5. **Validaciones más estrictas**: e.g., impedir borrar tasks con Activity, validar prioridades y WIP caps desde el API.
 6. **Documentación automática**: generar OpenAPI/Swagger a partir de las rutas para que los agentes puedan descubrir campos dinámicamente.
-7. **Endpoints adicionales**: exponer `/api/subtasks`, `/api/activities/:id`, o endpoints para el Auto-Executor (crear run + evidencia en un paso).
-
-## 9. OpenAPI
-- Spec generada en `docs/openapi/mission-control.json`.
-- Regenerar con: `npm run api:spec`.
+7. **Rate limiting y hardening**: protección básica ante abuso si se expone fuera de red privada.
 
 ---
 Cualquier corrección o ampliación la podemos iterar sobre este mismo archivo: `docs/api-manual.md`.

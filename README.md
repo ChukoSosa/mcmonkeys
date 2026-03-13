@@ -137,21 +137,41 @@ Flujo recomendado:
 2. Si cambiás entre main y demo, cerrá la otra primero.
 3. Si el dataset dummy desaparece, corré `npm run dummy:restore`.
 
-### Perfil de instalación (app remota)
+### Distribución (paquete instalable para clientes)
 
-Cuando MC Lucy se instala en un entorno remoto de cliente:
-1. Se instala solo la app Mission Control (API + board + office).
-2. No se instala el sitio web de marketing/manual (`/web/*` y páginas informativas).
-3. El arranque inicial no usa mock data.
-4. Se inicia con API real + task de onboarding + agente default `OpenClaw` (Main).
+Para generar el ZIP distribuible que solo contiene Mission Control (sin landing ni manual):
 
-Por defecto este repo corre en modo **app-only** (`APP_ONLY_INSTALL=true`).
-Eso redirige `/web/*`, `/welcome` y `/thank-you` hacia `/app`.
-
-Si necesitás habilitar páginas web/marketing explícitamente:
-```env
-APP_ONLY_INSTALL="false"
+```bash
+npm run dist:build
 ```
+
+Esto genera `public/downloads/mclucy-latest.zip` con:
+- Servidor Next.js standalone compilado (sin source code)
+- Scripts de instalación (`install.sh` / `install.bat`)
+- Schema Prisma + seed
+- `.env.dist` preconfigurado con `APP_ONLY_INSTALL=true`
+- `OPENCLAW-BOOTSTRAP.txt` con URL inyectada
+- Documentación canónica para OpenClaw (`MISSION_CONTROL_OVERVIEW.md`, `WORKFLOW_GUIDE.md`, `TASK_SYSTEM.md`, `MCLUCY_API_MANUAL.md`, `EVIDENCE_AND_OUTPUTS.md`)
+- Carpeta `outputs/` para evidencia por ticket
+
+El usuario final recibe el ZIP, corre el instalador, y MC Lucy levanta automáticamente en `localhost:3001`.
+
+> El ZIP no va en git (`.gitignore`). Generarlo manualmente antes de cada deploy.
+
+### Rutas disponibles
+
+| Ruta | Descripción |
+|---|---|
+| `/app` | Mission Control (dashboard principal) |
+| `/board` | Board de tareas |
+| `/overview` | Vista overview |
+| `/office` | Oficina virtual |
+| `/initializing` | Pantalla de arranque |
+| `/web/landing` | Landing page |
+| `/web/manual` | Manual de usuario |
+| `/web/story` | Historia del proyecto |
+| `/web/payment` | Página de pago |
+| `/thank-you` | Prompt de instalación para OpenClaw |
 
 ## Arquitectura
 
@@ -186,57 +206,3 @@ Los errores más comunes:
 - **ECONNREFUSED 5432** → Postgres no está corriendo
 - **role "postgres" does not exist** → Crear el rol manualmente (ver TROUBLESHOOTING.md)
 - **Puerto 3001 en uso** → `lsof -ti:3001 | xargs kill -9` (macOS/Linux)
-
-- Expected content-type: `text/event-stream`
-- Tracked event names:
-	- `activity.logged`
-	- `task.updated`
-	- `run.updated`
-	- `supervisor.kpis`
-
-## Office Page Plan (Phase 2)
-
-The upcoming Office page should be a separate visual route that reuses this exact data layer.
-
-Recommended route:
-- `app/office/page.tsx`
-
-Recommended module split:
-- `components/office/OfficeCanvas.tsx`
-- `components/office/OfficeAgentSprite.tsx`
-- `components/office/OfficeTaskOverlay.tsx`
-- `components/office/OfficeActivityTicker.tsx`
-- `lib/office/sceneModel.ts`
-- `lib/office/mappers.ts`
-
-### Data Mapping Rules (Dashboard -> Office)
-
-- Agent status -> sprite state (idle, working, blocked, offline)
-- Task priority -> urgency marker (P1 red, P2 amber, P3 cyan)
-- Task assignment -> desk ownership / room lane
-- Activity event -> motion pulse / floating log chip
-- KPI anomalies -> ambient warning indicators
-
-### Non-goals for first Office iteration
-
-- No backend mutation yet (read-only is fine)
-- No heavy game engine dependency
-- No authentication flow changes
-
-## Definition Of Done
-
-Phase 1 is considered done when all are true:
-
-- `npm run build` succeeds
-- Dashboard loads with data from remote API
-- Filters update tasks and activity meaningfully
-- Agent detail modal shows profile + assigned tasks + recent activity
-- SSE panel shows connection state and events (when available)
-
-## Suggested Next Execution Order
-
-1. Add `app/office/page.tsx` with static layout shell and navigation entry
-2. Build scene model from existing queries (agents, tasks, activity)
-3. Render first visual office with placeholder sprites and status coloring
-4. Add live motion hooks from SSE events
-5. Add interaction (click desk -> open existing AgentDetailModal-style panel)

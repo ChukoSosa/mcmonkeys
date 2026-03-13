@@ -22,6 +22,13 @@ const ROOT = path.join(__dirname, "..");
 const DIST = path.join(ROOT, "dist");
 const ZIP_DIR = path.join(ROOT, "public", "downloads");
 const ZIP_OUT = path.join(ZIP_DIR, "mclucy-latest.zip");
+const CANONICAL_DOCS = [
+  "MISSION_CONTROL_OVERVIEW.md",
+  "WORKFLOW_GUIDE.md",
+  "TASK_SYSTEM.md",
+  "MCLUCY_API_MANUAL.md",
+  "EVIDENCE_AND_OUTPUTS.md",
+];
 
 const c = {
   reset: "\x1b[0m",
@@ -126,6 +133,11 @@ copyFile(
 );
 ok("docs/OPENCLAW-AGENT-PROMPT.md copied");
 
+for (const docName of CANONICAL_DOCS) {
+  copyFile(path.join(ROOT, "docs", docName), path.join(DIST, docName));
+}
+ok("Canonical onboarding docs copied to package root");
+
 // 3f. Install scripts
 copyFile(
   path.join(ROOT, "scripts", "dist", "install.sh"),
@@ -186,14 +198,25 @@ fs.writeFileSync(
     "",
     "After installation:",
     "  MC Lucy runs at http://localhost:3001",
+    "  Evidence folder: ./outputs",
     "",
     "OpenClaw automation:",
     "  Paste the contents of OPENCLAW-BOOTSTRAP.txt",
     "  as the system prompt in your OpenClaw agent.",
+    "  Before operating, read:",
+    "    - MISSION_CONTROL_OVERVIEW.md",
+    "    - WORKFLOW_GUIDE.md",
+    "    - TASK_SYSTEM.md",
+    "    - MCLUCY_API_MANUAL.md",
+    "    - EVIDENCE_AND_OUTPUTS.md",
     "",
   ].join("\n")
 );
 ok("README-INSTALL.txt written");
+
+// 4d. Evidence root
+fs.mkdirSync(path.join(DIST, "outputs"), { recursive: true });
+ok("outputs/ folder created");
 
 // ── Step 5: Zip the distribution ───────────────────────────────────────────
 step("5/7", "Creating ZIP archive");
@@ -232,6 +255,12 @@ const requiredFiles = [
   ".env.dist",
   "OPENCLAW-BOOTSTRAP.txt",
   "README-INSTALL.txt",
+  "MISSION_CONTROL_OVERVIEW.md",
+  "WORKFLOW_GUIDE.md",
+  "TASK_SYSTEM.md",
+  "MCLUCY_API_MANUAL.md",
+  "EVIDENCE_AND_OUTPUTS.md",
+  "outputs",
 ];
 const missingFromDist = requiredFiles.filter((f) => !fs.existsSync(path.join(DIST, f)));
 if (missingFromDist.length > 0) {

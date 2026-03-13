@@ -113,6 +113,9 @@ cp prisma/seed.ts _setup/seed.ts
 DATABASE_URL="$DATABASE_URL" ./_setup/node_modules/.bin/tsx ./_setup/seed.ts
 ok "Database seeded"
 
+mkdir -p outputs
+ok "Evidence folder ready: ./outputs"
+
 # ── Step 4: Start server ─────────────────────────────────────────────────────
 step "4/5" "Starting MC Lucy"
 
@@ -167,10 +170,17 @@ echo "  MC Lucy: http://localhost:3001"
 echo "  API:     http://localhost:3001/api/health"
 echo "  Logs:    mc-lucy.log"
 echo "  Stop:    kill \$(cat mc-lucy.pid)"
+echo "  Evidence: ./outputs"
 echo ""
 echo "  OpenClaw automation:"
 echo "  Paste OPENCLAW-BOOTSTRAP.txt as the system prompt"
 echo "  for your OpenClaw agent. It will connect automatically."
+echo "  Read before operating:"
+echo "    - MISSION_CONTROL_OVERVIEW.md"
+echo "    - WORKFLOW_GUIDE.md"
+echo "    - TASK_SYSTEM.md"
+echo "    - MCLUCY_API_MANUAL.md"
+echo "    - EVIDENCE_AND_OUTPUTS.md"
 echo -e "${CYAN}────────────────────────────────────────────${RESET}"
 echo ""
 

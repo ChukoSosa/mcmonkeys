@@ -230,73 +230,10 @@ HTTP GET /api/supervisor/overview
 
 **Use case**: Decision making about workload, delegation, or priorities
 
----
-
-## 🔄 Run Procedures
-
-### Procedure 8: Create Execution Run (Command Execution)
-
-**Trigger**: Need to execute something (script, command, process)  
-**Action**: Create run record
-
-```
-HTTP POST /api/runs
-{
-  "type": "command.deploy",
-  "source": "manual",
-  "triggeredBy": "operator-root",
-  "payload": {
-    "environment": "staging",
-    "version": "v1.2.3"
-  },
-  "agentId": "ninja-agent-id"
-}
-```
-
-**Response**:
-```json
-{
-  "id": "run-789",
-  "type": "command.deploy",
-  "status": "PENDING",
-  "createdAt": "2024-01-15T11:15:00Z"
-}
-```
-
----
-
-### Procedure 9: Update Run Status
-
-**Trigger**: Run completes or fails  
-**Action**: PATCH run with result
-
-```
-HTTP PATCH /api/runs/<run-id>
-{
-  "status": "SUCCEEDED",
-  "resultSummary": "Deployment successful, 3 services updated"
-}
-```
-
-OR if failed:
-```
-HTTP PATCH /api/runs/<run-id>
-{
-  "status": "FAILED",
-  "errorDetail": "Service X failed to start: port already in use"
-}
-```
-
-**System**:
-- ✅ Record result in DB
-- ✅ Emit SSE: `run.completed`
-- ✅ Link to related task if applicable
-
----
 
 ## 📊 Real-Time Updates Procedures
 
-### Procedure 10: Subscribe to Real-Time Events (AGENT)
+### Procedure 8: Subscribe to Real-Time Events (AGENT)
 
 **Trigger**: Agent wants to stay in sync  
 **Action**: Open SSE connection
@@ -323,11 +260,10 @@ data: {
   "assignedAgentId": "agent-xyz"
 }
 
-event: run.completed
+event: supervisor.kpis
 data: {
-  "id": "run-789",
-  "status": "SUCCEEDED",
-  "resultSummary": "..."
+  "activeAgents": 3,
+  "tasksInProgress": 5
 }
 ```
 
@@ -336,11 +272,11 @@ data: {
 **Agent behavior**:
 - React to `task.updated` → check if relevant
 - React to `agent.status` → update view
-- React to `run.completed` → log result
+- React to `supervisor.kpis` → adjust workload decisions
 
 ---
 
-### Procedure 11: Retrieve Activity Log
+### Procedure 9: Retrieve Activity Log
 
 **Trigger**: Need history or audit trail  
 **Action**: GET activity
@@ -378,7 +314,7 @@ HTTP GET /api/activity?limit=50&agentId=<agent-id>&taskId=<task-id>
 
 ## 🛟 Error Handling Procedures
 
-### Procedure 12: Agent BLOCKED
+### Procedure 10: Agent BLOCKED
 
 **Trigger**: Agent encounters an obstacle  
 **Action**: Report blocked status + get help
@@ -402,7 +338,7 @@ HTTP POST /api/agents/heartbeat
 
 ---
 
-### Procedure 13: Task Escalation
+### Procedure 11: Task Escalation
 
 **Trigger**: Task can't be completed by assigned agent  
 **Action**: Mark as REVIEW and notify
@@ -432,7 +368,7 @@ POST /api/tasks/<task-id>/comments
 
 ## 📈 Reporting Procedures
 
-### Procedure 14: Generate Daily Report
+### Procedure 12: Generate Daily Report
 
 **Trigger**: End of day or on-demand  
 **Action**: Fetch all KPIs
