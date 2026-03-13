@@ -103,7 +103,7 @@ export function AgentInspector({
           disabled={generating}
           className="rounded border border-cyan-400/50 bg-cyan-500/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-cyan-200 transition hover:bg-cyan-500/20 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {generating ? "Generating... (may take ~15s)" : "Generate Avatar"}
+          {generating ? "Generating... (may take ~15s)" : "Generate MC MONKEY"}
         </button>
       ) : (
         <p className="rounded border border-surface-700 bg-surface-800 px-3 py-2 text-[11px] uppercase tracking-wide text-slate-400">
