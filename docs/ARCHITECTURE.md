@@ -46,9 +46,15 @@ Visión general de la arquitectura de Mission Control Office: componentes, flujo
 ```
 app/
 ├── api/
-│   ├── server/          # Backend services & Prisma
+│   ├── server/          # Backend services & Prisma (task-service, event-bus, etc.)
 │   ├── agents/          # GET /api/agents, POST /api/agents
-│   ├── tasks/           # GET/POST /api/tasks, PATCH /api/tasks/[id]
+│   ├── tasks/           # GET/POST /api/tasks, PATCH/DELETE /api/tasks/[id]
+│   │   ├── [id]/archive # POST /api/tasks/:id/archive
+│   │   ├── [id]/subtasks# GET/POST /api/tasks/:id/subtasks
+│   │   ├── [id]/comments# GET/POST comments, reply, resolve
+│   │   └── sla-alerts/  # GET /api/tasks/sla-alerts (SLA breach detector)
+│   ├── subtasks/        # PATCH/DELETE /api/subtasks/[id]
+│   ├── pipelines/       # GET /api/pipelines (with stages + tasks)
 │   ├── runs/            # GET/POST /api/runs
 │   ├── activity/        # GET /api/activity
 │   ├── events/          # GET /api/events (SSE Stream)
@@ -73,13 +79,15 @@ components/
 │   ├── DashboardShell.tsx      # Main layout
 │   ├── AgentsPanel.tsx         # Agents list
 │   ├── TasksPanel.tsx          # Tasks list
-│   ├── ActivityFeedPanel.tsx   # Activity log
+│   ├── ActivityFeedPanel.tsx   # Activity log + SLA alerts section
 │   ├── KpiPanel.tsx            # Key metrics
 │   ├── SSEPanel.tsx            # Real-time events
 │   ├── FiltersBar.tsx          # Filters
 │   ├── SummaryBar.tsx          # Top stats
 │   ├── AgentDetailModal.tsx    # Agent details
-│   └── TaskDetailPanel.tsx     # Task details
+│   ├── TaskDetailPanel.tsx     # Task details + MainAgentBubble
+│   ├── PipelineBoard.tsx       # Pipeline/stage lanes view
+│   └── CreateTaskModal.tsx     # Task creation modal
 │
 ├── office/
 │   ├── OfficeScene.tsx         # 3D scene (Babylon.js)
@@ -106,7 +114,27 @@ lib/
 │   ├── tasks.ts                # getTasks() hook
 │   ├── activity.ts             # getActivity() hook
 │   ├── kpis.ts                 # getKpis() hook
-│   └── urls.ts
+│   ├── sla.ts                  # getSlaAlerts() — SLA breach alerts client
+│   ├── pipelines.ts            # getPipelines() — Pipeline+stages client
+│   └── mockMode.ts             # Mock mode toggle utility
+│
+├── cards/
+│   ├── constants.ts            # Card config constants
+│   ├── helpers.ts              # Card helper functions
+│   └── index.ts                # Exports
+│
+├── mission/
+│   ├── index.ts                # Mission module exports
+│   ├── intake.ts               # Intake flow (onboarding detection)
+│   ├── bootstrap.ts            # System bootstrap orchestrator
+│   ├── bootstrapTask.ts        # Bootstrap task creation
+│   ├── decomposition.ts        # Task decomposition logic
+│   ├── executor.ts             # Mission executor
+│   ├── helpers.ts              # Mission helpers
+│   ├── mainAgentPolicy.ts      # Main agent decision engine (Spanish UX messages)
+│   ├── systemState.ts          # System state machine
+│   ├── useSystemInitializationState.ts  # Hook for init state
+│   └── apiPayloads.ts          # API payload builders
 │
 ├── office/
 │   ├── avatarGenerator.ts      # Avatar generation
@@ -116,8 +144,10 @@ lib/
 │
 ├── schemas/
 │   ├── agent.ts                # Zod schemas for agents
-│   ├── task.ts                 # Zod schemas for tasks
+│   ├── task.ts                 # Zod schemas for tasks (includes pipelineStageId, archivedAt)
 │   ├── activity.ts             # Zod schemas for activity
+│   ├── comment.ts              # Zod schemas for comments
+│   ├── subtask.ts              # Zod schemas for subtasks
 │   ├── kpis.ts                 # Zod schemas for KPIs
 │   ├── sse.ts                  # SSE message schemas
 │   └── index.ts
@@ -128,7 +158,8 @@ lib/
 └── utils/
     ├── cn.ts                   # Class name merger
     ├── formatDate.ts           # Date formatting
-    └── formatStatus.ts         # Status formatting
+    ├── formatStatus.ts         # Status → color/label (REVIEW=amber, BACKLOG=slate, BLOCKED=red)
+    └── useOnboardingState.ts   # Onboarding flow hook
 ```
 
 ### `/prisma` - Database
@@ -179,17 +210,60 @@ Response example:
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/api/tasks` | List tasks (paginated, filterable) |
+| GET | `/api/tasks` | List tasks (paginated, filterable, `showArchived` param) |
 | GET | `/api/tasks/:id` | Get task details |
-| POST | `/api/tasks` | Create new task |
+| POST | `/api/tasks` | Create new task (accepts `pipelineStageId`) |
 | PATCH | `/api/tasks/:id` | Update task |
 | DELETE | `/api/tasks/:id` | Delete task |
+| POST | `/api/tasks/:id/archive` | Archive a DONE task |
+| GET | `/api/tasks/sla-alerts` | SLA breach alerts (comments open >30 min) |
 
 Query params for GET `/api/tasks`:
 - `status=IN_PROGRESS` - Filter by status
 - `assignedAgentId=agent-123` - Filter by agent
+- `showArchived=true` - Include archived tasks
 - `limit=20` - Page size (max 200)
 - `cursor=task-id` - Pagination cursor
+
+#### Subtasks
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/tasks/:id/subtasks` | List subtasks |
+| POST | `/api/tasks/:id/subtasks` | Create subtask |
+| PATCH | `/api/subtasks/:id` | Update subtask (`title`, `status`, `position`, `ownerAgentId`) |
+| DELETE | `/api/subtasks/:id` | Delete subtask |
+
+#### Comments
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/tasks/:id/comments` | List comments (cursor-paginated) |
+| POST | `/api/tasks/:id/comments` | Create comment |
+| POST | `/api/tasks/:id/comments/:commentId/reply` | Reply to comment |
+| POST | `/api/tasks/:id/comments/:commentId/resolve` | Resolve comment |
+
+### **Pipelines**
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/pipelines` | List pipelines with stages and tasks |
+
+Response:
+```json
+{
+  "pipelines": [
+    {
+      "id": "pipeline-123",
+      "name": "Discovery",
+      "stages": [
+        { "id": "stage-1", "name": "Backlog", "position": 0, "tasks": [ ... ] },
+        { "id": "stage-2", "name": "In Progress", "position": 1, "tasks": [ ... ] }
+      ]
+    }
+  ]
+}
+```
 
 ### **Runs**
 
@@ -246,7 +320,9 @@ Connection:
 const es = new EventSource('/api/events');
 es.onmessage = (e) => {
   const event = JSON.parse(e.data);
-  // Handle: agent.status, task.updated, run.completed, etc.
+  // Handle: agent.status, task.updated, task.archived, run.completed,
+  //         task.comment.created, task.comment.answered, task.comment.escalated,
+  //         activity.logged, supervisor.kpis, etc.
 };
 es.onerror = () => es.close();
 ```
@@ -287,9 +363,25 @@ Task
 ├── status (BACKLOG, IN_PROGRESS, REVIEW, DONE, BLOCKED)
 ├── priority (1-5)
 ├── dueDate
+├── archivedAt (null = active, date = archived)
 ├── assignedAgentId (FK → Agent)
+├── pipelineStageId (FK → PipelineStage, optional)
 ├── createdByType / createdById
-└── relationships: activities, subtasks, comments
+└── relationships: activities, subtasks, comments, pipelineStage
+
+Pipeline
+├── id
+├── name
+├── description
+├── type
+└── stages (PipelineStage[])
+
+PipelineStage
+├── id
+├── name
+├── position (sort order)
+├── pipelineId (FK → Pipeline)
+└── tasks (Task[])
 
 Run
 ├── id

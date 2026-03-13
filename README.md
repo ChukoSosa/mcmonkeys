@@ -20,7 +20,12 @@ Front + API en un solo repo. Levantás con un comando y ya tenés agentes, tarea
 
 - Dashboard con agentes, tareas, subtareas, feed de actividad, KPIs y eventos SSE en tiempo real
 - Oficina virtual con agentes animados por zona
-- Board de tareas con drag & drop de estados
+- Board de tareas con toggle Kanban / Pipeline
+- Pipeline Discovery con lanes por stage (Backlog → In Progress → Review → Done)
+- Archivar tasks completadas (DONE) y toggle para mostrar/ocultar archivadas
+- Badge SLA rojo pulsante en cards cuando un comentario lleva más de 30 min sin respuesta
+- Mensajes del agente Main en español amigable con tooltip explicativo por tipo
+- Status badges con color semántico: REVIEW=amber, BACKLOG=slate, BLOCKED=rojo
 - Filtros globales: búsqueda, agente, estado, límite de actividad
 - Modal de detalle por agente con historial y tareas asignadas
 - API local completa integrada (Next.js API Routes + Prisma + PostgreSQL)
@@ -126,8 +131,11 @@ No hay backend separado. Todo queda local.
 |---|---|
 | `GET /api/health` | Estado del servidor |
 | `GET /api/agents` | Lista de agentes |
-| `GET /api/tasks` | Lista de tareas |
+| `GET /api/tasks` | Lista de tareas (con `showArchived`) |
 | `GET /api/tasks/:id` | Detalle de tarea + subtareas |
+| `POST /api/tasks/:id/archive` | Archivar tarea DONE |
+| `GET /api/tasks/sla-alerts` | Alertas SLA (comentarios >30 min sin respuesta) |
+| `GET /api/pipelines` | Pipelines con stages y tareas |
 | `GET /api/activity` | Feed de actividad |
 | `GET /api/events` | Stream SSE en tiempo real |
 | `GET /api/supervisor/kpis` | KPIs operativos |

@@ -1,6 +1,6 @@
 # Mission Control API Manual
 
-_Last updated: 2026-03-11_
+_Last updated: 2026-06-01 — v0.6.0_
 
 ## 1. Introducción
 El API de Mission Control permite leer y operar el estado del sistema (tasks, agentes, runs y eventos en tiempo real). Está pensado para:
@@ -29,6 +29,9 @@ interface TaskSummary {
   description: string;
   status: "BACKLOG" | "IN_PROGRESS" | "REVIEW" | "DONE" | "BLOCKED";
   priority: number;
+  archivedAt?: string | null;
+  pipelineStageId?: string | null;
+  pipelineStage?: { id: string; name: string; position?: number; pipelineId?: string } | null;
   updatedAt: string;
   assignedAgent?: { id: string; name: string } | null;
 }
@@ -92,6 +95,39 @@ interface Comment {
 }
 ```
 
+### 3.6 Pipeline
+```ts
+interface Pipeline {
+  id: string;
+  name: string;
+  description?: string | null;
+  type?: string | null;
+  stages: PipelineStage[];
+}
+
+interface PipelineStage {
+  id: string;
+  name: string;
+  position: number;
+  pipelineId: string;
+  tasks: TaskSummary[];
+}
+```
+
+### 3.7 SlaTaskAlert
+```ts
+interface SlaTaskAlert {
+  taskId: string;
+  taskTitle: string;
+  comments: Array<{
+    id: string;
+    body: string;
+    ageMinutes: number;
+    createdAt: string;
+  }>;
+}
+```
+
 ## 4. Endpoints
 
 ### 4.1 Health
@@ -104,11 +140,13 @@ Uso: monitoreo básico (uptime checks).
 ### 4.2 Tasks
 | Método | Ruta | Descripción |
 | --- | --- | --- |
-| GET | `/api/tasks` | Lista tasks (soporta `status`, `assignedAgentId`, `limit`, `cursor`). |
-| POST | `/api/tasks` | Crea una task nueva. |
+| GET | `/api/tasks` | Lista tasks (soporta `status`, `assignedAgentId`, `showArchived`, `limit`, `cursor`). |
+| POST | `/api/tasks` | Crea una task nueva (acepta `pipelineStageId`). |
 | GET | `/api/tasks/:id` | Devuelve task + subtasks + actividad reciente. |
 | PATCH | `/api/tasks/:id` | Actualiza título/description/status/priority/assignedAgent. |
 | DELETE | `/api/tasks/:id` | Elimina la task (bloqueado para `IN_PROGRESS` y `DONE`). |
+| POST | `/api/tasks/:id/archive` | Archiva una task en estado `DONE`. |
+| GET | `/api/tasks/sla-alerts` | Lista tareas con comentarios `requiresResponse=true` abiertos hace >30 min. |
 
 **GET /api/tasks**
 ```bash
@@ -209,7 +247,58 @@ Respuesta:
 
 > Cada operación genera un registro en Activity: `task.comment.created`, `task.comment.replied`, `task.comment.resolved`. Las escalaciones del sentinel aparecen como `task.comment.escalated` con `payload: { commentId, minutesPending }`.
 
-### 4.3 Activity
+**POST /api/tasks/:id/archive**
+```bash
+curl -X POST http://localhost:3000/api/tasks/<taskId>/archive
+```
+Solo funciona si el `status` de la task es `DONE`. Setea `archivedAt = now()`. Respuesta: `{ "task": TaskSummary }`.
+
+**GET /api/tasks/sla-alerts**
+```bash
+curl http://localhost:3000/api/tasks/sla-alerts
+```
+Respuesta:
+```json
+{
+  "alerts": [
+    {
+      "taskId": "uuid",
+      "taskTitle": "M2-007 Implementar feature X",
+      "comments": [
+        { "id": "uuid", "body": "¿Podés revisar esto?", "ageMinutes": 47, "createdAt": "..." }
+      ]
+    }
+  ]
+}
+```
+Uso: polling con intervalo 60s para badge rojo en board y sección de alertas en ActivityFeed.
+
+### 4.3 Pipelines
+`GET /api/pipelines`
+```bash
+curl http://localhost:3000/api/pipelines
+```
+Respuesta:
+```json
+{
+  "pipelines": [
+    {
+      "id": "pipeline-uuid",
+      "name": "Discovery",
+      "description": "Pipeline de descubrimiento inicial",
+      "stages": [
+        { "id": "stage-1", "name": "Backlog", "position": 0, "tasks": [ ... ] },
+        { "id": "stage-2", "name": "In Progress", "position": 1, "tasks": [ ... ] },
+        { "id": "stage-3", "name": "Review", "position": 2, "tasks": [ ... ] },
+        { "id": "stage-4", "name": "Done", "position": 3, "tasks": [ ... ] }
+      ]
+    }
+  ]
+}
+```
+Solo incluye tasks con `archivedAt = null`.
+
+### 4.4 Activity
 `GET /api/activity?taskId=...&agentId=...&limit=50&cursor=...`
 
 Permite filtrar por task o agent. Ejemplo:
@@ -221,7 +310,7 @@ Respuesta: `{ "events": ActivityEntry[], "nextCursor": string | null }`
 **Detalle puntual**
 - `GET /api/activity/:id` → `{ "event": ActivityEntry }`
 
-### 4.4 Agents
+### 4.5 Agents
 | Método | Ruta | Descripción |
 | --- | --- | --- |
 | GET | `/api/agents` | Lista agentes. |
@@ -236,7 +325,7 @@ curl -X POST http://localhost:3000/api/agents/heartbeat \
   -d '{ "agentId": "1111-...", "status": "WORKING", "statusMessage": "Auto-Executor" }'
 ```
 
-### 4.5 Runs
+### 4.6 Runs
 | Método | Ruta | Descripción |
 | --- | --- | --- |
 | GET | `/api/runs` | Lista runs recientes. |
@@ -251,17 +340,17 @@ curl -X POST http://localhost:3000/api/runs \
   -d '{ "type": "auto-executor", "agentId": "0000-...", "targetRef": "task:<id>" }'
 ```
 
-### 4.6 Supervisor / KPIs
+### 4.7 Supervisor / KPIs
 | Método | Ruta | Descripción |
 | --- | --- | --- |
 | GET | `/api/supervisor/overview` | Resumen (milestones, tareas por estado, workload de agentes, runs activos). |
 | GET | `/api/supervisor/kpis` | KPIs del supervisor (counts, cycle time, etc.). |
 
-### 4.7 Events (SSE)
+### 4.8 Events (SSE)
 `GET /api/events`
 
 - Conecta un stream SSE (`text/event-stream`).
-- Emite eventos `run.updated`, `task.updated`, `agent.status`, `activity.logged`, `supervisor.kpis`.
+- Emite eventos: `run.updated`, `task.updated`, `task.archived`, `task.comment.created`, `task.comment.answered`, `task.comment.escalated`, `agent.status`, `activity.logged`, `supervisor.kpis`.
 
 Ejemplo:
 ```bash
