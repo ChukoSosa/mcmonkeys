@@ -38,7 +38,7 @@ export default function PaymentPage() {
 
     setIsSubmitting(true);
     await new Promise((resolve) => setTimeout(resolve, 900));
-    router.push(`/web/thanks?paid=1&plan=${plan}`);
+    router.push(`/thank-you`);
   };
 
   return (
