@@ -78,7 +78,6 @@ export default function OfficePage() {
 
     agents.forEach((agent) => {
       const apiAvatarUrl = resolveAgentAvatarUrl(agent);
-      // Keep local/generated avatar as source of truth; only hydrate from API if missing.
       if (apiAvatarUrl && !nextMapping[agent.id]) {
         nextMapping[agent.id] = apiAvatarUrl;
         changed = true;
@@ -190,7 +189,7 @@ export default function OfficePage() {
 
   return (
     <DashboardShell showFilters={false}>
-      <div className="h-full grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,2fr)_300px_minmax(0,1fr)] xl:grid-cols-[minmax(0,2fr)_320px_minmax(0,1fr)]">
+      <div className="grid h-full grid-cols-1 gap-4 lg:grid-cols-[minmax(0,2fr)_300px_minmax(0,1fr)] xl:grid-cols-[minmax(0,2fr)_320px_minmax(0,1fr)]">
         <section className="min-h-0 lg:h-full lg:min-h-[560px]">
           {agentsLoading ? (
             <div className="flex h-full items-center justify-center rounded-xl border border-surface-700 bg-surface-900 text-sm text-slate-400">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,14 +23,55 @@ const NAV_ITEMS = [
   { href: "/office", label: "Office" },
 ];
 
+function getPendingPageLabel(href: string | null) {
+  return NAV_ITEMS.find((item) => item.href === href)?.label ?? "Page";
+}
+
+function computePendingModalTop(mainElement: HTMLElement | null) {
+  if (!mainElement) return null;
+
+  const rect = mainElement.getBoundingClientRect();
+  const viewportMiddle = window.innerHeight / 2;
+  const relativeCenter = viewportMiddle - rect.top;
+  return Math.min(Math.max(relativeCenter, 80), Math.max(rect.height - 80, 80));
+}
+
 export function DashboardShell({ children, showFilters = true, topBar }: DashboardShellProps) {
   const pathname = usePathname();
   const { isReady } = useOnboardingState();
   const demoMode = isPublicDemoMode();
+  const mainRef = useRef<HTMLElement | null>(null);
+  const [pendingHref, setPendingHref] = useState<string | null>(null);
+  const [pendingModalTop, setPendingModalTop] = useState<number | null>(null);
+  const pendingPageLabel = getPendingPageLabel(pendingHref);
 
   useEffect(() => {
     if (!isReady) return;
   }, [isReady]);
+
+  useEffect(() => {
+    setPendingHref(null);
+  }, [pathname]);
+
+  useLayoutEffect(() => {
+    if (!pendingHref) {
+      setPendingModalTop(null);
+      return;
+    }
+
+    const updatePendingModalTop = () => {
+      setPendingModalTop(computePendingModalTop(mainRef.current));
+    };
+
+    updatePendingModalTop();
+    window.addEventListener("resize", updatePendingModalTop);
+    window.addEventListener("scroll", updatePendingModalTop, { passive: true });
+
+    return () => {
+      window.removeEventListener("resize", updatePendingModalTop);
+      window.removeEventListener("scroll", updatePendingModalTop);
+    };
+  }, [pendingHref]);
 
   if (!isReady) {
     return (
@@ -58,6 +99,12 @@ export function DashboardShell({ children, showFilters = true, topBar }: Dashboa
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => {
+                  if (pathname !== item.href) {
+                    setPendingModalTop(computePendingModalTop(mainRef.current));
+                    setPendingHref(item.href);
+                  }
+                }}
                 className={cn(
                   "rounded px-3 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors",
                   active
@@ -84,7 +131,29 @@ export function DashboardShell({ children, showFilters = true, topBar }: Dashboa
         {showFilters && <FiltersBar />}
       </div>
 
-      <main className="flex-1 min-h-0 p-6 overflow-hidden">{children}</main>
+      <main ref={mainRef} className="relative flex-1 min-h-0 overflow-hidden p-6">
+        {children}
+        {pendingHref && (
+          <div className="absolute inset-0 z-40 bg-surface-950/20 backdrop-blur-[1px]">
+            <div
+              className={cn(
+                "absolute left-1/2 h-44 w-full max-w-xs -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-surface-700 bg-surface-900/95 px-6 py-5 shadow-2xl",
+                pendingModalTop == null && "opacity-0",
+              )}
+              style={{ top: pendingModalTop ?? 0 }}
+            >
+              <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
+                <span className="h-12 w-12 animate-spin rounded-full border-2 border-cyan-400/20 border-t-cyan-300" />
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-cyan-300">Loading</p>
+                  <p className="mt-1 text-sm font-semibold text-slate-100">Opening {pendingPageLabel}</p>
+                  <p className="mt-1 text-xs text-slate-400">Preparing page content.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
     </div>
   );
 }

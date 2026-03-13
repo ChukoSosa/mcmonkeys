@@ -27,13 +27,13 @@ export default function BoardPage() {
   const searchQuery = useDashboardStore((s) => s.searchQuery);
   const selectedTaskId = useDashboardStore((s) => s.selectedTaskId);
   const setSelectedTaskId = useDashboardStore((s) => s.setSelectedTaskId);
-    const showArchived = useDashboardStore((s) => s.showArchived);
+  const showArchived = useDashboardStore((s) => s.showArchived);
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [confirmDeleteFromModal, setConfirmDeleteFromModal] = useState(false);
   const [isDeletingTask, setIsDeletingTask] = useState(false);
-    const [confirmArchiveFromModal, setConfirmArchiveFromModal] = useState(false);
-    const [isArchivingTask, setIsArchivingTask] = useState(false);
+  const [confirmArchiveFromModal, setConfirmArchiveFromModal] = useState(false);
+  const [isArchivingTask, setIsArchivingTask] = useState(false);
   const [boardView, setBoardView] = useState<"kanban" | "pipelines">("kanban");
   const queryClient = useQueryClient();
 
@@ -46,7 +46,6 @@ export default function BoardPage() {
   const handleCreated = useCallback(
     (taskId: string) => {
       void queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      // keep modal open so user can see the execution result
       void taskId;
     },
     [queryClient],
@@ -66,19 +65,19 @@ export default function BoardPage() {
     }
   }, [queryClient, selectedTaskId, setSelectedTaskId]);
 
-    const handleArchiveFromModal = useCallback(async () => {
-      if (!selectedTaskId) return;
+  const handleArchiveFromModal = useCallback(async () => {
+    if (!selectedTaskId) return;
 
-      setIsArchivingTask(true);
-      try {
-        await archiveTask(selectedTaskId);
-        setSelectedTaskId(null);
-        setConfirmArchiveFromModal(false);
-        await queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      } finally {
-        setIsArchivingTask(false);
-      }
-    }, [queryClient, selectedTaskId, setSelectedTaskId]);
+    setIsArchivingTask(true);
+    try {
+      await archiveTask(selectedTaskId);
+      setSelectedTaskId(null);
+      setConfirmArchiveFromModal(false);
+      await queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    } finally {
+      setIsArchivingTask(false);
+    }
+  }, [queryClient, selectedTaskId, setSelectedTaskId]);
 
   const { data: tasks = [], isLoading, isError } = useQuery({
     queryKey: ["tasks", showArchived],
@@ -97,7 +96,7 @@ export default function BoardPage() {
     [slaAlerts],
   );
 
-    const selectedTask = tasks.find((t) => t.id === selectedTaskId);
+  const selectedTask = tasks.find((t) => t.id === selectedTaskId);
 
   const normalizedSearch = searchQuery.trim().toLowerCase();
 
@@ -155,8 +154,7 @@ export default function BoardPage() {
   return (
     <DashboardShell>
       <div className="h-full min-h-0">
-        {/* View toggle */}
-        <div className="flex items-center gap-2 mb-3">
+        <div className="mb-3 flex items-center gap-2">
           <button
             onClick={() => setBoardView("kanban")}
             className={`rounded border px-3 py-1 text-xs font-semibold transition-colors ${
@@ -180,104 +178,108 @@ export default function BoardPage() {
         </div>
 
         {boardView === "pipelines" && (
-          <div className="overflow-y-auto h-[calc(100%-44px)]">
+          <div className="h-[calc(100%-44px)] overflow-y-auto">
             <PipelineBoard />
           </div>
         )}
 
-        {boardView === "kanban" && (<>
-        {isLoading && <SkeletonList rows={6} />}
-        {isError && <ErrorMessage message="Failed to load board tasks" />}
-        {!isLoading && !isError && filteredTasks.length === 0 && (
-          <EmptyState message="No tasks match current filters" />
-        )}
+        {boardView === "kanban" && (
+          <>
+            {isLoading && <SkeletonList rows={6} />}
+            {isError && <ErrorMessage message="Failed to load board tasks" />}
+            {!isLoading && !isError && filteredTasks.length === 0 && (
+              <EmptyState message="No tasks match current filters" />
+            )}
 
-        {!isLoading && !isError && filteredTasks.length > 0 && (
-          <div className="h-full min-h-0 overflow-x-auto">
-            <div className="grid h-full min-w-[980px] grid-flow-col auto-cols-[280px] gap-3 justify-between">
-              {boardColumns.map((status) => (
-                <Card
-                  key={status}
-                  title={status}
-                  titleRight={<span className="text-[10px] text-slate-500">{grouped[status]?.length ?? 0}</span>}
-                  className="h-full"
-                >
-                  <div className="space-y-2">
-                    {status === "BACKLOG" && !demoMode && (
-                      <button
-                        onClick={handleOpenCreate}
-                        className="flex w-full items-center justify-center gap-1.5 rounded border border-cyan-500/50 bg-cyan-500/10 px-3 py-1.5 text-xs font-semibold text-cyan-300 transition-colors hover:bg-cyan-500/20"
-                      >
-                        <FontAwesomeIcon icon={faPlus} />
-                        Create New Task
-                      </button>
-                    )}
-                    {(grouped[status] ?? []).map((task) => (
-                      <button
-                        key={task.id}
-                        onClick={() => setSelectedTaskId(selectedTaskId === task.id ? null : task.id)}
-                        className="w-full rounded border border-surface-700 bg-surface-800 p-2 text-left hover:bg-surface-700"
-                      >
-                        <div className="flex items-start justify-between gap-1.5">
-                          <p className="text-xs text-slate-100 line-clamp-2 flex-1">{task.title}</p>
-                          {slaByTaskId.has(task.id) && (() => {
-                            const alert = slaByTaskId.get(task.id)!;
-                            const oldest = alert.breachedComments[0];
-                            const count = alert.breachedComments.length;
-                            return (
-                              <div className="relative group/sla shrink-0">
-                                <span className="inline-flex items-center gap-1 rounded border border-red-500/50 bg-red-500/15 px-1.5 py-0.5 text-[10px] font-bold text-red-400">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
-                                  SLA
+            {!isLoading && !isError && filteredTasks.length > 0 && (
+              <div className="h-full min-h-0 overflow-x-auto">
+                <div className="grid h-full min-w-[980px] grid-flow-col auto-cols-[280px] justify-between gap-3">
+                  {boardColumns.map((status) => (
+                    <Card
+                      key={status}
+                      title={status}
+                      titleRight={<span className="text-[10px] text-slate-500">{grouped[status]?.length ?? 0}</span>}
+                      className="h-full"
+                    >
+                      <div className="space-y-2">
+                        {status === "BACKLOG" && !demoMode && (
+                          <button
+                            onClick={handleOpenCreate}
+                            className="flex w-full items-center justify-center gap-1.5 rounded border border-cyan-500/50 bg-cyan-500/10 px-3 py-1.5 text-xs font-semibold text-cyan-300 transition-colors hover:bg-cyan-500/20"
+                          >
+                            <FontAwesomeIcon icon={faPlus} />
+                            Create New Task
+                          </button>
+                        )}
+                        {(grouped[status] ?? []).map((task) => (
+                          <button
+                            key={task.id}
+                            onClick={() => setSelectedTaskId(selectedTaskId === task.id ? null : task.id)}
+                            className="w-full rounded border border-surface-700 bg-surface-800 p-2 text-left hover:bg-surface-700"
+                          >
+                            <div className="flex items-start justify-between gap-1.5">
+                              <p className="line-clamp-2 flex-1 text-xs text-slate-100">{task.title}</p>
+                              {slaByTaskId.has(task.id) && (() => {
+                                const alert = slaByTaskId.get(task.id)!;
+                                const oldest = alert.breachedComments[0];
+                                const count = alert.breachedComments.length;
+                                return (
+                                  <div className="group/sla relative shrink-0">
+                                    <span className="inline-flex items-center gap-1 rounded border border-red-500/50 bg-red-500/15 px-1.5 py-0.5 text-[10px] font-bold text-red-400">
+                                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-red-400" />
+                                      SLA
+                                    </span>
+                                    <div className="pointer-events-none absolute right-0 top-full z-50 mt-1.5 w-56 rounded border border-red-500/30 bg-slate-900 px-3 py-2 text-[11px] leading-snug text-slate-300 opacity-0 shadow-xl transition-opacity group-hover/sla:opacity-100">
+                                      <p className="mb-1 font-semibold text-red-400">⏱ SLA vencido</p>
+                                      <p>{count === 1 ? "1 comentario" : `${count} comentarios`} sin respuesta.</p>
+                                      {oldest && (
+                                        <p className="mt-1 text-slate-500">
+                                          El más antiguo lleva <span className="font-semibold text-red-300">{oldest.ageMinutes} min</span> abierto (límite: 30 min).
+                                        </p>
+                                      )}
+                                    </div>
+                                  </div>
+                                );
+                              })()}
+                            </div>
+                            <div className="mt-2 flex flex-wrap gap-1">
+                              <StatusBadge status={status} />
+                              {task.priority != null && (
+                                <StatusBadge
+                                  status={priorityLabel(task.priority)}
+                                  variant={priorityVariant(task.priority)}
+                                />
+                              )}
+                            </div>
+                            <div className="mt-2 flex items-center gap-2 text-[10px] text-slate-500">
+                              {task.assignedAgent && (
+                                <span className="flex truncate items-center gap-1">
+                                  <FontAwesomeIcon icon={faUser} />
+                                  {task.assignedAgent.name}
                                 </span>
-                                <div className="pointer-events-none absolute right-0 top-full mt-1.5 w-56 rounded border border-red-500/30 bg-slate-900 px-3 py-2 text-[11px] text-slate-300 leading-snug opacity-0 group-hover/sla:opacity-100 transition-opacity z-50 shadow-xl">
-                                  <p className="font-semibold text-red-400 mb-1">⏱ SLA vencido</p>
-                                  <p>{count === 1 ? "1 comentario" : `${count} comentarios`} sin respuesta.</p>
-                                  {oldest && (
-                                    <p className="mt-1 text-slate-500">El más antiguo lleva <span className="text-red-300 font-semibold">{oldest.ageMinutes} min</span> abierto (límite: 30 min).</p>
-                                  )}
-                                </div>
-                              </div>
-                            );
-                          })()}
-                        </div>
-                        <div className="mt-2 flex flex-wrap gap-1">
-                          <StatusBadge status={status} />
-                          {task.priority != null && (
-                            <StatusBadge
-                              status={priorityLabel(task.priority)}
-                              variant={priorityVariant(task.priority)}
-                            />
-                          )}
-                        </div>
-                        <div className="mt-2 flex items-center gap-2 text-[10px] text-slate-500">
-                          {task.assignedAgent && (
-                            <span className="flex items-center gap-1 truncate">
-                              <FontAwesomeIcon icon={faUser} />
-                              {task.assignedAgent.name}
-                            </span>
-                          )}
-                          {task.updatedAt && (
-                            <span className="ml-auto flex items-center gap-1">
-                              <FontAwesomeIcon icon={faClock} />
-                              {fromNow(task.updatedAt)}
-                            </span>
-                          )}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
+                              )}
+                              {task.updatedAt && (
+                                <span className="ml-auto flex items-center gap-1">
+                                  <FontAwesomeIcon icon={faClock} />
+                                  {fromNow(task.updatedAt)}
+                                </span>
+                              )}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
         )}
-        </>)}
       </div>
 
       {selectedTaskId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-xl border border-surface-700 bg-surface-900 shadow-2xl">
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-hidden rounded-xl border border-surface-700 bg-surface-900 shadow-2xl">
             <div className="flex items-center justify-between border-b border-surface-700 px-4 py-3">
               <h2 className="text-sm font-semibold text-slate-100">Task Details</h2>
               <div className="flex items-center gap-2">
@@ -305,34 +307,34 @@ export default function BoardPage() {
                     Cancel
                   </button>
                 )}
-                  {selectedTask?.status === "DONE" && !selectedTask?.archivedAt && (
-                    <>
+                {selectedTask?.status === "DONE" && !selectedTask?.archivedAt && (
+                  <>
+                    <button
+                      onClick={() => {
+                        if (!confirmArchiveFromModal) {
+                          setConfirmArchiveFromModal(true);
+                          return;
+                        }
+                        void handleArchiveFromModal();
+                      }}
+                      disabled={isArchivingTask}
+                      className="rounded border border-amber-500/40 bg-amber-500/15 px-2 py-1 text-amber-300 hover:bg-amber-500/25 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <span className="flex items-center gap-1 text-xs">
+                        <FontAwesomeIcon icon={faBoxArchive} />
+                        {isArchivingTask ? "Archiving..." : confirmArchiveFromModal ? "Confirm Archive" : "Archive"}
+                      </span>
+                    </button>
+                    {confirmArchiveFromModal && !isArchivingTask && (
                       <button
-                        onClick={() => {
-                          if (!confirmArchiveFromModal) {
-                            setConfirmArchiveFromModal(true);
-                            return;
-                          }
-                          void handleArchiveFromModal();
-                        }}
-                        disabled={isArchivingTask}
-                        className="rounded border border-amber-500/40 bg-amber-500/15 px-2 py-1 text-amber-300 hover:bg-amber-500/25 disabled:cursor-not-allowed disabled:opacity-50"
+                        onClick={() => setConfirmArchiveFromModal(false)}
+                        className="rounded border border-surface-700 bg-surface-800 px-2 py-1 text-xs text-slate-300 hover:bg-surface-700"
                       >
-                        <span className="flex items-center gap-1 text-xs">
-                          <FontAwesomeIcon icon={faBoxArchive} />
-                          {isArchivingTask ? "Archiving..." : confirmArchiveFromModal ? "Confirm Archive" : "Archive"}
-                        </span>
+                        Cancel
                       </button>
-                      {confirmArchiveFromModal && !isArchivingTask && (
-                        <button
-                          onClick={() => setConfirmArchiveFromModal(false)}
-                          className="rounded border border-surface-700 bg-surface-800 px-2 py-1 text-xs text-slate-300 hover:bg-surface-700"
-                        >
-                          Cancel
-                        </button>
-                      )}
-                    </>
-                  )}
+                    )}
+                  </>
+                )}
                 <button
                   onClick={() => {
                     setConfirmDeleteFromModal(false);
@@ -352,12 +354,7 @@ export default function BoardPage() {
         </div>
       )}
 
-      {isCreateModalOpen && (
-        <CreateTaskModal
-          onClose={() => setIsCreateModalOpen(false)}
-          onCreated={handleCreated}
-        />
-      )}
+      {isCreateModalOpen && <CreateTaskModal onClose={() => setIsCreateModalOpen(false)} onCreated={handleCreated} />}
     </DashboardShell>
   );
 }
