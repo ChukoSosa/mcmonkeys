@@ -216,6 +216,7 @@ ok("README-INSTALL.txt written");
 
 // 4d. Evidence root
 fs.mkdirSync(path.join(DIST, "outputs"), { recursive: true });
+fs.writeFileSync(path.join(DIST, "outputs", ".keep"), "Evidence root for ticket outputs.\n", "utf-8");
 ok("outputs/ folder created");
 
 // ── Step 5: Zip the distribution ───────────────────────────────────────────
@@ -260,7 +261,7 @@ const requiredFiles = [
   "TASK_SYSTEM.md",
   "MCLUCY_API_MANUAL.md",
   "EVIDENCE_AND_OUTPUTS.md",
-  "outputs",
+  "outputs/.keep",
 ];
 const missingFromDist = requiredFiles.filter((f) => !fs.existsSync(path.join(DIST, f)));
 if (missingFromDist.length > 0) {
