@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# MC Lucy — Local Installation Script
+# MC-MONKEYS — Local Installation Script
 # Tested on macOS and Linux (Ubuntu/Debian).
 # Prerequisites: Node.js >= 18, PostgreSQL running and accessible.
 
@@ -19,7 +19,7 @@ fail() { echo -e "${RED}✗ ERROR:${RESET} $1"; exit 1; }
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT_DIR"
 
-echo -e "\n${CYAN}MC Lucy — Installation${RESET}"
+echo -e "\n${CYAN}MC-MONKEYS — Installation${RESET}"
 echo "────────────────────────────────────────────"
 
 # ── Step 1: Node.js ──────────────────────────────────────────────────────────
@@ -117,7 +117,7 @@ mkdir -p outputs
 ok "Evidence folder ready: ./outputs"
 
 # ── Step 4: Start server ─────────────────────────────────────────────────────
-step "4/5" "Starting MC Lucy"
+step "4/5" "Starting MC-MONKEYS"
 
 # Kill any existing process on port 3001
 if lsof -Pi :3001 -sTCP:LISTEN -t &>/dev/null; then
@@ -141,7 +141,7 @@ echo "$SERVER_PID" > mc-lucy.pid
 ok "Server started (PID: $SERVER_PID) — logs in mc-lucy.log"
 
 # ── Step 5: Wait and open browser ───────────────────────────────────────────
-step "5/5" "Waiting for MC Lucy to boot"
+step "5/5" "Waiting for MC-MONKEYS to boot"
 echo "  Waiting up to 20 seconds for the server to be ready..."
 
 READY=false
@@ -156,7 +156,7 @@ done
 echo ""
 
 if [ "$READY" = "true" ]; then
-  ok "MC Lucy is running at http://localhost:3001"
+  ok "MC-MONKEYS is running at http://localhost:3001"
 else
   warn "Server is taking longer than expected. Check mc-lucy.log for details."
   warn "Once ready, open http://localhost:3001 in your browser."
@@ -166,7 +166,7 @@ echo ""
 echo -e "${CYAN}────────────────────────────────────────────${RESET}"
 echo -e "${GREEN}✨  Installation complete!${RESET}"
 echo ""
-echo "  MC Lucy: http://localhost:3001"
+echo "  MC-MONKEYS: http://localhost:3001"
 echo "  API:     http://localhost:3001/api/health"
 echo "  Logs:    mc-lucy.log"
 echo "  Stop:    kill \$(cat mc-lucy.pid)"

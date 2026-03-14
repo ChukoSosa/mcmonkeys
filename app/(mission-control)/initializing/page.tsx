@@ -41,9 +41,9 @@ export default function InitializingPage() {
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 rounded border border-cyan-500/25 bg-cyan-500/10 px-2.5 py-1 text-[10px] uppercase tracking-wider text-cyan-300">
                 <FontAwesomeIcon icon={faBullseye} />
-                MC LUCY Startup
+                MC-MONKEYS Startup
               </div>
-              <h1 className="text-2xl font-semibold tracking-tight text-slate-100">Initializing MC LUCY</h1>
+              <h1 className="text-2xl font-semibold tracking-tight text-slate-100">Initializing MC-MONKEYS</h1>
               <p className="max-w-2xl text-sm text-slate-400">
                 Preparing Mission Control and configuring the system for operation.
               </p>
@@ -95,7 +95,7 @@ export default function InitializingPage() {
                     Initialization in progress
                   </p>
                   <p className="text-xs text-slate-300">
-                    The system is preparing MC LUCY for first operational use.
+                    The system is preparing MC-MONKEYS for first operational use.
                   </p>
                 </div>
               )}

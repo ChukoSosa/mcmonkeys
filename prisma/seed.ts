@@ -131,7 +131,7 @@ async function main() {
   });
 
   // Post the agent operating prompt as the first comment on the onboarding task.
-  // OpenClaw reads this on first access and learns how to operate MC Lucy.
+  // OpenClaw reads this on first access and learns how to operate MC-MONKEYS.
   await prisma.taskComment.upsert({
     where: { id: "comment-onboarding-agent-prompt" },
     update: {

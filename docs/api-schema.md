@@ -1,4 +1,4 @@
-# MC Lucy API Schema
+# MC-MONKEYS API Schema
 
 Resumen práctico de endpoints disponibles hoy en Mission Control.
 

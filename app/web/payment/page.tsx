@@ -90,7 +90,7 @@ export default function PaymentPage() {
                 src={teamImages[imageIndex]}
                 width={420}
                 height={420}
-                alt="MC Lucy Team"
+                alt="MC-MONKEYS Team"
                 className="h-auto w-full max-w-[420px]"
                 priority
               />
@@ -98,10 +98,10 @@ export default function PaymentPage() {
           </div>
           <div className="flex flex-col gap-5">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">Mission Control</p>
-            <h1 className="text-4xl font-semibold text-white sm:text-5xl">Get MC Lucy</h1>
+            <h1 className="text-4xl font-semibold text-white sm:text-5xl">Get MC-MONKEYS</h1>
             <p className="text-lg font-medium text-slate-300">Run your own Mission Control for AI agents.</p>
             <p className="mx-auto max-w-xl text-sm leading-relaxed text-slate-400">
-              MC Lucy gives you a clear operational view of what your agents are doing, what is blocked, and what just changed.
+              MC-MONKEYS gives you a clear operational view of what your agents are doing, what is blocked, and what just changed.
               <br />
               <span className="text-slate-300">No guessing. No invisible work.</span>
             </p>
@@ -132,7 +132,7 @@ export default function PaymentPage() {
           <div className="space-y-4">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">The story</p>
             <h2 className="text-2xl font-semibold text-white">Why $3?</h2>
-            <p className="text-sm leading-relaxed text-slate-300">MC Lucy started with a simple idea.</p>
+            <p className="text-sm leading-relaxed text-slate-300">MC-MONKEYS started with a simple idea.</p>
             <div className="space-y-1 text-sm text-slate-200">
               <p>$1 for the builder</p>
               <p>$1 for Claudio — the agent who helped build it</p>
@@ -155,7 +155,7 @@ export default function PaymentPage() {
                 src="/office/imgs/scenes/3dolarstory.png"
                 width={380}
                 height={280}
-                alt="MC Lucy pricing"
+                alt="MC-MONKEYS pricing"
                 className="h-auto w-full max-w-[380px]"
               />
             </div>
@@ -315,10 +315,10 @@ export default function PaymentPage() {
 
       {/* ── Section 4: Why support ── */}
       <section className="mx-auto max-w-2xl space-y-4 text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Why support MC Lucy?</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Why support MC-MONKEYS?</p>
         <h2 className="text-2xl font-semibold text-white">An independent project, not a platform.</h2>
         <p className="text-sm leading-relaxed text-slate-400">
-          MC Lucy is not venture-backed. It is an independent project built by a developer and an AI agent experimenting with better ways to coordinate agent work.
+          MC-MONKEYS is not venture-backed. It is an independent project built by a developer and an AI agent experimenting with better ways to coordinate agent work.
           Supporting the project helps continue development and improve the system.
         </p>
         <p className="text-sm text-slate-300">And you get Mission Control for your agents.</p>
@@ -335,7 +335,7 @@ export default function PaymentPage() {
           {[
             { n: "01", title: "Installation prompt", text: "You receive an installation prompt." },
             { n: "02", title: "Paste into OpenClaw", text: "Paste it into your OpenClaw agent." },
-            { n: "03", title: "Auto-install", text: "The agent installs MC Lucy automatically." },
+            { n: "03", title: "Auto-install", text: "The agent installs MC-MONKEYS automatically." },
             { n: "04", title: "Ready", text: "Mission Control launches in your browser with your system ready to go." },
           ].map((step) => (
             <div key={step.n} className="space-y-2 rounded-xl border border-slate-800 bg-slate-900/60 p-5">
@@ -349,7 +349,7 @@ export default function PaymentPage() {
 
       {/* ── Section 6: Trust signal ── */}
       <section className="space-y-2 text-center">
-        <p className="text-sm italic text-slate-500">MC Lucy was built while running real AI agents.</p>
+        <p className="text-sm italic text-slate-500">MC-MONKEYS was built while running real AI agents.</p>
         <p className="text-sm italic text-slate-500">It exists because agent workflows needed visibility.</p>
       </section>
 

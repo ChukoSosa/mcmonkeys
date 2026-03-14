@@ -179,12 +179,12 @@ async function main() {
   }
 
   console.log(`\n${c.green}${"─".repeat(44)}`);
-  console.log(`✨  Setup complete — starting MC Lucy on http://localhost:3001`);
+  console.log(`✨  Setup complete — starting MC-MONKEYS on http://localhost:3001`);
   console.log(`${"─".repeat(44)}`);
   console.log(`\n  Next step for OpenClaw:`);
   console.log(`  Paste the contents of OPENCLAW-BOOTSTRAP.txt`);
   console.log(`  as OpenClaw's system prompt so it learns how`);
-  console.log(`  to connect and operate MC Lucy automatically.`);
+  console.log(`  to connect and operate MC-MONKEYS automatically.`);
   console.log(`${"─".repeat(44)}${c.reset}\n`);
 
   // Open browser after Next.js finishes booting (~12s).

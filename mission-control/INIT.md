@@ -1,4 +1,4 @@
-# MC LUCY Mission Control Initialization Guide
+# MC-MONKEYS Mission Control Initialization Guide
 
 ## Mission Control Purpose
 Mission Control coordinates agent work through explicit tasks, subtasks, and activity tracking.

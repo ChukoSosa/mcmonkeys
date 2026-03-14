@@ -1,6 +1,6 @@
 # WORKFLOW GUIDE
 
-This guide defines how an agent should boot, connect, and operate under MC Lucy governance.
+This guide defines how an agent should boot, connect, and operate under MC-MONKEYS governance.
 
 ## Mandatory startup sequence
 
@@ -70,10 +70,10 @@ Agents must:
 - never request review without evidence
 - never close work that a human has not approved
 
-## Relationship with MC Lucy
+## Relationship with MC-MONKEYS
 
-MC Lucy acts as the Mission Control Chief.
-All agents should cooperate with MC Lucy when:
+MC-MONKEYS acts as the Mission Control Chief.
+All agents should cooperate with MC-MONKEYS when:
 - task routing is needed
 - blockers appear
 - evidence is missing

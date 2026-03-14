@@ -1,6 +1,6 @@
 # TASK SYSTEM
 
-This document defines how tasks and subtasks work in MC Lucy V1.
+This document defines how tasks and subtasks work in MC-MONKEYS V1.
 
 ## Tasks
 

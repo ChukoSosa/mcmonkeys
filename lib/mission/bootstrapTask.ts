@@ -3,7 +3,7 @@ import type { MissionDraftTaskPayload } from "@/lib/mission/intake";
 export const MISSION_CONTROL_ONBOARDING_TASK_TITLE = "MC-LUCY-001 Mission Control Initialization";
 
 export const MISSION_CONTROL_ONBOARDING_TASK_DESCRIPTION =
-  "Initialize Mission Control and configure the OpenClaw environment to operate using MC LUCY as the operational source of truth.";
+  "Initialize Mission Control and configure the OpenClaw environment to operate using MC-MONKEYS as the operational source of truth.";
 
 export const MISSION_CONTROL_ONBOARDING_SUBTASK_TITLES = [
   "Read INIT.md documentation",

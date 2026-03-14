@@ -56,7 +56,7 @@ const MAIN_TOOLTIPS: Array<{ match: RegExp; tip: string }> = [
   },
   {
     match: /tarea creada exitosamente/i,
-    tip: "Main procesó tu solicitud con éxito y creó la tarea en MC LUCY.",
+    tip: "Main procesó tu solicitud con éxito y creó la tarea en MC-MONKEYS.",
   },
   {
     match: /errores parciales/i,
@@ -64,13 +64,13 @@ const MAIN_TOOLTIPS: Array<{ match: RegExp; tip: string }> = [
   },
   {
     match: /lista para crear/i,
-    tip: "Main validó tu solicitud y puede crear la tarea en MC LUCY.",
+    tip: "Main validó tu solicitud y puede crear la tarea en MC-MONKEYS.",
   },
 ];
 
 function getMainTooltip(title: string): string {
   const entry = MAIN_TOOLTIPS.find((t) => t.match.test(title));
-  return entry?.tip ?? "Respuesta automática del agente Main de MC LUCY.";
+  return entry?.tip ?? "Respuesta automática del agente Main de MC-MONKEYS.";
 }
 
 const TONE_TITLE_STYLE: Record<string, string> = {

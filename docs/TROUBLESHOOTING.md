@@ -1,4 +1,4 @@
-# MC Lucy — Troubleshooting
+# MC-MONKEYS — Troubleshooting
 
 Soluciones a los problemas más comunes durante instalación y uso.
 
@@ -215,7 +215,7 @@ npm install --legacy-peer-deps
 - [ ] `curl http://localhost:3001/api/health` → `{"status":"ok"}`
 - [ ] `curl http://localhost:3001/api/agents` → JSON con agentes
 
-Si todo pasa, MC Lucy está operativo.
+Si todo pasa, MC-MONKEYS está operativo.
 
 ---
 

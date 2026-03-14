@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "MC Lucy | Story",
-  description: "The story behind MC Lucy — why it exists, who built it, and what it's trying to solve.",
+  title: "MC-MONKEYS | Story",
+  description: "The story behind MC-MONKEYS — why it exists, who built it, and what it's trying to solve.",
 };
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -30,7 +30,7 @@ export default function StoryPage() {
           Why MC&nbsp;LUCY Exists
         </h1>
         <p className="mt-5 text-base leading-relaxed text-slate-300">
-          This is not a product marketing page. It&apos;s the honest story of how MC LUCY came to exist — the
+          This is not a product marketing page. It&apos;s the honest story of how MC-MONKEYS came to exist — the
           frustration behind it, the agent that helped build it, and the philosophy that drives every design
           decision. If you&apos;re running AI agents and sometimes feel like you&apos;re working in the dark,
           this story was written for you.
@@ -72,13 +72,13 @@ export default function StoryPage() {
         <h2 className="mt-2 text-2xl font-semibold text-white">Enter Claudio</h2>
         <div className="mt-4 space-y-4 text-sm leading-relaxed text-slate-300">
           <p>
-            Claudio is the main agent I used throughout the development of MC LUCY. And calling him a
+            Claudio is the main agent I used throughout the development of MC-MONKEYS. And calling him a
             &ldquo;tool&rdquo; would undersell what actually happened.
           </p>
           <p>
             Claudio helped research the real pain points in agent workflows. He identified where coordination
             broke down, proposed approaches for making task state visible, and helped design the core model
-            around cards, events, and activity. A lot of the structure you see in MC LUCY today traces back
+            around cards, events, and activity. A lot of the structure you see in MC-MONKEYS today traces back
             to conversations with Claudio — working through the problem, proposing solutions, and testing
             whether the logic held up.
           </p>
@@ -89,7 +89,7 @@ export default function StoryPage() {
           </p>
         </div>
         <PullQuote>
-          &ldquo;MC LUCY is the result of a human and an agent trying to solve the same problem together.&rdquo;
+          &ldquo;MC-MONKEYS is the result of a human and an agent trying to solve the same problem together.&rdquo;
         </PullQuote>
       </section>
 
@@ -108,7 +108,7 @@ export default function StoryPage() {
             shows what is happening right now, not after the fact.
           </p>
           <p>
-            MC LUCY was designed to answer four questions that should never require investigation:
+            MC-MONKEYS was designed to answer four questions that should never require investigation:
           </p>
           <ul className="ml-4 mt-2 space-y-1 list-disc list-inside text-slate-300">
             <li>What is happening right now?</li>
@@ -138,13 +138,13 @@ export default function StoryPage() {
             a bipedal hominid. Lucy represents a beginning. The first step toward something more complex.
           </p>
           <p>
-            In MC LUCY, that symbolism becomes playful: Lucy, an icon of the earliest human systems, now
+            In MC-MONKEYS, that symbolism becomes playful: Lucy, an icon of the earliest human systems, now
             acting as the Mission Control for AI agents. The first step of human organization, applied to
             a completely new kind of work.
           </p>
         </div>
         <PullQuote>
-          &ldquo;Lucy was the beginning of human systems. MC LUCY is a small attempt to bring that same
+          &ldquo;Lucy was the beginning of human systems. MC-MONKEYS is a small attempt to bring that same
           principle to AI.&rdquo;
         </PullQuote>
       </section>
@@ -168,7 +168,7 @@ export default function StoryPage() {
           </ul>
           <p className="mt-4">
             That framing stuck. Not because it&apos;s a serious pricing model, but because it captures
-            something true about how MC LUCY was made. It&apos;s a personal project. Three people
+            something true about how MC-MONKEYS was made. It&apos;s a personal project. Three people
             invested in this thing — one of them an AI, one of them involuntarily. That feels worth
             acknowledging.
           </p>
@@ -181,7 +181,7 @@ export default function StoryPage() {
         <h2 className="mt-2 text-2xl font-semibold text-white">Built From Inside the Problem</h2>
         <div className="mt-4 space-y-4 text-sm leading-relaxed text-slate-300">
           <p>
-            MC LUCY was not designed in the abstract. It was built while actually running agents —
+            MC-MONKEYS was not designed in the abstract. It was built while actually running agents —
             hitting the problems in real time, shipping features to fix them, and then running agents
             again to see if it worked.
           </p>
@@ -207,7 +207,7 @@ export default function StoryPage() {
         <h2 className="mt-2 text-2xl font-semibold text-white">Prevent Invisible Work</h2>
         <div className="mt-4 space-y-4 text-sm leading-relaxed text-slate-300">
           <p>
-            The single principle behind every design decision in MC LUCY is this: all meaningful work
+            The single principle behind every design decision in MC-MONKEYS is this: all meaningful work
             should exist as a visible card.
           </p>
           <p>
@@ -222,7 +222,7 @@ export default function StoryPage() {
           </p>
           <p>
             Invisible work is not neutral. It accumulates confusion, erodes confidence, and eventually
-            makes the whole system feel unreliable — even when the underlying execution is sound. MC LUCY
+            makes the whole system feel unreliable — even when the underlying execution is sound. MC-MONKEYS
             exists to close that gap.
           </p>
         </div>
@@ -234,17 +234,17 @@ export default function StoryPage() {
         <h2 className="mt-2 text-2xl font-semibold text-white">One Problem, Done Well</h2>
         <div className="mt-4 space-y-4 text-sm leading-relaxed text-slate-300">
           <p>
-            MC LUCY is not trying to become a platform. It&apos;s not chasing an enterprise roadmap or
+            MC-MONKEYS is not trying to become a platform. It&apos;s not chasing an enterprise roadmap or
             trying to be everything for everyone who runs agents. That&apos;s not the goal.
           </p>
           <p>
             The goal is to solve one important problem well: making agent work visible. If you can look
-            at MC LUCY and immediately understand what your agents are doing, what&apos;s blocked, and
+            at MC-MONKEYS and immediately understand what your agents are doing, what&apos;s blocked, and
             what just changed — then it did its job.
           </p>
           <p>
             If you&apos;re running agents and sometimes feel like you&apos;re operating in the dark,
-            MC LUCY was built exactly for that moment.
+            MC-MONKEYS was built exactly for that moment.
           </p>
         </div>
       </section>
@@ -255,7 +255,7 @@ export default function StoryPage() {
           href="/web/payment"
           className="rounded-md bg-cyan-400 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
         >
-          Get MC Lucy
+          Get MC-MONKEYS
         </Link>
         <Link
           href="/app"

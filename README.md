@@ -1,4 +1,4 @@
-# MC Lucy
+# MC-MONKEYS
 
 Dashboard operativo de agentes de IA con API local integrada.
 
@@ -169,7 +169,7 @@ Esto genera `public/downloads/mclucy-latest.zip` con:
 - Documentación canónica para OpenClaw (`MISSION_CONTROL_OVERVIEW.md`, `WORKFLOW_GUIDE.md`, `TASK_SYSTEM.md`, `MCLUCY_API_MANUAL.md`, `EVIDENCE_AND_OUTPUTS.md`)
 - Carpeta `outputs/` para evidencia por ticket
 
-El usuario final recibe el ZIP, corre el instalador, y MC Lucy levanta automáticamente en `localhost:3001`.
+El usuario final recibe el ZIP, corre el instalador, y MC-MONKEYS levanta automáticamente en `localhost:3001`.
 
 > El ZIP no va en git (`.gitignore`). Generarlo manualmente antes de cada deploy.
 

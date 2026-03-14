@@ -278,7 +278,7 @@ export function buildMainAgentResponseDraft(
     if (executionResult.stage === "subtasks_created" && executionResult.success) {
       return {
         title: "¡Tarea creada exitosamente!",
-        message: "La tarea y sus subtareas fueron creadas en MC LUCY.",
+        message: "La tarea y sus subtareas fueron creadas en MC-MONKEYS.",
         bulletPoints: [
           `ID de tarea: ${executionResult.taskId ?? "n/a"}`,
           `Subtareas creadas: ${executionResult.subtasksCreatedCount}`,
@@ -303,7 +303,7 @@ export function buildMainAgentResponseDraft(
 
   return {
     title: "Tarea lista para crear",
-    message: "El pedido es válido y puede procesarse en MC LUCY.",
+    message: "El pedido es válido y puede procesarse en MC-MONKEYS.",
     bulletPoints: warnings.length > 0 ? warnings : ["Sin advertencias detectadas."],
     tone: "confirming",
   };

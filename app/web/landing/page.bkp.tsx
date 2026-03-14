@@ -52,7 +52,7 @@ const INSTALL_STEPS = [
   "Purchase a license.",
   "Copy the installation prompt.",
   "Paste it into OpenClaw.",
-  "Your agent installs MC LUCY automatically.",
+  "Your agent installs MC-MONKEYS automatically.",
 ];
 
 const ALT_HERO_HEADLINES = [
@@ -68,7 +68,7 @@ const ALT_HERO_SUBHEADLINES = [
 ];
 
 export const metadata = {
-  title: "MC Lucy | Landing",
+  title: "MC-MONKEYS | Landing",
   description: "Mission Control for AI Agents.",
 };
 
@@ -86,7 +86,7 @@ export default function LandingPage() {
           Make agent work visible, structured, and trackable.
         </p>
         <p className="mt-5 max-w-3xl text-sm leading-relaxed text-slate-300 sm:text-base">
-          MC LUCY is the operational dashboard for OpenClaw. It turns requests into cards, cards into
+          MC-MONKEYS is the operational dashboard for OpenClaw. It turns requests into cards, cards into
           execution, and execution into visible events. Instead of wondering what your agents are doing,
           you can finally see it.
         </p>
@@ -95,7 +95,7 @@ export default function LandingPage() {
             href="/web/payment"
             className="rounded-md bg-cyan-400 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
           >
-            Get MC Lucy
+            Get MC-MONKEYS
           </Link>
           <Link
             href="/app"
@@ -135,7 +135,7 @@ export default function LandingPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">Section 3 - The Solution</p>
         <h2 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">Turn agent work into a visible operational flow.</h2>
         <p className="mt-4 max-w-4xl text-sm leading-relaxed text-slate-300 sm:text-base">
-          MC LUCY structures agent work into a simple operational lifecycle.
+          MC-MONKEYS structures agent work into a simple operational lifecycle.
         </p>
         <div className="mt-5 rounded-lg border border-cyan-500/25 bg-cyan-500/10 px-4 py-4 text-sm font-medium tracking-wide text-cyan-100">
           Request → Card → Subtasks → Execution → Events → Visibility
@@ -147,11 +147,11 @@ export default function LandingPage() {
       </section>
 
       <section className="mt-12 rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">Section 4 - Why MC LUCY Feels Different</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">Section 4 - Why MC-MONKEYS Feels Different</p>
         <h2 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">Built for agent-driven work.</h2>
         <p className="mt-4 max-w-4xl text-sm leading-relaxed text-slate-300 sm:text-base">
           Traditional project tools assume humans move tasks manually. Agent chaos is the opposite: agents
-          execute, but visibility gets lost. MC LUCY sits in the middle as a control layer where agents drive
+          execute, but visibility gets lost. MC-MONKEYS sits in the middle as a control layer where agents drive
           execution and humans observe and guide the system.
         </p>
         <div className="mt-6 grid gap-3 sm:grid-cols-3">
@@ -164,7 +164,7 @@ export default function LandingPage() {
             <p className="mt-2 text-sm text-slate-200">Agents execute but visibility is lost.</p>
           </article>
           <article className="rounded-lg border border-cyan-400/30 bg-cyan-500/10 p-4">
-            <p className="text-xs uppercase tracking-[0.12em] text-cyan-200">MC LUCY</p>
+            <p className="text-xs uppercase tracking-[0.12em] text-cyan-200">MC-MONKEYS</p>
             <p className="mt-2 text-sm text-cyan-100">Agents drive execution while humans observe and guide the system.</p>
           </article>
         </div>
@@ -194,7 +194,7 @@ export default function LandingPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">Section 6 - Philosophy</p>
         <h2 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">Prevent invisible work.</h2>
         <p className="mt-4 max-w-4xl text-sm leading-relaxed text-slate-300 sm:text-base">
-          MC LUCY is built around a simple idea: all meaningful work should exist as a visible card.
+          MC-MONKEYS is built around a simple idea: all meaningful work should exist as a visible card.
           When work is visible, agents and operators can understand what is happening, who owns the work,
           what is blocked, and what has been completed.
         </p>
@@ -212,7 +212,7 @@ export default function LandingPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">Section 7 - Installation</p>
         <h2 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">Install through your agent.</h2>
         <p className="mt-4 max-w-4xl text-sm leading-relaxed text-slate-300 sm:text-base">
-          MC LUCY installs directly through OpenClaw. After purchasing a license, you simply copy an installation
+          MC-MONKEYS installs directly through OpenClaw. After purchasing a license, you simply copy an installation
           prompt and paste it into your agent.
         </p>
         <ol className="mt-5 space-y-2 text-sm text-slate-200">
@@ -229,7 +229,7 @@ export default function LandingPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">Section 8 - Human Touch</p>
         <h2 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">Built from real agent experience.</h2>
         <p className="mt-4 max-w-4xl text-sm leading-relaxed text-slate-300 sm:text-base">
-          MC LUCY started as a personal tool while running agents in real workflows. The system was shaped
+          MC-MONKEYS started as a personal tool while running agents in real workflows. The system was shaped
           through actual experimentation, frustration, and iteration. Claudio, the main agent used during
           development, helped structure the operational model behind Mission Control. This project was built
           from inside the problem, not from outside it.
@@ -240,7 +240,7 @@ export default function LandingPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">Section 9 - Final CTA</p>
         <h2 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">Bring Mission Control to your agents.</h2>
         <p className="mt-4 max-w-4xl text-sm leading-relaxed text-slate-100 sm:text-base">
-          If you are running agents with OpenClaw, MC LUCY gives you the operational layer you have been missing.
+          If you are running agents with OpenClaw, MC-MONKEYS gives you the operational layer you have been missing.
           Understand what your agents are doing. Track progress. Prevent invisible work.
         </p>
         <div className="mt-7 flex flex-wrap gap-3">
@@ -248,7 +248,7 @@ export default function LandingPage() {
             href="/web/payment"
             className="rounded-md bg-cyan-300 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-200"
           >
-            Get MC Lucy
+            Get MC-MONKEYS
           </Link>
           <Link
             href="/app"

@@ -1,6 +1,6 @@
 # Changelog
 
-Todas las versiones notables de MC Lucy están documentadas acá.
+Todas las versiones notables de MC-MONKEYS están documentadas acá.
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es/1.0.0/).
 Versionado semántico: `vMAJOR.MINOR.PATCH`
 

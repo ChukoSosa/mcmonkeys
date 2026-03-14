@@ -1,10 +1,10 @@
 # MISSION CONTROL OVERVIEW
 
-MC Lucy is the operating layer that coordinates agents, tasks, evidence, and reviews inside a single Mission Control workflow.
+MC-MONKEYS is the operating layer that coordinates agents, tasks, evidence, and reviews inside a single Mission Control workflow.
 
 ## Source of truth
 
-MC Lucy is the source of truth for:
+MC-MONKEYS is the source of truth for:
 - active tasks
 - task status
 - subtask progress
@@ -12,11 +12,11 @@ MC Lucy is the source of truth for:
 - comments and review requests
 - activity feed and system events
 
-If work is not reflected in MC Lucy, it is not considered operationally complete.
+If work is not reflected in MC-MONKEYS, it is not considered operationally complete.
 
 ## Core operating model
 
-MC Lucy runs as a local Mission Control server with:
+MC-MONKEYS runs as a local Mission Control server with:
 - dashboard and office UI
 - local API under `/api`
 - PostgreSQL database
@@ -45,7 +45,7 @@ Task states:
 
 Important:
 - In this version, `REVIEW` is the equivalent of `READY_FOR_REVIEW`.
-- `TODO` is not a task state in MC Lucy V1.
+- `TODO` is not a task state in MC-MONKEYS V1.
 
 ## Canonical subtask lifecycle for this version
 
@@ -65,9 +65,9 @@ Expected flow:
 - human approves -> `DONE`
 - human requests changes -> back to `IN_PROGRESS`
 
-## What MC Lucy coordinates
+## What MC-MONKEYS coordinates
 
-MC Lucy is responsible for:
+MC-MONKEYS is responsible for:
 - tracking all active work
 - monitoring agents
 - exposing API endpoints for automation

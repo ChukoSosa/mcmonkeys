@@ -4,7 +4,7 @@ This document defines the evidence system required before review.
 
 ## Canonical evidence folder
 
-Inside the MC Lucy installation, the evidence root is:
+Inside the MC-MONKEYS installation, the evidence root is:
 - `outputs/`
 
 If the package is extracted into a folder named `MCLUCY`, the effective path becomes:

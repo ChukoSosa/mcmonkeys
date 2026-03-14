@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * build-dist.js — Assembles and zips the MC Lucy distribution package.
+ * build-dist.js — Assembles and zips the MC-MONKEYS distribution package.
  *
  * Output: public/downloads/mclucy-latest.zip
  *
@@ -180,7 +180,7 @@ if (fs.existsSync(promptSrc)) {
 fs.writeFileSync(
   path.join(DIST, "README-INSTALL.txt"),
   [
-    "MC LUCY — Mission Control",
+    "MC-MONKEYS — Mission Control",
     "=========================",
     "",
     "Installation",
@@ -197,7 +197,7 @@ fs.writeFileSync(
     "  - PostgreSQL running locally",
     "",
     "After installation:",
-    "  MC Lucy runs at http://localhost:3001",
+    "  MC-MONKEYS runs at http://localhost:3001",
     "  Evidence folder: ./outputs",
     "",
     "OpenClaw automation:",
@@ -289,7 +289,7 @@ ${"─".repeat(48)}${c.reset}
   The install script will:
     - Set up PostgreSQL database
     - Seed initial data (onboarding task + agent prompt)
-    - Start MC Lucy on http://localhost:3001
+    - Start MC-MONKEYS on http://localhost:3001
     - Open the browser automatically
 
 ${c.cyan}  OpenClaw will find its operating instructions

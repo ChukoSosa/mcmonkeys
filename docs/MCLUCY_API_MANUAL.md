@@ -1,6 +1,6 @@
 # MCLUCY API MANUAL
 
-This is the operational API reference for agents running under MC Lucy.
+This is the operational API reference for agents running under MC-MONKEYS.
 
 ## Base URL
 

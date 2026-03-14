@@ -25,15 +25,15 @@ export function BlockHero() {
       <div className="grid w-full items-center gap-14 lg:grid-cols-2 lg:gap-16">
         <div className="space-y-7">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300/90">
-            MISSION CONTROL FOR AI AGENTS
+            MC-MONKEYS FOR AI AGENTS
           </p>
 
-          <h1 className="max-w-xl text-4xl font-semibold leading-tight text-slate-100 sm:text-5xl lg:text-6xl">
-            Built with an AI agent. For humans running AI agents.
+          <h1 className="max-w-xl text-4xl font-semibold leading-tight text-slate-100 sm:text-5xl lg:text-5xl">
+            Built by a human, designed with an agent, and operated by intelligence.
           </h1>
 
           <p className="max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-            MC LUCY is a Mission Control system designed through a real collaboration between a
+            <strong>MC-MONKEYS</strong> is a system designed through a real collaboration between a
             human builder and an AI strategist. The result is simple: you can finally see what
             your agents are doing.
           </p>
@@ -43,7 +43,7 @@ export function BlockHero() {
               href="/web/payment"
               className="rounded-xl bg-cyan-400 px-6 py-3 text-sm font-semibold text-slate-950 shadow-[0_0_0_rgba(56,189,248,0)] transition hover:-translate-y-0.5 hover:bg-cyan-300 hover:shadow-[0_0_24px_rgba(34,211,238,0.35)]"
             >
-              Get MC Lucy
+              Get <strong>MC-MONKEYS</strong>
             </Link>
             <Link
               href="/app"
@@ -60,7 +60,7 @@ export function BlockHero() {
           <div className="absolute -inset-5 rounded-[28px] bg-cyan-400/10 blur-2xl" />
           <div className="relative rounded-[24px] border border-slate-700/80 bg-slate-950/75 p-5 shadow-[0_26px_60px_rgba(2,8,23,0.75)] backdrop-blur-xl">
             <img
-              src={images[imageIndex]}
+              src="/office/imgs/landing/mission-control-office.png"
               alt="Hero Image"
               className="h-auto w-full rounded-lg object-cover"
             />

@@ -1,11 +1,11 @@
 @echo off
-REM MC Lucy — Local Installation Script (Windows)
+REM MC-MONKEYS — Local Installation Script (Windows)
 REM Prerequisites: Node.js >= 18, PostgreSQL running and accessible.
 
 setlocal EnableDelayedExpansion
 
 echo.
-echo [MC Lucy] Installation
+echo [MC-MONKEYS] Installation
 echo ============================================
 
 REM ── Step 1: Node.js ────────────────────────────────────────────────────────
@@ -101,7 +101,7 @@ echo [OK] Evidence folder ready: .\outputs
 
 REM ── Step 4: Start server ───────────────────────────────────────────────────
 echo.
-echo [4/5] Starting MC Lucy...
+echo [4/5] Starting MC-MONKEYS...
 
 REM Kill any process using port 3001
 for /f "tokens=5" %%p in ('netstat -aon ^| findstr ":3001 " ^| findstr "LISTENING"') do (
@@ -110,12 +110,12 @@ for /f "tokens=5" %%p in ('netstat -aon ^| findstr ":3001 " ^| findstr "LISTENIN
 
 set PORT=3001
 set HOSTNAME=0.0.0.0
-start /B "MC Lucy" node server.js > mc-lucy.log 2>&1
+start /B "MC-MONKEYS" node server.js > mc-lucy.log 2>&1
 echo [OK] Server starting — logs in mc-lucy.log
 
 REM ── Step 5: Wait and open browser ─────────────────────────────────────────
 echo.
-echo [5/5] Waiting for MC Lucy to boot...
+echo [5/5] Waiting for MC-MONKEYS to boot...
 set READY=false
 for /l %%i in (1,1,20) do (
   if "!READY!"=="false" (
@@ -128,7 +128,7 @@ for /l %%i in (1,1,20) do (
 echo.
 echo ============================================
 if "!READY!"=="true" (
-  echo [OK] MC Lucy is running at http://localhost:3001
+  echo [OK] MC-MONKEYS is running at http://localhost:3001
   echo.
   echo   Opening browser...
   start http://localhost:3001
@@ -140,7 +140,7 @@ if "!READY!"=="true" (
 
 echo.
 echo   Installation complete!
-echo   MC Lucy: http://localhost:3001
+echo   MC-MONKEYS: http://localhost:3001
 echo   Logs:    mc-lucy.log
 echo   Stop:    taskkill /IM node.exe /F
 echo   Evidence: .\outputs

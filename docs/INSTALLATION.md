@@ -1,4 +1,4 @@
-# MC Lucy — Guía de Instalación
+# MC-MONKEYS — Guía de Instalación
 
 Diseñada para ejecutarse de punta a punta sin intervención manual.
 Un solo comando instala todo y abre el browser automáticamente.
@@ -7,7 +7,7 @@ Un solo comando instala todo y abre el browser automáticamente.
 
 ## Prerequisito: PostgreSQL
 
-MC Lucy necesita PostgreSQL corriendo localmente. No hace falta configurarlo a mano — solo que el servicio esté activo.
+MC-MONKEYS necesita PostgreSQL corriendo localmente. No hace falta configurarlo a mano — solo que el servicio esté activo.
 
 **macOS (Homebrew — recomendado):**
 ```bash
@@ -88,7 +88,7 @@ curl http://localhost:3001/api/tasks
 # → {"tasks":[{"id":"task-onboarding-installation",...}]}
 ```
 
-Si los tres devuelven JSON, MC Lucy está operativo.
+Si los tres devuelven JSON, MC-MONKEYS está operativo.
 
 ---
 
@@ -124,7 +124,7 @@ Ver [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) para diagnóstico completo.
 
 ## Distribución — ZIP instalable para clientes
 
-MC Lucy se puede empaquetar en un ZIP autoinstalable que contiene **solo Mission Control** (sin landing, manual ni páginas de marketing).
+MC-MONKEYS se puede empaquetar en un ZIP autoinstalable que contiene **solo Mission Control** (sin landing, manual ni páginas de marketing).
 
 ### Generar el ZIP
 
@@ -215,5 +215,5 @@ curl http://localhost:3001/web/landing
 
 ---
 
-**¡Listo! MC Lucy está corriendo y listo para operar.**
+**¡Listo! MC-MONKEYS está corriendo y listo para operar.**
 

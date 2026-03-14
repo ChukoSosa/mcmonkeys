@@ -27,7 +27,7 @@ import { Card } from "@/components/ui";
 import { useOnboardingState } from "@/lib/utils/useOnboardingState";
 
 const TOPIC_LINKS = [
-  { id: "hero", label: "What is MC LUCY" },
+  { id: "hero", label: "What is MC-MONKEYS" },
   { id: "concepts", label: "Key Concepts" },
   { id: "philosophy", label: "Mission Philosophy" },
   { id: "rules", label: "Golden Rules" },
@@ -61,7 +61,7 @@ const CONCEPT_CARDS = [
 
 const GOLDEN_RULES = [
   "Actionable requests must become cards.",
-  "MC LUCY is the source of truth for task state.",
+  "MC-MONKEYS is the source of truth for task state.",
   "Agents update progress and blockers through cards.",
   "Completed work must include evidence or completion notes.",
 ];
@@ -270,14 +270,14 @@ export default function ManualPage() {
                   <div className="space-y-3">
                     <p className="text-[11px] uppercase tracking-[0.2em] text-cyan-300">Manual</p>
                     <h1 className="text-3xl font-bold tracking-tight text-slate-100 lg:text-4xl">
-                      Welcome to MC LUCY
+                      Welcome to MC-MONKEYS
                     </h1>
                     <p className="max-w-3xl text-sm leading-relaxed text-slate-300 lg:text-base">
-                      MC LUCY is the operational source of truth for task intake, assignment, tracking,
+                      MC-MONKEYS is the operational source of truth for task intake, assignment, tracking,
                       and execution visibility.
                     </p>
                     <p className="max-w-3xl text-sm leading-relaxed text-slate-400">
-                      MC LUCY is not just a dashboard. It is the operating system that coordinates how
+                      MC-MONKEYS is not just a dashboard. It is the operating system that coordinates how
                       agents receive, execute, and report work.
                     </p>
                     <div className="flex flex-wrap gap-2 pt-1">
@@ -339,7 +339,7 @@ export default function ManualPage() {
             <h2 className="text-xs font-semibold uppercase tracking-widest text-slate-400">Mission Control Philosophy</h2>
             <Card bodyClassName="space-y-3">
               <p className="text-sm leading-relaxed text-slate-200">
-                MC LUCY is designed to prevent invisible work.
+                MC-MONKEYS is designed to prevent invisible work.
               </p>
               <p className="text-xs leading-relaxed text-slate-300">
                 All meaningful work should exist as a visible card. This allows agents and operators to understand:
@@ -405,7 +405,7 @@ export default function ManualPage() {
                     <h3 className="text-lg font-semibold text-slate-100">Want to understand exactly how Mission Control runs?</h3>
                     <p className="max-w-2xl text-sm text-slate-300">
                       Open the operational deep-dive to see the full lifecycle: intake, orchestration,
-                      execution, validation, and closure. This is the control logic behind MC LUCY.
+                      execution, validation, and closure. This is the control logic behind MC-MONKEYS.
                     </p>
                   </div>
                   <button
@@ -427,7 +427,7 @@ export default function ManualPage() {
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                   <div className="space-y-1.5">
                     <p className="text-[11px] uppercase tracking-[0.18em] text-amber-300">Commercial Access</p>
-                    <h3 className="text-lg font-semibold text-slate-100">Ready to unlock the full MC LUCY experience?</h3>
+                    <h3 className="text-lg font-semibold text-slate-100">Ready to unlock the full MC-MONKEYS experience?</h3>
                     <p className="max-w-2xl text-sm text-slate-300">
                       Choose the license that matches your operation and activate Mission Control for your team.
                     </p>
@@ -449,7 +449,7 @@ export default function ManualPage() {
               <div className="space-y-1">
                 <p className="text-xs uppercase tracking-widest text-slate-400">Ready to start operating?</p>
                 <p className="text-sm text-slate-200">
-                  Enter Mission Control and begin coordinating work with MC LUCY.
+                  Enter Mission Control and begin coordinating work with MC-MONKEYS.
                 </p>
               </div>
 
@@ -492,7 +492,7 @@ export default function ManualPage() {
               <div className="rounded-lg border border-surface-700 bg-surface-800 p-4">
                 <p className="text-xs uppercase tracking-widest text-cyan-300">Core Model</p>
                 <p className="mt-2 text-sm leading-relaxed text-slate-200">
-                  MC LUCY is an operational graph: requests become cards, cards drive execution,
+                  MC-MONKEYS is an operational graph: requests become cards, cards drive execution,
                   execution generates events, events update visibility, and visibility drives next decisions.
                   Everything loops through the card lifecycle so the system stays consistent.
                 </p>
@@ -602,7 +602,7 @@ export default function ManualPage() {
               <div className="flex items-center gap-2">
                 <FontAwesomeIcon icon={faCrown} className="text-amber-300" />
                 <h3 className="text-sm font-semibold uppercase tracking-widest text-slate-200">
-                  MC LUCY Licensing Plans
+                  MC-MONKEYS Licensing Plans
                 </h3>
               </div>
               <button

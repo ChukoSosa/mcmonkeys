@@ -16,11 +16,11 @@ export default function ThankYouPage() {
   const openClawPrompt = useMemo(
     () =>
       [
-        "MANUAL INSTALACION MC LUCY",
+        "MANUAL INSTALACION MC-MONKEYS",
         "",
-        "Prompt de instalación para OpenClaw — MC LUCY Mission Control",
+        "Prompt de instalación para OpenClaw — MC-MONKEYS Mission Control",
         "",
-        "You are going to install and activate MC LUCY Mission Control inside the current OpenClaw environment.",
+        "You are going to install and activate MC-MONKEYS Mission Control inside the current OpenClaw environment.",
         "",
         "Follow the instructions exactly in order.",
         "Do not skip steps.",
@@ -29,13 +29,13 @@ export default function ThankYouPage() {
         "If you cannot install a dependency automatically, stop and ask the user for explicit authorization before continuing.",
         "",
         "Your objective is to:",
-        "- Install MC LUCY.",
+        "- Install MC-MONKEYS.",
         "- Learn the operational model.",
         "- Configure the evidence system.",
         "- Activate the Mission Control workflow.",
-        "- Begin operating under MC LUCY governance.",
+        "- Begin operating under MC-MONKEYS governance.",
         "",
-        "STEP 1 — Download MC LUCY",
+        "STEP 1 — Download MC-MONKEYS",
         "",
         "PRE-STEP — Dependency Check (mandatory)",
         "",
@@ -79,7 +79,7 @@ export default function ThankYouPage() {
         "",
         "STEP 3 — Create Evidence System",
         "",
-        "Create the evidence storage system inside the MC LUCY installation.",
+        "Create the evidence storage system inside the MC-MONKEYS installation.",
         "The package should expose an outputs directory at:",
         "- MCLUCY/outputs",
         "",
@@ -91,7 +91,7 @@ export default function ThankYouPage() {
         "",
         "STEP 4 — Understand Task Lifecycle",
         "",
-        "MC LUCY uses this workflow in the current version:",
+        "MC-MONKEYS uses this workflow in the current version:",
         "- BACKLOG",
         "- IN_PROGRESS",
         "- REVIEW",
@@ -142,8 +142,8 @@ export default function ThankYouPage() {
         "",
         "STEP 10 — Mission Control Leadership",
         "",
-        "MC LUCY is the Mission Control Chief.",
-        "All agents should cooperate with MC LUCY when coordination is required.",
+        "MC-MONKEYS is the Mission Control Chief.",
+        "All agents should cooperate with MC-MONKEYS when coordination is required.",
         "",
         "STEP 11 — System Activation",
         "",
@@ -209,12 +209,12 @@ export default function ThankYouPage() {
     <div className="flex min-h-screen items-center justify-center bg-surface-950 px-4 py-10 text-slate-100">
       <div className="w-full max-w-4xl space-y-5">
         <div className="text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">MC Lucy</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">MC-MONKEYS</p>
           <h1 className="mt-2 text-2xl font-semibold text-slate-100 sm:text-3xl">
             Thanks for trusting the project.
           </h1>
           <p className="mt-2 text-sm text-slate-400">
-            Copy the prompt below and paste it into OpenClaw to install MC Lucy locally.
+            Copy the prompt below and paste it into OpenClaw to install MC-MONKEYS locally.
           </p>
         </div>
 
@@ -234,7 +234,7 @@ export default function ThankYouPage() {
           bodyClassName="space-y-3"
         >
           <p className="text-sm text-slate-300">
-            Paste this exact prompt in OpenClaw. It will download, install, and onboard MC Lucy automatically.
+            Paste this exact prompt in OpenClaw. It will download, install, and onboard MC-MONKEYS automatically.
           </p>
           <pre className="max-h-[520px] overflow-auto rounded-md border border-surface-700 bg-surface-950 p-4 text-xs leading-relaxed text-slate-200">
             {openClawPrompt}
