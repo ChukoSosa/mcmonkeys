@@ -21,6 +21,7 @@ import { prisma } from "./prisma";
 import { activityService } from "./activity-service";
 import { runService } from "./run-service";
 import { emitEvent } from "./event-bus";
+import { logger } from "./logger";
 import {
   decideMainAgentFlow,
   buildMainAgentResponseDraft,
@@ -195,11 +196,13 @@ export function dispatchCommentReview(params: {
   commentId: string;
   commentBody: string;
   authorType: string;
+  requestId?: string;
+  waitUntil?: (promise: Promise<unknown>) => void;
 }): void {
   if (isMissionControlDemoMode()) return;
   if (!shouldAutoProcess(params.authorType)) return;
 
-  void (async () => {
+  const job = (async () => {
     try {
       // Idempotency: skip if a run for this exact comment already exists
       const existing = await prisma.run.findFirst({
@@ -232,9 +235,34 @@ export function dispatchCommentReview(params: {
         payload: { commentId: params.commentId },
       });
 
+      logger.info(
+        {
+          requestId: params.requestId,
+          taskId: params.taskId,
+          commentId: params.commentId,
+          runId: run.id,
+        },
+        "Comment review run queued",
+      );
+
       await executeCommentReviewRun(run.id);
     } catch (err) {
-      console.error("[comment-automator] Unhandled dispatch error:", err);
+      logger.error(
+        {
+          requestId: params.requestId,
+          taskId: params.taskId,
+          commentId: params.commentId,
+          error: err,
+        },
+        "Unhandled comment review dispatch error",
+      );
     }
   })();
+
+  if (params.waitUntil) {
+    params.waitUntil(job);
+    return;
+  }
+
+  void job;
 }

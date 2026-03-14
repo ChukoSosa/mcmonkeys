@@ -1,18 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
 import { activityService } from "@/app/api/server/activity-service";
-import { apiErrorResponse } from "@/app/api/server/api-error";
+import { apiErrorResponse, validationError } from "@/app/api/server/api-error";
+import { z } from "zod";
+
+const ActivityQuerySchema = z.object({
+  limit: z.coerce.number().int().min(1).max(200).optional(),
+  cursor: z.string().min(1).optional(),
+  taskId: z.string().min(1).optional(),
+  agentId: z.string().min(1).optional(),
+  subtaskId: z.string().min(1).optional(),
+  commentId: z.string().min(1).optional(),
+  actorId: z.string().min(1).optional(),
+  actorType: z.string().min(1).optional(),
+});
 
 export async function GET(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams;
-    const limit = searchParams.get("limit") ? parseInt(searchParams.get("limit")!) : 50;
-    const cursor = searchParams.get("cursor") || undefined;
-    const taskId = searchParams.get("taskId") || undefined;
-    const agentId = searchParams.get("agentId") || undefined;
-    const subtaskId = searchParams.get("subtaskId") || undefined;
-    const commentId = searchParams.get("commentId") || undefined;
-    const actorId = searchParams.get("actorId") || undefined;
-    const actorType = searchParams.get("actorType") || undefined;
+    const searchParams = Object.fromEntries(request.nextUrl.searchParams.entries());
+    const parsed = ActivityQuerySchema.safeParse(searchParams);
+    if (!parsed.success) {
+      throw validationError(parsed.error);
+    }
+
+    const {
+      limit = 50,
+      cursor,
+      taskId,
+      agentId,
+      subtaskId,
+      commentId,
+      actorId,
+      actorType,
+    } = parsed.data;
 
     const { events, nextCursor } = await activityService.list({
       limit,

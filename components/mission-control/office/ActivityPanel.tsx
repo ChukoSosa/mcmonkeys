@@ -36,7 +36,7 @@ export function ActivityPanel({ selectedAgentId, selectedAgentName, showAllActiv
 
       return item.agentId === selectedAgentId;
     });
-  }, [data, selectedAgentId]);
+  }, [data, selectedAgentId, showAllActivity]);
 
   return (
     <Card

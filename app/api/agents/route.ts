@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { agentService } from "@/app/api/server/agent-service";
-import { apiErrorResponse } from "@/app/api/server/api-error";
+import { apiErrorResponse, validationError } from "@/app/api/server/api-error";
 import { isMissionControlDemoMode, demoReadOnlyResponse } from "@/app/api/server/demo-mode";
+import { z } from "zod";
+
+const AgentHeartbeatBodySchema = z.object({
+  agentId: z.string().min(1, "agentId is required"),
+  status: z.enum(["IDLE", "THINKING", "WORKING", "BLOCKED"]).optional(),
+  statusMessage: z.string().max(300).optional(),
+});
 
 export async function GET() {
   try {
@@ -19,11 +26,12 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { agentId, status, statusMessage } = body;
-
-    if (!agentId) {
-      return NextResponse.json({ error: "agentId is required" }, { status: 400 });
+    const parsed = AgentHeartbeatBodySchema.safeParse(body);
+    if (!parsed.success) {
+      throw validationError(parsed.error);
     }
+
+    const { agentId, status, statusMessage } = parsed.data;
 
     const agent = await agentService.heartbeat(agentId, { status, statusMessage });
     return NextResponse.json(agent);

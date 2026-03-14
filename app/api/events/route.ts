@@ -1,14 +1,51 @@
 import { NextRequest, NextResponse } from "next/server";
-import { onEvent, getListenerCount } from "@/app/api/server/event-bus";
+import { onEvent } from "@/app/api/server/event-bus";
+import { createRequestContext, withRequestHeaders } from "@/app/api/server/request-context";
 
 export const dynamic = "force-dynamic";
 
+function isAllowedOrigin(request: NextRequest, origin: string | null): boolean {
+  if (!origin) return true;
+
+  const configured = process.env.MISSION_CONTROL_ALLOWED_ORIGINS;
+  if (!configured || configured.trim().length === 0) {
+    return origin === request.nextUrl.origin;
+  }
+
+  const allowedOrigins = configured
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
+
+  return allowedOrigins.includes(origin);
+}
+
 export async function GET(request: NextRequest) {
+  const requestContext = createRequestContext(request);
+  const origin = request.headers.get("origin");
+  if (!isAllowedOrigin(request, origin)) {
+    return withRequestHeaders(
+      NextResponse.json(
+        {
+          error: "Origin is not allowed",
+          code: "FORBIDDEN",
+          requestId: requestContext.requestId,
+        },
+        { status: 403 },
+      ),
+      requestContext,
+    );
+  }
+
+  const allowedOrigin = origin ?? request.nextUrl.origin;
+
   const headers = new Headers({
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache",
     "Connection": "keep-alive",
-    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Credentials": "true",
+    "Vary": "Origin",
   });
 
   const responseStream = new ReadableStream({
@@ -43,5 +80,5 @@ export async function GET(request: NextRequest) {
     },
   });
 
-  return new NextResponse(responseStream, { headers });
+  return withRequestHeaders(new NextResponse(responseStream, { headers }), requestContext);
 }

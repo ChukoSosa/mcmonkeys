@@ -1,8 +1,18 @@
 import { NextResponse } from "next/server";
 import type { ZodError } from "zod";
+import { logger } from "./logger";
+
+interface ApiErrorContext {
+  requestId?: string;
+  method?: string;
+  pathname?: string;
+}
 
 export type ApiErrorCode =
   | "VALIDATION_ERROR"
+  | "UNAUTHORIZED"
+  | "FORBIDDEN"
+  | "TOO_MANY_REQUESTS"
   | "NOT_FOUND"
   | "CONFLICT"
   | "BAD_REQUEST"
@@ -25,18 +35,42 @@ export function validationError(error: ZodError) {
   return new ApiError(400, "VALIDATION_ERROR", "Invalid request payload", error.flatten());
 }
 
-export function apiErrorResponse(error: unknown) {
+export function apiErrorResponse(error: unknown, context?: ApiErrorContext) {
   if (error instanceof ApiError) {
+    logger.warn({
+      requestId: context?.requestId,
+      method: context?.method,
+      pathname: context?.pathname,
+      code: error.code,
+      status: error.status,
+      details: error.details,
+      message: error.message,
+    }, "Handled API error");
+
     return NextResponse.json(
       {
         error: error.message,
         code: error.code,
         details: error.details,
+        requestId: context?.requestId,
       },
       { status: error.status },
     );
   }
 
-  console.error("Unhandled API error", error);
-  return NextResponse.json({ error: "Internal server error", code: "INTERNAL_ERROR" }, { status: 500 });
+  logger.error({
+    requestId: context?.requestId,
+    method: context?.method,
+    pathname: context?.pathname,
+    error,
+  }, "Unhandled API error");
+
+  return NextResponse.json(
+    {
+      error: "Internal server error",
+      code: "INTERNAL_ERROR",
+      requestId: context?.requestId,
+    },
+    { status: 500 },
+  );
 }

@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/api/server/prisma";
-import { apiErrorResponse } from "@/app/api/server/api-error";
+import { apiErrorResponse, validationError } from "@/app/api/server/api-error";
 import { emitEvent } from "@/app/api/server/event-bus";
 import { activityService } from "@/app/api/server/activity-service";
 import { dispatchCommentReview } from "@/app/api/server/comment-automator";
 import { isMissionControlDemoMode, demoReadOnlyResponse } from "@/app/api/server/demo-mode";
+import { createRequestContext, withRequestHeaders } from "@/app/api/server/request-context";
+import { z } from "zod";
 
 const OPERATOR_ACTOR = {
   type: "human" as const,
@@ -12,19 +14,43 @@ const OPERATOR_ACTOR = {
   name: "Operator",
 };
 
-function clampLimit(value: string | null, fallback = 50) {
-  const n = value ? Number.parseInt(value, 10) : fallback;
-  if (!Number.isFinite(n)) return fallback;
-  return Math.max(1, Math.min(n, 200));
-}
+const TaskIdParamSchema = z.object({
+  id: z.string().min(1),
+});
+
+const CommentsQuerySchema = z.object({
+  limit: z.coerce.number().int().min(1).max(200).optional(),
+});
+
+const CreateCommentSchema = z.object({
+  body: z.string().min(1, "body is required").max(5_000),
+  authorType: z.enum(["agent", "human", "system"]).optional(),
+  authorId: z.string().min(1).nullable().optional(),
+  requiresResponse: z.boolean().optional(),
+  status: z.string().min(1).max(40).optional(),
+  inReplyToId: z.string().min(1).nullable().optional(),
+});
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const requestContext = createRequestContext(request);
   try {
-    const { id } = await params;
-    const limit = clampLimit(request.nextUrl.searchParams.get("limit"), 50);
+    const parsedParams = TaskIdParamSchema.safeParse(await params);
+    if (!parsedParams.success) {
+      throw validationError(parsedParams.error);
+    }
+
+    const parsedQuery = CommentsQuerySchema.safeParse(
+      Object.fromEntries(request.nextUrl.searchParams.entries()),
+    );
+    if (!parsedQuery.success) {
+      throw validationError(parsedQuery.error);
+    }
+
+    const { id } = parsedParams.data;
+    const limit = parsedQuery.data.limit ?? 50;
 
     const comments = await prisma.taskComment.findMany({
       where: { taskId: id },
@@ -36,13 +62,16 @@ export async function GET(
       return !comment.resolvedAt && (comment.status ?? "open") !== "resolved";
     }).length;
 
-    return NextResponse.json({
-      comments,
-      nextCursor: null,
-      openCount,
-    });
+    return withRequestHeaders(
+      NextResponse.json({
+        comments,
+        nextCursor: null,
+        openCount,
+      }),
+      requestContext,
+    );
   } catch (error) {
-    return apiErrorResponse(error);
+    return withRequestHeaders(apiErrorResponse(error, requestContext), requestContext);
   }
 }
 
@@ -50,18 +79,25 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const requestContext = createRequestContext(request);
   try {
     if (isMissionControlDemoMode()) {
-      return demoReadOnlyResponse();
+      return withRequestHeaders(demoReadOnlyResponse(), requestContext);
     }
 
-    const { id } = await params;
+    const parsedParams = TaskIdParamSchema.safeParse(await params);
+    if (!parsedParams.success) {
+      throw validationError(parsedParams.error);
+    }
+
     const payload = await request.json();
-
-    const body = typeof payload?.body === "string" ? payload.body.trim() : "";
-    if (!body) {
-      return NextResponse.json({ error: "body is required" }, { status: 400 });
+    const parsedBody = CreateCommentSchema.safeParse(payload);
+    if (!parsedBody.success) {
+      throw validationError(parsedBody.error);
     }
+
+    const { id } = parsedParams.data;
+    const body = parsedBody.data.body.trim();
 
     const task = await prisma.task.findUnique({
       where: { id },
@@ -72,23 +108,17 @@ export async function POST(
       return NextResponse.json({ error: "task not found" }, { status: 404 });
     }
 
-    const normalizedAuthorType =
-      typeof payload?.authorType === "string" ? payload.authorType.toLowerCase() : "human";
-    const authorType = ["agent", "human", "system"].includes(normalizedAuthorType)
-      ? normalizedAuthorType
-      : "human";
+    const authorType = parsedBody.data.authorType ?? "human";
 
     const comment = await prisma.taskComment.create({
       data: {
         taskId: id,
         authorType,
-        authorId: typeof payload?.authorId === "string" ? payload.authorId : null,
+        authorId: parsedBody.data.authorId ?? null,
         body,
-        requiresResponse: Boolean(payload?.requiresResponse),
-        status: typeof payload?.status === "string" && payload.status.trim()
-          ? payload.status.trim()
-          : "open",
-        inReplyToId: typeof payload?.inReplyToId === "string" ? payload.inReplyToId : null,
+        requiresResponse: parsedBody.data.requiresResponse ?? false,
+        status: parsedBody.data.status?.trim() || "open",
+        inReplyToId: parsedBody.data.inReplyToId ?? null,
       },
     });
 
@@ -125,10 +155,12 @@ export async function POST(
       commentId: comment.id,
       commentBody: comment.body,
       authorType: comment.authorType,
+      requestId: requestContext.requestId,
+      waitUntil: (request as NextRequest & { waitUntil?: (promise: Promise<unknown>) => void }).waitUntil,
     });
 
-    return NextResponse.json(comment, { status: 201 });
+    return withRequestHeaders(NextResponse.json(comment, { status: 201 }), requestContext);
   } catch (error) {
-    return apiErrorResponse(error);
+    return withRequestHeaders(apiErrorResponse(error, requestContext), requestContext);
   }
 }

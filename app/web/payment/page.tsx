@@ -3,8 +3,17 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
+import { z } from "zod";
 
 type Plan = "annual" | "monthly";
+
+const PaymentSchema = z.object({
+  cardholder: z.string().trim().min(2, "Enter the cardholder name"),
+  cardNumber: z.string().regex(/^\d{16}$/, "Card number must have 16 digits"),
+  expiry: z.string().regex(/^(0[1-9]|1[0-2])\/(\d{2})$/, "Use MM/YY format"),
+  cvv: z.string().regex(/^\d{3,4}$/, "CVV must have 3 or 4 digits"),
+});
 
 export default function PaymentPage() {
   const router = useRouter();
@@ -14,10 +23,38 @@ export default function PaymentPage() {
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+
+  function normalizeCardNumber(value: string) {
+    return value.replace(/\D/g, "").slice(0, 16);
+  }
+
+  function formatCardNumber(value: string) {
+    return normalizeCardNumber(value).replace(/(.{4})/g, "$1 ").trim();
+  }
+
+  function normalizeExpiry(value: string) {
+    const digits = value.replace(/\D/g, "").slice(0, 4);
+    if (digits.length <= 2) return digits;
+    return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+  }
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!cardholder.trim() || !cardNumber.trim() || !expiry.trim() || !cvv.trim()) return;
+    setFormError(null);
+
+    const parsed = PaymentSchema.safeParse({
+      cardholder,
+      cardNumber: normalizeCardNumber(cardNumber),
+      expiry,
+      cvv: cvv.replace(/\D/g, ""),
+    });
+
+    if (!parsed.success) {
+      setFormError(parsed.error.issues[0]?.message ?? "Check your payment details.");
+      return;
+    }
+
     setIsSubmitting(true);
     await new Promise((resolve) => setTimeout(resolve, 900));
     router.push("/web/thank-you");
@@ -32,8 +69,15 @@ export default function PaymentPage() {
         <div className="flex flex-row items-center gap-10">
           <div className="flex flex-col">
             <div className="rounded-md border border-slate-700 bg-slate-900/50 p-4">
-              <img src="\office\mcmonkes-library\001.png" width={420}  alt="MC Lucy" />
-            </div>            
+              <Image
+                src="/office/mcmonkes-library/001.png"
+                width={420}
+                height={420}
+                alt="MC Lucy Team"
+                className="h-auto w-full max-w-[420px]"
+                priority
+              />
+            </div>
           </div>
           <div className="flex flex-col gap-5">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">Mission Control</p>
@@ -88,11 +132,15 @@ export default function PaymentPage() {
             </div>
           </div>
 
-          <div className="flex min-h-[260px] items-center justify-center rounded-xl border border-dashed border-slate-600/70 bg-slate-900/50 p-6">
+          <div className="flex min-h-[260px] items-center justify-center rounded-xl border border-dashed border-slate-600/70 bg-slate-900/50 p-4">
             <div className="text-center">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Image Placeholder</p>
-              <p className="mt-2 text-sm text-slate-400">Concept photo area</p>
-              <p className="mt-1 text-xs text-slate-500">MC Lucy / Builder / Claudio / Family story visual</p>
+              <Image
+                src="/office/imgs/scenes/3dolarstory.png"
+                width={380}
+                height={280}
+                alt="MC Lucy pricing"
+                className="h-auto w-full max-w-[380px]"
+              />
             </div>
           </div>
         </div>
@@ -193,33 +241,48 @@ export default function PaymentPage() {
               value={cardholder}
               onChange={(e) => setCardholder(e.target.value)}
               placeholder="Cardholder name"
+              aria-label="Cardholder name"
               className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
               required
             />
             <input
-              value={cardNumber}
-              onChange={(e) => setCardNumber(e.target.value)}
+              value={formatCardNumber(cardNumber)}
+              onChange={(e) => setCardNumber(normalizeCardNumber(e.target.value))}
               placeholder="Card number"
+              aria-label="Card number"
+              inputMode="numeric"
+              autoComplete="cc-number"
               className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
               required
             />
             <div className="grid grid-cols-2 gap-3">
               <input
                 value={expiry}
-                onChange={(e) => setExpiry(e.target.value)}
+                onChange={(e) => setExpiry(normalizeExpiry(e.target.value))}
                 placeholder="MM/YY"
+                aria-label="Expiry date"
+                inputMode="numeric"
+                autoComplete="cc-exp"
                 className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
                 required
               />
               <input
                 value={cvv}
-                onChange={(e) => setCvv(e.target.value)}
+                onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0, 4))}
                 placeholder="CVV"
+                aria-label="CVV"
+                inputMode="numeric"
+                autoComplete="cc-csc"
                 className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
                 required
               />
             </div>
           </div>
+          {formError && (
+            <p className="rounded-md border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-300">
+              {formError}
+            </p>
+          )}
           <button
             type="submit"
             disabled={isSubmitting}
