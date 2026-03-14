@@ -27,7 +27,7 @@ export default function StoryPage() {
       <header className="mb-16">
         <SectionLabel>The Story</SectionLabel>
         <h1 className="mt-3 text-4xl font-semibold leading-tight text-white sm:text-5xl">
-          Why MC&nbsp;LUCY Exists
+          Why MC-MONKEYS Exists
         </h1>
         <p className="mt-5 text-base leading-relaxed text-slate-300">
           This is not a product marketing page. It&apos;s the honest story of how MC-MONKEYS came to exist — the
