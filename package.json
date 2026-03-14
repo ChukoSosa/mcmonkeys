@@ -22,6 +22,7 @@
     "demo:db:seed": "tsx scripts/seed-demo-db.ts",
     "demo:dummyset": "tsx scripts/seed-demo-db.ts",
     "demo:db:reset": "npm run demo:db:setup ; npm run demo:db:seed",
+    "mc:backlog:review": "tsx scripts/run-backlog-review.ts",
     "dist:build": "node scripts/build-dist.js"
   },
   "prisma": {

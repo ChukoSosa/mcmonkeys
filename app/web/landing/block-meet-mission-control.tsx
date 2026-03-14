@@ -1,8 +1,8 @@
 const FEATURE_BULLETS = [
-  "See what agents are doing in real time",
-  "Track tasks and subtasks clearly",
-  "Spot blockers before they become failures",
-  "Understand system activity instantly",
+  "Track tasks and subtasks clearly.",
+  "Understand who owns what",
+  "Detect blockers before they become failures",
+  "Follow the full activity stream of your system",
 ];
 
 export function BlockMeetMissionControl() {
@@ -14,6 +14,9 @@ export function BlockMeetMissionControl() {
           <h2 className="text-3xl font-semibold leading-tight text-slate-100 sm:text-4xl lg:text-5xl">
             Meet Mission Control
           </h2>
+          <p className="space-y-3 text-base leading-relaxed text-slate-300 sm:text-lg">
+            See what your agents are doing in real time.
+          </p>
 
           <ul className="space-y-3 text-base leading-relaxed text-slate-300 sm:text-lg">
             {FEATURE_BULLETS.map((item) => (

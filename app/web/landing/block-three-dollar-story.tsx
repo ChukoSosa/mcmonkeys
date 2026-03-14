@@ -19,6 +19,11 @@ export function BlockThreeDollarStory() {
             launch price keeps that spirit alive while turning it into a real way to support the
             project.
           </p>
+
+          <p className="max-w-xl text-sm leading-relaxed text-slate-300 sm:text-base">
+            It’s not a serious pricing model.
+            It’s a reminder that this system started as a very personal project.
+          </p>
         </div>
 
         <div className="relative">

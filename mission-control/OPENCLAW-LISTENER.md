@@ -145,6 +145,39 @@ This re-triggers the automator pipeline via the normal comment POST flow.
 
 ---
 
+## mcLucy Backlog Health Review (Manual Trigger)
+
+mcLucy can run a backlog health cycle on demand to validate Gold Rules and raise flags for OpenClaw Main.
+
+### Endpoint
+```
+POST {MC_BASE_URL}/api/tasks/backlog-review
+Content-Type: application/json
+
+{
+  "dryRun": false,
+  "limit": 100
+}
+```
+
+### What this run does
+1. Scans BACKLOG tasks.
+2. Validates readiness (title clarity, min subtasks, Input section, Output section).
+3. Creates a task comment flag from mcLucy when non-compliant.
+4. Emits activity/events so OpenClaw can detect and act.
+5. If pending human response exceeds 30 minutes, moves task to BLOCKED.
+
+### OpenClaw clear contract
+Only OpenClaw Main clears mcLucy flags. After fixing the card, OpenClaw must post a comment including:
+
+```
+[mclucy-clear:{fingerprint}]
+```
+
+The fingerprint is included in the original mcLucy flag comment.
+
+---
+
 ## AgentRoutine Registration
 
 Register the listener as an `AgentRoutine` on startup so MC can track its health:

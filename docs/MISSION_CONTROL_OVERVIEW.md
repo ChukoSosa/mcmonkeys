@@ -2,6 +2,8 @@
 
 MC-MONKEYS is the operating layer that coordinates agents, tasks, evidence, and reviews inside a single Mission Control workflow.
 
+mcLucy is the PM/Scrum-Master bot of Mission Control. Its job is to keep the board alive, healthy, and auditable.
+
 ## Source of truth
 
 MC-MONKEYS is the source of truth for:
@@ -33,6 +35,13 @@ Agents must:
 - save outputs as evidence
 - request review before completion
 - wait for human approval before final closure
+
+mcLucy Gold Rules (enforced before starting execution):
+- rule 1: task title must be clear and specific
+- rule 2: minimum 2 subtasks (nice to have: 2 to 5)
+- rule 3: expected output must be explicit, measurable, and documented
+- rule 4: required input/material must be explicit and documented
+- rule 5: every board movement must be logged (task, subtask, comment, status move, info request)
 
 ## Canonical task lifecycle for this version
 

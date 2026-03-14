@@ -1,6 +1,14 @@
 import { apiFetch } from "./client";
-import { TasksResponseSchema, SubtasksResponseSchema, CommentsResponseSchema, CommentSchema } from "@/lib/schemas";
+import {
+  TasksResponseSchema,
+  SubtasksResponseSchema,
+  CommentsResponseSchema,
+  CommentSchema,
+  TaskValidationStateSchema,
+  ValidationFlagsResponseSchema,
+} from "@/lib/schemas";
 import type { Task, Subtask, Comment } from "@/lib/schemas";
+import type { TaskValidationState, ValidationFlagItem } from "@/lib/schemas";
 import { shouldUseMockData } from "./mockMode";
 import { MOCK_TASKS, getMockSubtasks, getMockComments } from "@/lib/mock/data";
 
@@ -110,4 +118,45 @@ export async function archiveTask(taskId: string): Promise<Task> {
     throw new Error("Failed to parse archived task response");
   }
   return parsed.data;
+}
+
+export async function getTaskValidationState(taskId: string): Promise<TaskValidationState | null> {
+  if (shouldUseMockData()) {
+    return null;
+  }
+
+  const raw = await apiFetch<unknown>(`/api/tasks/${taskId}/validation-state`);
+  const parsed = TaskValidationStateSchema.safeParse(raw);
+  if (!parsed.success) {
+    console.warn("[getTaskValidationState] schema mismatch", parsed.error.flatten());
+    return null;
+  }
+  return parsed.data;
+}
+
+export async function getValidationFlags(options?: {
+  includeBlocked?: boolean;
+  limit?: number;
+}): Promise<ValidationFlagItem[]> {
+  if (shouldUseMockData()) {
+    return [];
+  }
+
+  const query = new URLSearchParams();
+  if (options?.includeBlocked) {
+    query.set("includeBlocked", "true");
+  }
+  if (typeof options?.limit === "number") {
+    query.set("limit", String(options.limit));
+  }
+
+  const suffix = query.toString() ? `?${query.toString()}` : "";
+  const raw = await apiFetch<unknown>(`/api/tasks/validation-flags${suffix}`);
+  const parsed = ValidationFlagsResponseSchema.safeParse(raw);
+  if (!parsed.success) {
+    console.warn("[getValidationFlags] schema mismatch", parsed.error.flatten());
+    return [];
+  }
+
+  return parsed.data.flags;
 }

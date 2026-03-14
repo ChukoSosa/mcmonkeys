@@ -21,7 +21,7 @@ export function BlockOrigin() {
               <br />
               Where systems start to feel opaque.
             </p>
-            <p>Claudio proposed the operational architecture that MC-MONKEYS uses today.</p>
+            <p>Claudio helped shape the operational architecture that MC-MONKEYS uses today.</p>
           </div>
         </div>
 

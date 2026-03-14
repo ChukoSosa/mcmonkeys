@@ -10,6 +10,7 @@ import {
   outputHasEvidenceFile,
   parseExistingTicketCode,
 } from "./task-output";
+import { checkLucyGoldRules } from "@/lib/mission/goldRules";
 
 const OPERATOR_ACTOR = {
   type: "human" as const,
@@ -235,7 +236,19 @@ export const taskService = {
 
     const existing = await prisma.task.findUnique({
       where: { id },
-      select: { id: true, title: true, status: true, assignedAgentId: true, metadata: true },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        status: true,
+        assignedAgentId: true,
+        metadata: true,
+        _count: {
+          select: {
+            subtasks: true,
+          },
+        },
+      },
     });
 
     if (!existing) {
@@ -250,6 +263,52 @@ export const taskService = {
       const agent = await prisma.agent.findUnique({ where: { id: updates.assignedAgentId }, select: { id: true } });
       if (!agent) {
         throw new ApiError(400, "BAD_REQUEST", "Assigned agent does not exist");
+      }
+    }
+
+    const targetTitle = typeof updates.title === "string" ? updates.title : existing.title;
+    const targetDescription =
+      typeof updates.description === "string" ? updates.description : existing.description;
+    const targetStatus = updates.status ?? existing.status;
+
+    if (["IN_PROGRESS", "REVIEW", "DONE"].includes(targetStatus)) {
+      const goldRules = checkLucyGoldRules({
+        title: targetTitle,
+        description: targetDescription,
+        subtaskCount: existing._count.subtasks,
+      });
+
+      if (goldRules.errors.length > 0) {
+        await activityService.log({
+          kind: "task",
+          action: "task.guard.blocked",
+          summary: `Lucy blocked status transition for task "${existing.title}"`,
+          actor: OPERATOR_ACTOR,
+          taskId: existing.id,
+          agentId: existing.assignedAgentId ?? undefined,
+          payload: {
+            previousStatus: existing.status,
+            attemptedStatus: targetStatus,
+            errors: goldRules.errors,
+            warnings: goldRules.warnings,
+            checks: goldRules.checks,
+            policyOwner: "mcLucy",
+          },
+        });
+
+        throw new ApiError(
+          400,
+          "VALIDATION_ERROR",
+          "Lucy policy blocked task start/review: task does not comply with Gold Rules",
+          {
+            rule: "gold-rules",
+            previousStatus: existing.status,
+            attemptedStatus: targetStatus,
+            errors: goldRules.errors,
+            warnings: goldRules.warnings,
+            checks: goldRules.checks,
+          },
+        );
       }
     }
 

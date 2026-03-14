@@ -34,3 +34,51 @@ export type PipelineStageRef = z.infer<typeof PipelineStageRefSchema>;
 export const TasksResponseSchema = z.object({
   tasks: z.array(TaskSchema),
 });
+
+export const TaskValidationStateSchema = z.object({
+  taskId: z.string(),
+  status: z.string(),
+  compliant: z.boolean(),
+  checks: z.object({
+    hasClearTitle: z.boolean(),
+    hasRequiredSubtasks: z.boolean(),
+    hasClearOutput: z.boolean(),
+    hasClearInput: z.boolean(),
+  }),
+  errors: z.array(z.string()),
+  warnings: z.array(z.string()),
+  openFlag: z
+    .object({
+      commentId: z.string(),
+      createdAt: z.string(),
+      fingerprint: z.string().nullable(),
+      resolvedByOpenClaw: z.boolean(),
+      humanCommentsAfterFlag: z.number(),
+    })
+    .nullable(),
+  mcLucy: z.record(z.string(), z.unknown()).nullable(),
+  reviewedAt: z.string(),
+});
+
+export type TaskValidationState = z.infer<typeof TaskValidationStateSchema>;
+
+export const ValidationFlagItemSchema = z.object({
+  taskId: z.string(),
+  taskTitle: z.string(),
+  taskStatus: z.string(),
+  flagCommentId: z.string(),
+  fingerprint: z.string().nullable(),
+  flaggedAt: z.string(),
+  ageMinutes: z.number(),
+  awaitingHumanInput: z.boolean(),
+  timedOut: z.boolean(),
+  errors: z.array(z.string()),
+});
+
+export const ValidationFlagsResponseSchema = z.object({
+  total: z.number(),
+  flags: z.array(ValidationFlagItemSchema),
+  updatedAt: z.string(),
+});
+
+export type ValidationFlagItem = z.infer<typeof ValidationFlagItemSchema>;

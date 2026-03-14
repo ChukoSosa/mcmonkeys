@@ -1,7 +1,7 @@
 import type { MissionSubtask, MissionTaskDetail } from "@/types/mission";
 
-export const MIN_RECOMMENDED_SUBTASKS = 5;
-export const MAX_RECOMMENDED_SUBTASKS = 10;
+export const MIN_RECOMMENDED_SUBTASKS = 2;
+export const MAX_RECOMMENDED_SUBTASKS = 5;
 
 export const MIN_RECOMMENDED_SUBTASK_MINUTES = 5;
 export const MAX_RECOMMENDED_SUBTASK_MINUTES = 20;

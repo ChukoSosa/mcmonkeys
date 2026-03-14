@@ -14,6 +14,9 @@ export function BlockFourQuestions() {
           <h2 className="text-3xl font-semibold leading-tight text-slate-100 sm:text-4xl lg:text-5xl">
             Four questions your system should answer instantly
           </h2>
+          <p className="space-y-3 text-base leading-relaxed text-slate-300 sm:text-lg">
+            A system running agents should always answer four questions instantly.
+          </p>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">

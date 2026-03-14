@@ -10,7 +10,7 @@ import { BlockFinalCta } from "./block-final-cta";
 
 export const metadata = {
   title: "MC-MONKEYS | Landing",
-  description: "MC-MONKEYS for AI Agents.",
+  description: "Mission Control for AI agents. Built by a human, designed with an agent, and operated by intelligence.",
 };
 
 export default function LandingPage() {
@@ -20,12 +20,15 @@ export default function LandingPage() {
       <div className="relative">
         <BlockHero />
         <BlockScreenshots />
-        <BlockOrigin />
-        <BlockThreeRoles />
-        <BlockCoreIdea />
+        
         <BlockMeetMissionControl />
+        <BlockCoreIdea />
         <BlockFourQuestions />
+        
+        <BlockOrigin />
+        <BlockThreeRoles />       
         <BlockThreeDollarStory />
+
         <BlockFinalCta />
       </div>
     </main>

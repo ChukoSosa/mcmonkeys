@@ -89,6 +89,9 @@ const ACTION_VERBS = [
   "optimize",
 ];
 
+const INPUT_SIGNAL_REGEX = /\b(input|inputs|insumo|insumos|material|materiales|dependencia|dependencias|prerequisito|prerequisitos)\b/i;
+const OUTPUT_SIGNAL_REGEX = /\b(output|outputs|resultado esperado|resultado|entregable|evidencia|criterio de completitud|criterio de done)\b/i;
+
 function cleanText(value: string | undefined): string {
   return (value ?? "").replace(/\s+/g, " ").trim();
 }
@@ -131,6 +134,14 @@ function parseActionableClauses(rawText: string): string[] {
 function hasActionSignal(rawText: string): boolean {
   const text = rawText.toLowerCase();
   return ACTION_VERBS.some((verb) => text.includes(verb));
+}
+
+function hasInputSignal(rawText: string): boolean {
+  return INPUT_SIGNAL_REGEX.test(rawText);
+}
+
+function hasOutputSignal(rawText: string): boolean {
+  return OUTPUT_SIGNAL_REGEX.test(rawText);
 }
 
 function buildGenericDraftSubtasks(baseTitle: string): MissionDraftSubtask[] {
@@ -220,6 +231,14 @@ export function createDraftTaskFromIntake(input: MissionRawIntakeRequest): Missi
 
   if (!hasActionSignal(normalized.rawText)) {
     warnings.push("No clear action verb detected; draft may require clarification.");
+  }
+
+  if (!hasInputSignal(normalized.rawText)) {
+    warnings.push("Lucy rule: define required input/material before starting the task.");
+  }
+
+  if (!hasOutputSignal(normalized.rawText)) {
+    warnings.push("Lucy rule: define expected measurable output before starting the task.");
   }
 
   const draftSubtasks = suggestDraftSubtasks(normalized);

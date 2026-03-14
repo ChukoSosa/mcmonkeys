@@ -253,12 +253,13 @@ export function buildMainAgentResponseDraft(
 
   if (decision.decision === "ask_for_clarification") {
     return {
-      title: "Cuéntame un poco más",
-      message: "Recibí tu mensaje pero necesito más detalle para crear la tarea correctamente. Respondé estas preguntas:",
+      title: "mcLucy necesita más detalle",
+      message: "Soy mcLucy (scrum master/PM del Mission Control) y necesito estos datos para mantener el board sano antes de arrancar:",
       bulletPoints: warnings.length > 0 ? warnings : ["El pedido es ambiguo sin más contexto."],
       followUpQuestions: [
         "¿Cuál es el objetivo concreto?",
-        "¿Cuál es el resultado esperado o criterio de completitud?",
+        "¿Cuál es el input/material necesario para empezar?",
+        "¿Cuál es el resultado esperado o criterio de completitud medible?",
         "¿Quién debería encargarse de esto?",
       ],
       tone: "clarifying",

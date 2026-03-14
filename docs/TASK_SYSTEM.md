@@ -34,8 +34,8 @@ Important compatibility note:
 ## Subtasks
 
 Subtasks are used for granular progress tracking.
-Whenever possible, a task should be decomposed into 3 to 5 subtasks.
-In more complex cases, up to 10 subtasks is acceptable.
+Every task must have at least 2 subtasks before execution starts.
+Recommended range is 2 to 5 subtasks.
 
 Canonical subtask states:
 - `TODO`
@@ -74,6 +74,9 @@ Possible outputs include:
 - structured data
 
 If expected output is unclear, escalate and ask for clarification.
+
+Before execution starts, required inputs/materials must also be documented.
+If input context is missing, the task must remain blocked/backlog until clarified.
 
 ## Review gate
 

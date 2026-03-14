@@ -25,11 +25,11 @@ export function BlockHero() {
       <div className="grid w-full items-center gap-14 lg:grid-cols-2 lg:gap-16">
         <div className="space-y-7">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300/90">
-            MC-MONKEYS FOR AI AGENTS
+            Mission Control for AI agents
           </p>
 
           <h1 className="max-w-xl text-4xl font-semibold leading-tight text-slate-100 sm:text-5xl lg:text-5xl">
-            Built by a human, designed with an agent, and operated by intelligence.
+            Built by a human, designed with an agent, and operated with intelligence.
           </h1>
 
           <p className="max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
