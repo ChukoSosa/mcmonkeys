@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -18,12 +18,29 @@ const PaymentSchema = z.object({
 export default function PaymentPage() {
   const router = useRouter();
   const [plan, setPlan] = useState<Plan>("annual");
+  const [imageIndex, setImageIndex] = useState(0);
   const [cardholder, setCardholder] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+
+  const teamImages = [
+    "/office/mcmonkes-library/001.png",
+    "/office/mcmonkes-library/002.png",
+    "/office/mcmonkes-library/003.png",
+  ];
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setImageIndex((current) => (current + 1) % teamImages.length);
+    }, 3000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [teamImages.length]);
 
   function normalizeCardNumber(value: string) {
     return value.replace(/\D/g, "").slice(0, 16);
@@ -70,7 +87,7 @@ export default function PaymentPage() {
           <div className="flex flex-col">
             <div className="rounded-md border border-slate-700 bg-slate-900/50 p-4">
               <Image
-                src="/office/mcmonkes-library/001.png"
+                src={teamImages[imageIndex]}
                 width={420}
                 height={420}
                 alt="MC Lucy Team"
