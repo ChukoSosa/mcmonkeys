@@ -7,6 +7,25 @@ import type { Agent, Task } from "@/types";
 import type { NormalizedSceneState } from "@/lib/office/sceneStateNormalizer";
 import { cn } from "@/lib/utils/cn";
 
+function getStateBorderClassName(state: NormalizedSceneState): string {
+  switch (state.state) {
+    case "working":
+      return "border-accent-green";
+    case "idle":
+      return "border-amber-300";
+    case "reviewing":
+      return "border-cyan-300";
+    case "blocked":
+      return "border-accent-amber";
+    case "offline":
+      return "border-slate-500";
+    case "critical":
+      return "border-accent-red";
+    default:
+      return "border-slate-400";
+  }
+}
+
 interface AgentBubbleProps {
   agent: Agent;
   task: Task | null;
@@ -14,6 +33,7 @@ interface AgentBubbleProps {
   y: number;
   offsetX?: number;
   offsetY?: number;
+  slowMove?: boolean;
   avatarUrl?: string;
   state: NormalizedSceneState;
   onSelectAgent: (agentId: string) => void;
@@ -27,6 +47,7 @@ function AgentBubbleComponent({
   y,
   offsetX = 0,
   offsetY = 0,
+  slowMove = false,
   avatarUrl,
   state,
   onSelectAgent,
@@ -34,6 +55,7 @@ function AgentBubbleComponent({
 }: AgentBubbleProps) {
   const [imageFailed, setImageFailed] = useState(false);
   const bubbleControls = useAnimationControls();
+  const borderClassName = getStateBorderClassName(state);
 
   const triggerBounce = () => {
     bubbleControls.stop();
@@ -59,7 +81,11 @@ function AgentBubbleComponent({
       className="group absolute z-20"
       style={{ transform: `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))` }}
       animate={{ left: `${x}%`, top: `${y}%` }}
-      transition={{ type: "spring", stiffness: 120, damping: 18, mass: 0.8 }}
+      transition={
+        slowMove
+          ? { type: "tween", duration: 3.2, ease: [0.22, 0.8, 0.2, 1] }
+          : { type: "spring", stiffness: 120, damping: 18, mass: 0.8 }
+      }
       onAnimationComplete={() => onReachedPosition(agent.id)}
       onClick={() => {
         triggerBounce();
@@ -71,7 +97,8 @@ function AgentBubbleComponent({
         initial={{ y: 0, scale: 1 }}
         animate={bubbleControls}
         className={cn(
-          "relative h-14 w-14 overflow-hidden rounded-full border-2 border-surface-700 bg-surface-900/95",
+          "relative h-14 w-14 overflow-hidden rounded-full border-2 bg-surface-900/95",
+          borderClassName,
           state.ringClassName,
           state.pulse && "animate-pulse-slow",
         )}
