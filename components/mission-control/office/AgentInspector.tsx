@@ -104,7 +104,14 @@ export function AgentInspector({
       {/* Name + role */}
       <div>
         <p className="text-sm font-semibold text-slate-100">{agent.name}</p>
-        <p className="text-slate-400">{agent.role ?? "Unknown role"}</p>
+        <div className="flex items-center gap-2">
+          <p className="text-slate-400">{agent.role ?? "Unknown role"}</p>
+          {agent.id === "mclucy-chief" && (
+            <span className="rounded border border-cyan-400/40 bg-cyan-500/10 px-2 py-0.5 text-[10px] uppercase tracking-wide text-cyan-200">
+              Global Supervisor
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-slate-300">
