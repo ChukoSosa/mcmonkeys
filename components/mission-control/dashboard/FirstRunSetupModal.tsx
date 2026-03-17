@@ -116,7 +116,7 @@ export function FirstRunSetupModal({
           <div className="rounded-lg border border-surface-700 bg-surface-800/60 px-4 py-3 text-xs text-slate-300">
             <p className="font-semibold uppercase tracking-[0.16em] text-slate-200">Output Folder</p>
             <p className="mt-1 leading-relaxed">
-              Recommended structure: <span className="font-semibold text-cyan-300">your-folder/outputs/TASK-###/output</span>
+              Recommended structure: <span className="font-semibold text-cyan-300">your-folder/mcmonkeys/TASK-###/output</span>
             </p>
           </div>
 
@@ -125,7 +125,7 @@ export function FirstRunSetupModal({
             <input
               value={pathInput}
               onChange={(event) => setPathInput(event.target.value)}
-              placeholder="Example: C:\\MCLUCY\\outputs"
+              placeholder="Example: C:\\mcmonkeys"
               className="w-full rounded-lg border border-surface-600 bg-surface-950 px-3 py-2.5 text-sm text-slate-100 outline-none transition focus:border-cyan-500"
             />
           </label>
@@ -133,11 +133,11 @@ export function FirstRunSetupModal({
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              onClick={() => setPathInput("outputs")}
+              onClick={() => setPathInput("mcmonkeys")}
               className="inline-flex items-center gap-2 rounded-md border border-surface-600 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-slate-300 transition hover:border-slate-500 hover:text-slate-100"
             >
               <FontAwesomeIcon icon={faStar} />
-              Use recommended (outputs)
+              Use recommended (mcmonkeys)
             </button>
 
             {canUseDirectoryPicker && (
