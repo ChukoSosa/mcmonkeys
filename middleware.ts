@@ -5,6 +5,13 @@ import { checkRateLimit } from "@/lib/security/rate-limit";
 
 const MUTATING_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 
+function isReadOnlyDemoMode(): boolean {
+  return (
+    process.env.MISSION_CONTROL_DEMO_MODE === "true" ||
+    process.env.NEXT_PUBLIC_MISSION_CONTROL_DEMO_MODE === "true"
+  );
+}
+
 function withSecurityHeaders(response: NextResponse): NextResponse {
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("X-Frame-Options", "DENY");
@@ -47,6 +54,18 @@ export async function middleware(request: NextRequest) {
   }
 
   if (isMutatingMethod) {
+    if (isReadOnlyDemoMode()) {
+      return withSecurityHeaders(
+        NextResponse.json(
+          {
+            error: "Read-only demo",
+            code: "DEMO_MODE_READ_ONLY",
+          },
+          { status: 403 },
+        ),
+      );
+    }
+
     const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
     const rateLimit = checkRateLimit(`api:${clientIp}:${pathname}`, {
       windowMs: 60_000,
