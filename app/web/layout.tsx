@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { notFound, usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
 const NAV_LINKS = [
@@ -13,6 +13,10 @@ const NAV_LINKS = [
 
 export default function WebLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+
+  if (process.env.NEXT_PUBLIC_APP_ONLY_INSTALL === "true") {
+    notFound();
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-100">

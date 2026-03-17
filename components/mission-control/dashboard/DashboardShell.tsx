@@ -4,11 +4,13 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBullseye } from "@fortawesome/free-solid-svg-icons";
+import { faBullseye, faCircleInfo, faGear } from "@fortawesome/free-solid-svg-icons";
 import { SummaryBar } from "@/components/mission-control/dashboard/SummaryBar";
 import { FiltersBar } from "@/components/mission-control/dashboard/FiltersBar";
+import { FirstRunSetupModal } from "@/components/mission-control/dashboard/FirstRunSetupModal";
 import { cn } from "@/lib/utils/cn";
 import { useOnboardingState } from "@/lib/utils/useOnboardingState";
+import { useOutputFolderPreference } from "@/lib/utils/useOutputFolderPreference";
 import { isPublicDemoMode } from "@/lib/utils/demoMode";
 
 interface DashboardShellProps {
@@ -38,16 +40,63 @@ function computePendingModalTop(mainElement: HTMLElement | null) {
 
 export function DashboardShell({ children, showFilters = true, topBar }: DashboardShellProps) {
   const pathname = usePathname();
-  const { isReady } = useOnboardingState();
+  const { hasSeenOnboarding, isReady, markOnboardingSeen } = useOnboardingState();
+  const {
+    outputFolderPath,
+    setOutputFolderPath,
+    isReady: isOutputPreferenceReady,
+  } = useOutputFolderPreference();
   const demoMode = isPublicDemoMode();
   const mainRef = useRef<HTMLElement | null>(null);
+  const settingsMenuRef = useRef<HTMLDivElement | null>(null);
+  const hasInitializedSetupRef = useRef(false);
   const [pendingHref, setPendingHref] = useState<string | null>(null);
   const [pendingModalTop, setPendingModalTop] = useState<number | null>(null);
+  const [isSetupModalOpen, setIsSetupModalOpen] = useState(false);
+  const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
+  const [setupModalMode, setSetupModalMode] = useState<"first-run" | "settings">("first-run");
   const pendingPageLabel = getPendingPageLabel(pendingHref);
+  const hasConfiguredOutputFolder = outputFolderPath.trim().length > 0;
+  const requiresInitialSetup = !hasSeenOnboarding || !hasConfiguredOutputFolder;
+  const isWorkspaceReady = isReady && isOutputPreferenceReady;
+  const shouldBlockNavigation = isWorkspaceReady && requiresInitialSetup;
 
   useEffect(() => {
-    if (!isReady) return;
-  }, [isReady]);
+    if (!isWorkspaceReady) return;
+    if (hasInitializedSetupRef.current) return;
+
+    // Mark that we've initialized to prevent re-opening the modal
+    hasInitializedSetupRef.current = true;
+
+    if (requiresInitialSetup) {
+      setSetupModalMode("first-run");
+      setIsSetupModalOpen(true);
+    }
+  }, [isWorkspaceReady, requiresInitialSetup]);
+
+  useEffect(() => {
+    if (!isSettingsMenuOpen) return;
+
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (!settingsMenuRef.current?.contains(event.target as Node)) {
+        setIsSettingsMenuOpen(false);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsSettingsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("mousedown", handleOutsideClick);
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      window.removeEventListener("mousedown", handleOutsideClick);
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [isSettingsMenuOpen]);
 
   useEffect(() => {
     setPendingHref(null);
@@ -73,7 +122,7 @@ export function DashboardShell({ children, showFilters = true, topBar }: Dashboa
     };
   }, [pendingHref]);
 
-  if (!isReady) {
+  if (!isWorkspaceReady) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-surface-950 text-slate-400">
         <p className="text-xs uppercase tracking-widest">Preparing Mission Control...</p>
@@ -92,31 +141,77 @@ export function DashboardShell({ children, showFilters = true, topBar }: Dashboa
           </div>
         </Link>
 
-        <nav className="flex items-center gap-1 rounded-lg border border-surface-700 bg-surface-800 p-1">
-          {NAV_ITEMS.map((item) => {
-            const active = pathname.startsWith(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => {
-                  if (pathname !== item.href) {
-                    setPendingModalTop(computePendingModalTop(mainRef.current));
-                    setPendingHref(item.href);
-                  }
-                }}
-                className={cn(
-                  "rounded px-3 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors",
-                  active
-                    ? "bg-cyan-500/20 text-cyan-300"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-surface-700",
-                )}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+        <div className="flex items-center gap-2">
+          <nav className="flex items-center gap-1 rounded-lg border border-surface-700 bg-surface-800 p-1">
+            {NAV_ITEMS.map((item) => {
+              const active = pathname.startsWith(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={(event) => {
+                    if (shouldBlockNavigation && pathname !== item.href) {
+                      event.preventDefault();
+                      setSetupModalMode("first-run");
+                      setIsSetupModalOpen(true);
+                      return;
+                    }
+
+                    if (pathname !== item.href) {
+                      setPendingModalTop(computePendingModalTop(mainRef.current));
+                      setPendingHref(item.href);
+                    }
+                  }}
+                  className={cn(
+                    "rounded px-3 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors",
+                    active
+                      ? "bg-cyan-500/20 text-cyan-300"
+                      : "text-slate-400 hover:text-slate-200 hover:bg-surface-700",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div ref={settingsMenuRef} className="relative">
+            <button
+              type="button"
+              onClick={() => setIsSettingsMenuOpen((current) => !current)}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-surface-700 bg-surface-800 text-slate-300 transition hover:border-surface-600 hover:text-slate-100"
+              aria-label="Open Mission Control menu"
+            >
+              <FontAwesomeIcon icon={faGear} />
+            </button>
+
+            {isSettingsMenuOpen && (
+              <div className="absolute right-0 top-11 z-50 w-52 rounded-lg border border-surface-700 bg-surface-900 p-1.5 shadow-xl">
+                <Link
+                  href="/web/manual"
+                  className="flex items-center gap-2 rounded-md px-3 py-2 text-xs font-semibold text-slate-300 transition hover:bg-surface-800 hover:text-slate-100"
+                  onClick={() => setIsSettingsMenuOpen(false)}
+                >
+                  <FontAwesomeIcon icon={faCircleInfo} className="text-cyan-300" />
+                  About MC Monkeys
+                </Link>
+
+                <button
+                  type="button"
+                  className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-xs font-semibold text-slate-300 transition hover:bg-surface-800 hover:text-slate-100"
+                  onClick={() => {
+                    setIsSettingsMenuOpen(false);
+                    setSetupModalMode("settings");
+                    setIsSetupModalOpen(true);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faGear} className="text-cyan-300" />
+                  Settings
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </header>
 
       <div className="shrink-0 px-6 pt-4">
@@ -154,6 +249,27 @@ export function DashboardShell({ children, showFilters = true, topBar }: Dashboa
           </div>
         )}
       </main>
+
+      <FirstRunSetupModal
+        open={isSetupModalOpen}
+        blocking={shouldBlockNavigation}
+        initialPath={outputFolderPath}
+        mode={setupModalMode}
+        onSave={(path) => {
+          setOutputFolderPath(path);
+          markOnboardingSeen();
+          fetch("/api/system/config/outputs-root", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ outputFolderPath: path }),
+          }).catch(console.error);
+          setIsSetupModalOpen(false);
+        }}
+        onClose={() => {
+          if (shouldBlockNavigation) return;
+          setIsSetupModalOpen(false);
+        }}
+      />
     </div>
   );
 }

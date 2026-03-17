@@ -47,14 +47,18 @@ export function computeNextTicketCode(metadataValues: unknown[]): string {
   return formatTicketCode(maxSeen + 1);
 }
 
-export function getTicketPaths(ticketCode: string): {
+export function getTicketPaths(
+  ticketCode: string,
+  outputsRoot?: string,
+): {
   ticketCode: string;
   ticketDir: string;
   inputDir: string;
   outputDir: string;
 } {
   const normalized = normalizeTicketCode(ticketCode);
-  const ticketDir = path.join(OUTPUTS_ROOT, normalized);
+  const root = outputsRoot ?? OUTPUTS_ROOT;
+  const ticketDir = path.join(root, normalized);
   return {
     ticketCode: normalized,
     ticketDir,
@@ -63,20 +67,23 @@ export function getTicketPaths(ticketCode: string): {
   };
 }
 
-export async function ensureEvidenceFolders(ticketCode: string): Promise<{
+export async function ensureEvidenceFolders(
+  ticketCode: string,
+  outputsRoot?: string,
+): Promise<{
   ticketCode: string;
   ticketDir: string;
   inputDir: string;
   outputDir: string;
 }> {
-  const paths = getTicketPaths(ticketCode);
+  const paths = getTicketPaths(ticketCode, outputsRoot);
   await mkdir(paths.inputDir, { recursive: true });
   await mkdir(paths.outputDir, { recursive: true });
   return paths;
 }
 
-export async function outputHasEvidenceFile(ticketCode: string): Promise<boolean> {
-  const { outputDir } = getTicketPaths(ticketCode);
+export async function outputHasEvidenceFile(ticketCode: string, outputsRoot?: string): Promise<boolean> {
+  const { outputDir } = getTicketPaths(ticketCode, outputsRoot);
   return hasAnyFileRecursive(outputDir);
 }
 

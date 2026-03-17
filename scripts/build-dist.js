@@ -88,6 +88,7 @@ run(
       ...process.env,
       NODE_ENV: "production",
       APP_ONLY_INSTALL: "true",
+      NEXT_PUBLIC_APP_ONLY_INSTALL: "true",
     },
   }
 );
@@ -104,6 +105,15 @@ step("3/7", "Assembling distribution folder");
 // 3a. Standalone server (server.js + node_modules + .next/server/)
 copyDir(standaloneDir, DIST);
 ok("Standalone server copied");
+
+// Strip all web pages from dist (marketing/sales pages not included in operator package)
+const webDistDir = path.join(DIST, ".next", "server", "app", "web");
+if (fs.existsSync(webDistDir)) {
+  fs.rmSync(webDistDir, { recursive: true, force: true });
+  ok("Web pages stripped from dist (APP_ONLY_INSTALL)");
+} else {
+  warn("web/ dir not found in dist — may already be excluded");
+}
 
 // 3b. Static assets (.next/static/ → dist/.next/static/)
 const nextStaticSrc = path.join(ROOT, ".next", "static");
@@ -158,6 +168,7 @@ fs.writeFileSync(
   [
     'DATABASE_URL="postgresql://postgres:postgres@localhost:5432/mission_control"',
     'APP_ONLY_INSTALL="true"',
+    'NEXT_PUBLIC_APP_ONLY_INSTALL="true"',
     'NEXT_PUBLIC_MISSION_CONTROL_API_BASE_URL="http://localhost:3001"',
     'NEXT_PUBLIC_USE_MOCK_DATA="false"',
   ].join("\n") + "\n"
