@@ -4,9 +4,19 @@ import type { Agent } from "@/lib/schemas";
 import { shouldUseMockData } from "./mockMode";
 import { MOCK_AGENTS } from "@/lib/mock/data";
 
+function isMcLucySupervisorAgent(agent: Agent): boolean {
+  const normalizedId = agent.id.toLowerCase();
+  const normalizedName = agent.name.toLowerCase();
+  return normalizedId === "mclucy-chief" || normalizedName === "mclucy";
+}
+
+function toOperationalAgents(agents: Agent[]): Agent[] {
+  return agents.filter((agent) => !isMcLucySupervisorAgent(agent));
+}
+
 export async function getAgents(): Promise<Agent[]> {
   if (shouldUseMockData()) {
-    return MOCK_AGENTS;
+    return toOperationalAgents(MOCK_AGENTS);
   }
 
   const raw = await apiFetch<unknown>("/api/agents");
@@ -15,5 +25,5 @@ export async function getAgents(): Promise<Agent[]> {
     console.warn("[getAgents] schema mismatch", parsed.error.flatten());
     return [];
   }
-  return parsed.data.agents;
+  return toOperationalAgents(parsed.data.agents);
 }

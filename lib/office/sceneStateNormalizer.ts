@@ -54,14 +54,14 @@ export function normalizeSceneState(agent: Agent): NormalizedSceneState {
       return {
         state,
         label: "Reviewing",
-        ringClassName: "ring-2 ring-cyan-300",
+        ringClassName: "ring-2 ring-amber-400",
         pulse: false,
       };
     case "blocked":
       return {
         state,
         label: "Blocked",
-        ringClassName: "ring-2 ring-accent-amber",
+        ringClassName: "ring-2 ring-accent-red",
         pulse: false,
       };
     case "offline":

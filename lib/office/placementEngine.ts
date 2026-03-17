@@ -52,7 +52,7 @@ export function resolveSeatAssignments(agents: Agent[]): Record<string, ZoneId> 
 function isPrivateOfficeAgent(agent: Agent): boolean {
   const name = normalizeName(agent.name);
   if (name.includes("claudio")) return true;
-  if (name.includes("lucy")) return true;
+  if (name.includes("mclucy")) return true;
 
   const role = normalizeName(agent.role);
   if (role.includes("project manager")) return true;
@@ -64,10 +64,11 @@ function isPrivateOfficeAgent(agent: Agent): boolean {
 export function resolveBaseZone(agent: Agent, seatAssignments: Record<string, ZoneId>): ZoneId {
   const name = normalizeName(agent.name);
   if (name.includes("claudio")) return "master-office";
-  if (name.includes("lucy")) return "barko-office";
+  if (name.includes("mclucy")) return "barko-office";
 
   const role = normalizeName(agent.role);
   if (role.includes("project manager")) return "master-office";
+  if (role.includes("operations")) return "chief-desk";
   if (role.includes("operations manager")) return "barko-office";
 
   if (isDeveloper(agent)) {
@@ -84,14 +85,11 @@ export function resolveTargetZoneFromState(sceneState: SceneState, baseZone: Zon
     case "idle":
       return "kitchen";
     case "reviewing":
-      if (baseZone === "master-office" || baseZone === "barko-office" || baseZone === "chief-desk") {
-        return baseZone;
-      }
-      return "lounge";
+      return "kitchen";
     case "blocked":
-      return baseZone;
-    case "offline":
       return "terrace";
+    case "offline":
+      return "game-area";
     case "critical":
       return baseZone;
     default:

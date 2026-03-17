@@ -3,7 +3,7 @@
 ## Purpose
 
 The Comment Listener is a **mandatory always-on daemon** that runs inside OpenClaw immediately after startup.  
-Its job is to detect new human comments on Mission Control tasks in real time and trigger automatic reviews — without any manual polling or operator intervention.
+Its job is to detect new human comments on Mission Control tasks in real time and make OpenClaw Main read and reply with coherent reasoning.
 
 ---
 
@@ -60,23 +60,24 @@ Accept: text/event-stream
 ### Relevant Events
 | Event name | When it fires | Action required |
 |---|---|---|
-| `task.comment.created` | A human created a comment on any task | Process → dispatch review |
+| `task.comment.created` | A human created a comment on any task | Process immediately: read context + reason + reply |
 | `task.comment.answered` | Main posted a reply | Update internal state only |
-| `run.updated` | A review run changed status | Log / update heartbeat |
+| `run.updated` | A background run changed status | Log / update heartbeat |
 
 ### Processing Logic (pseudo-code)
 ```ts
 eventSource.on("task.comment.created", (event) => {
-  const { commentId, taskId, authorType } = event.data;
+  const { commentId, taskId, authorType, newCommentFlag } = event.data;
 
   // Anti-loop: never process agent/system comments
   if (authorType !== "human") return;
+  if (!newCommentFlag) return;
 
-  // Idempotency: skip if already dispatched for this commentId
+  // Idempotency: skip if already processed for this commentId
   if (alreadyProcessed(commentId)) return;
 
   markProcessed(commentId);
-  dispatchReview({ taskId, commentId });
+  processComment({ taskId, commentId });
 });
 ```
 
@@ -124,11 +125,41 @@ Save `latestCursor` after every successful poll. If `hasMore = true`, immediatel
 
 ---
 
-## Dispatching a Comment Review
+## Processing A New Comment (OpenClaw Main)
 
-When a new human comment is detected (via SSE or polling), MC **automatically** creates a `Run` and processes it server-side. The listener's role is **detection only** — it does not need to call a separate review endpoint.
+When a new human comment is detected (via SSE or polling), OpenClaw Main must process it directly.
 
-However, if you need to **manually trigger** a re-review (e.g. after a failed run), use:
+### Required processing flow
+1. Read task context:
+
+```
+GET {MC_BASE_URL}/api/tasks/{taskId}
+GET {MC_BASE_URL}/api/tasks/{taskId}/comments
+GET {MC_BASE_URL}/api/tasks/{taskId}/subtasks
+```
+
+2. Identify the specific comment by `commentId`.
+3. Reason over full context (task + subtasks + thread history).
+4. Decide whether to:
+   - reply with clarification/confirmation,
+   - apply an operational action (for example task status change),
+   - request more information from the operator (including Telegram escalation if needed).
+5. Post a coherent response comment as `authorType="agent"`.
+
+### Optional operational action examples
+
+```
+PATCH {MC_BASE_URL}/api/tasks/{taskId}
+{
+  "status": "DONE"
+}
+```
+
+Only perform state transitions that are explicitly supported by Mission Control.
+
+### Manual re-trigger (if needed)
+
+If a comment was missed, post a new human comment to re-trigger the listener flow:
 
 ```
 POST {MC_BASE_URL}/api/tasks/{taskId}/comments
@@ -141,7 +172,7 @@ Content-Type: application/json
 }
 ```
 
-This re-triggers the automator pipeline via the normal comment POST flow.
+This emits a new `task.comment.created` signal and must be processed by OpenClaw.
 
 ---
 
@@ -202,8 +233,8 @@ The following rules **must** be enforced in the listener at all times:
 
 1. **Never dispatch a review for a comment where `authorType` is `agent` or `system`.**
 2. **Never post a comment in response to another agent comment** (MC enforces this server-side too, but the listener is the first line of defense).
-3. **Never re-dispatch if a `Run` with `type=comment_review` already exists for the same `commentId`.**  
-   Check `run.payload.commentId` before dispatching.
+3. **Never re-process the same `commentId` more than once.**  
+  Keep a processed comment id cache with persistence across restarts.
 
 ---
 
@@ -214,9 +245,9 @@ The following rules **must** be enforced in the listener at all times:
 | Listener alive | `AgentRoutine.lastRunStatus = "RUNNING"` heartbeat every 60 s |
 | SSE connected | Log `[listener:sse] connected` with timestamp |
 | Poll cycle | Log `[listener:poll] checked since={cursor} found={n}` |
-| Review dispatched | Log `[listener:dispatch] taskId={id} commentId={id} runId={id}` |
-| Run outcome | Listen to `run.updated` events, log final status |
-| Pending run backlog | Alert if `Run WHERE status=PENDING AND type=comment_review` count > 50 |
+| Comment processing | Log `[listener:process] taskId={id} commentId={id}` |
+| Response posted | Log `[listener:reply] taskId={id} commentId={id}` |
+| Clarification escalations | Log `[listener:clarify] commentId={id}` and destination |
 
 ---
 

@@ -33,8 +33,8 @@ function loadInstallationDocsSummary(): string {
     "- EVIDENCE_AND_OUTPUTS.md",
     "",
     "Evidence system:",
-    "- Root folder: outputs/",
-    "- Per task folder: outputs/{ticket-id}/",
+    "- Root folder: configured via GET /api/system/config/outputs-root (default: mcmonkeys)",
+    "- Per task folder: {configured-root}/{ticket-id}/",
     "- No task should move to REVIEW without evidence saved in its ticket folder.",
   ].join("\n");
 }
@@ -185,7 +185,7 @@ async function main() {
       {
         id: "subtask-onboarding-3",
         taskId: ONBOARDING_TASK_ID,
-        title: "Read task comments and confirm evidence system — GET /api/tasks/{id}/comments and verify outputs/ exists for ticket-based evidence",
+        title: "Read task comments and confirm evidence system — GET /api/tasks/{id}/comments and GET /api/system/config/outputs-root to confirm the active evidence root folder",
         status: "TODO",
         position: 3,
         ownerAgentId: openClaw.id,
@@ -201,7 +201,7 @@ async function main() {
       {
         id: "subtask-onboarding-5",
         taskId: ONBOARDING_TASK_ID,
-        title: "Request onboarding review — PATCH this task to REVIEW with evidence: docs processed, endpoints verified, outputs/ confirmed, SSE active, ready to operate",
+        title: "Request onboarding review — PATCH this task to REVIEW with evidence: docs processed, endpoints verified, configured output root confirmed, SSE active, ready to operate",
         status: "TODO",
         position: 5,
         ownerAgentId: openClaw.id,

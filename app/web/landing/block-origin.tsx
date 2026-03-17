@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export function BlockOrigin() {
   return (
     <section className="relative mx-auto w-full max-w-[1200px] px-6 py-24">
@@ -27,10 +29,14 @@ export function BlockOrigin() {
 
         <div className="relative">
           <div className="absolute -inset-4 rounded-[26px] bg-cyan-400/10 blur-2xl" />
-          <div className="relative flex min-h-[320px] items-center justify-center rounded-2xl border border-slate-700/80 bg-slate-950/70 p-8 shadow-[0_24px_60px_rgba(2,8,23,0.72)] backdrop-blur-xl">
-            <p className="text-center text-sm font-medium text-slate-300 sm:text-base">
-              Image: Human + Agent designing the system
-            </p>
+          <div className="relative flex min-h-[320px] items-center justify-center rounded-2xl border border-slate-700/80 bg-slate-950/70 p-4 shadow-[0_24px_60px_rgba(2,8,23,0.72)] backdrop-blur-xl">
+            <Image
+              src="/office/imgs/landing/billy-and-claudio-design-lucy.png"
+              alt="Ilustración del origen del sistema con Claudio"
+              width={1040}
+              height={720}
+              className="h-auto w-full max-w-[520px] rounded-xl border border-cyan-300/20 object-cover shadow-[0_20px_50px_rgba(34,211,238,0.18)]"
+            />
           </div>
         </div>
       </div>

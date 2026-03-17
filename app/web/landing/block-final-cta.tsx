@@ -8,7 +8,7 @@ export function BlockFinalCta() {
 
         <div className="relative mx-auto max-w-4xl space-y-8">
           <h2 className="text-3xl font-semibold !leading-tight text-slate-100 sm:text-4xl lg:text-5xl">
-            If you're running AI agents in the dark,
+            If you&apos;re running AI agents in the dark,
             <br />
             MC-MONKEYS was built for you.
           </h2>

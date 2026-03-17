@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export function BlockHero() {
   const images = [
@@ -59,9 +60,11 @@ export function BlockHero() {
         <div className="relative">
           <div className="absolute -inset-5 rounded-[28px] bg-cyan-400/10 blur-2xl" />
           <div className="relative rounded-[24px] border border-slate-700/80 bg-slate-950/75 p-5 shadow-[0_26px_60px_rgba(2,8,23,0.75)] backdrop-blur-xl">
-            <img
+            <Image
               src="/office/imgs/landing/mission-control-office.png"
               alt="Hero Image"
+              width={1200}
+              height={750}
               className="h-auto w-full rounded-lg object-cover"
             />
           </div>

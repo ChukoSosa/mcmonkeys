@@ -267,6 +267,23 @@ POST /api/tasks/<task-id>/comments
 Never post comments as `human`.
 Never create loops by responding to your own automation blindly.
 
+### React to new comment signal (mandatory)
+
+If you receive `task.comment.created` with `newCommentFlag=true`, treat it as a direct operational interrupt and process it immediately.
+
+Required sequence:
+1. Read latest task context:
+  - `GET /api/tasks/<task-id>`
+  - `GET /api/tasks/<task-id>/comments`
+  - `GET /api/tasks/<task-id>/subtasks`
+2. Locate the exact comment by `commentId` from the event payload.
+3. Interpret user intent from full context (not just keyword matching).
+4. Execute required action when valid (for example update task status with `PATCH /api/tasks/<task-id>`).
+5. Post an `authorType="agent"` response comment that references the user's request and explains the action taken.
+6. If the comment is ambiguous or missing context, ask a clarification question in the task thread and escalate to Telegram citing the unclear comment.
+
+Prioritize direct human intent over heuristics.
+
 ---
 
 ## Relevant real-time events
@@ -283,7 +300,7 @@ Relevant SSE events include:
 - `supervisor.kpis`
 - internal `run.updated` events from background automation
 
-If you receive a human-originated task comment, interpret it as review or operational input and check the task thread.
+If you receive `task.comment.created` with `newCommentFlag=true`, process it before resuming other work.
 
 ---
 

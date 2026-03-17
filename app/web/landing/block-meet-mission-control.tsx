@@ -48,7 +48,7 @@ export function BlockMeetMissionControl() {
                     <span className="text-cyan-200">Analyzing</span>
                   </div>
                   <div className="flex items-center justify-between rounded-md bg-slate-950/70 px-2 py-1.5 text-xs text-slate-200">
-                    <span>Lucy</span>
+                    <span>Tammy</span>
                     <span className="text-emerald-200">Supervising</span>
                   </div>
                 </div>

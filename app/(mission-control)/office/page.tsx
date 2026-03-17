@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { DashboardShell } from "@/components/mission-control/dashboard/DashboardShell";
 import { getAgents } from "@/lib/api/agents";
@@ -30,6 +30,8 @@ const EMPTY_AGENTS: Agent[] = [];
 const EMPTY_TASKS: Task[] = [];
 const MCLUCY_ID = "mclucy-chief";
 const MCLUCY_AVATAR_URL = "/office/mcmonkes-library/001.png";
+const MCLUCY_ZONE: ZoneId = "barko-office";
+
 const MCLUCY_AGENT: Agent = {
   id: MCLUCY_ID,
   name: "mcLUCY",
@@ -82,7 +84,7 @@ export default function OfficePage() {
         const response = await fetch("/api/mc-monkeys", { method: "GET" });
         if (!response.ok) return;
 
-        const payload = await response.json() as { avatars?: string[] };
+        const payload = (await response.json()) as { avatars?: string[] };
         if (!cancelled) {
           setLucyAvatarUrl(MCLUCY_AVATAR_URL);
         }
@@ -126,7 +128,7 @@ export default function OfficePage() {
       const baseZone = resolveBaseZone(agent, seatAssignments);
       const targetZone = resolveTargetZoneFromState(sceneState.state, baseZone);
       const task = resolveCurrentTask(agent, tasks);
-      return { agent, sceneState, baseZone, targetZone, task };
+      return { agent, sceneState, targetZone, task };
     });
 
     return [
@@ -136,18 +138,12 @@ export default function OfficePage() {
           avatarUrl: lucyAvatarUrl,
         },
         sceneState: normalizeSceneState(MCLUCY_AGENT),
-        baseZone: "chief-desk" as ZoneId,
-        targetZone: "chief-desk" as ZoneId,
+        targetZone: MCLUCY_ZONE,
         task: null,
       },
       ...baseAgents,
     ];
   }, [agents, lucyAvatarUrl, seatAssignments, tasks]);
-
-  const derivedRef = useRef(derived);
-  useEffect(() => {
-    derivedRef.current = derived;
-  }, [derived]);
 
   useEffect(() => {
     const targets: Record<string, ZoneId> = {};

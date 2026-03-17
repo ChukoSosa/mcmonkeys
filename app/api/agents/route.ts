@@ -4,6 +4,12 @@ import { apiErrorResponse, validationError } from "@/app/api/server/api-error";
 import { isMissionControlDemoMode, demoReadOnlyResponse } from "@/app/api/server/demo-mode";
 import { z } from "zod";
 
+function isMcLucySupervisorAgent(agent: { id: string; name: string }): boolean {
+  const normalizedId = agent.id.toLowerCase();
+  const normalizedName = agent.name.toLowerCase();
+  return normalizedId === "mclucy-chief" || normalizedName === "mclucy";
+}
+
 const AgentHeartbeatBodySchema = z.object({
   agentId: z.string().min(1, "agentId is required"),
   status: z.enum(["IDLE", "THINKING", "WORKING", "BLOCKED"]).optional(),
@@ -12,7 +18,7 @@ const AgentHeartbeatBodySchema = z.object({
 
 export async function GET() {
   try {
-    const agents = await agentService.list();
+    const agents = (await agentService.list()).filter((agent) => !isMcLucySupervisorAgent(agent));
     return NextResponse.json({ agents });
   } catch (error) {
     return apiErrorResponse(error);

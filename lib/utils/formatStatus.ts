@@ -20,6 +20,8 @@ export function statusVariant(status: string | null | undefined): StatusVariant 
     case "ACTIVE":
       return "cyan";
     case "REVIEW":
+    case "REVIEWING":
+    case "DOING":
       return "amber";
     case "THINKING":
       return "amber";

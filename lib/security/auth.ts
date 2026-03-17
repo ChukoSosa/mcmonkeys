@@ -1,4 +1,4 @@
-import { jwtVerify } from "jose";
+import { jwtVerify } from "jose/jwt/verify";
 
 const encoder = new TextEncoder();
 

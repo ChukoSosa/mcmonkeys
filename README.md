@@ -135,7 +135,7 @@ npm run dummy:restore # Rehidratar dataset dummy local + demo y validar snapshot
 ### DummySet (snapshot de demo)
 
 `DummySet` es el dataset de ejemplo oficial para la página DEMO.
-Incluye 4 agentes (Claudio, Codi, Lucy, Ninja), 8 tasks y actividad de ejemplo.
+Incluye 4 agentes (Claudio, Codi, Tammy, Ninja), 8 tasks y actividad de ejemplo.
 
 Para restaurarlo:
 ```bash

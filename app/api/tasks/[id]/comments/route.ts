@@ -3,7 +3,6 @@ import { prisma } from "@/app/api/server/prisma";
 import { apiErrorResponse, validationError } from "@/app/api/server/api-error";
 import { emitEvent } from "@/app/api/server/event-bus";
 import { activityService } from "@/app/api/server/activity-service";
-import { dispatchCommentReview } from "@/app/api/server/comment-automator";
 import { isMissionControlDemoMode, demoReadOnlyResponse } from "@/app/api/server/demo-mode";
 import { createRequestContext, withRequestHeaders } from "@/app/api/server/request-context";
 import { z } from "zod";
@@ -126,8 +125,11 @@ export async function POST(
     emitEvent({
       type: "task.comment.created",
       data: {
+        newCommentFlag: true,
         commentId: comment.id,
         taskId: id,
+        taskTitle: task.title,
+        commentBody: comment.body,
         authorType: comment.authorType,
         authorId: comment.authorId ?? null,
         requiresResponse: comment.requiresResponse,
@@ -147,16 +149,6 @@ export async function POST(
         authorType: comment.authorType,
         requiresResponse: comment.requiresResponse,
       },
-    });
-
-    // Fire-and-forget: OpenClaw Main reviews comment and replies automatically
-    dispatchCommentReview({
-      taskId: id,
-      commentId: comment.id,
-      commentBody: comment.body,
-      authorType: comment.authorType,
-      requestId: requestContext.requestId,
-      waitUntil: (request as NextRequest & { waitUntil?: (promise: Promise<unknown>) => void }).waitUntil,
     });
 
     return withRequestHeaders(NextResponse.json(comment, { status: 201 }), requestContext);

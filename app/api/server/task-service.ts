@@ -1,3 +1,4 @@
+import path from "node:path";
 import { Prisma } from "@prisma/client";
 import { prisma } from "./prisma";
 import { emitEvent } from "./event-bus";
@@ -10,6 +11,7 @@ import {
   outputHasEvidenceFile,
   parseExistingTicketCode,
 } from "./task-output";
+import { getOutputFolderPath } from "./system-config";
 import { checkLucyGoldRules } from "@/lib/mission/goldRules";
 
 const OPERATOR_ACTOR = {
@@ -183,7 +185,9 @@ export const taskService = {
     }
 
     const ticketCode = await this.reserveNextTicketCode();
-    await ensureEvidenceFolders(ticketCode);
+    const folderName = await getOutputFolderPath();
+    const outputsRoot = path.join(process.cwd(), folderName);
+    await ensureEvidenceFolders(ticketCode, outputsRoot);
 
     const task = await prisma.task.create({
       data: {
@@ -198,9 +202,9 @@ export const taskService = {
         metadata: {
           ticketCode,
           evidence: {
-            base: `outputs/${ticketCode}`,
-            input: `outputs/${ticketCode}/input`,
-            output: `outputs/${ticketCode}/output`,
+            base: `${folderName}/${ticketCode}`,
+            input: `${folderName}/${ticketCode}/input`,
+            output: `${folderName}/${ticketCode}/output`,
           },
         },
       },
@@ -315,32 +319,35 @@ export const taskService = {
     let ticketCode = parseExistingTicketCode(existing.metadata);
     let metadataUpdate: Record<string, unknown> | undefined;
 
+    const folderName = await getOutputFolderPath();
+    const outputsRoot = path.join(process.cwd(), folderName);
+
     if (!ticketCode) {
       ticketCode = await this.reserveNextTicketCode();
-      await ensureEvidenceFolders(ticketCode);
+      await ensureEvidenceFolders(ticketCode, outputsRoot);
       const existingMetadata = asObjectMetadata(existing.metadata);
       metadataUpdate = {
         ...existingMetadata,
         ticketCode,
         evidence: {
-          base: `outputs/${ticketCode}`,
-          input: `outputs/${ticketCode}/input`,
-          output: `outputs/${ticketCode}/output`,
+          base: `${folderName}/${ticketCode}`,
+          input: `${folderName}/${ticketCode}/input`,
+          output: `${folderName}/${ticketCode}/output`,
         },
       };
     }
 
     if (updates.status === "REVIEW") {
-      await ensureEvidenceFolders(ticketCode);
-      const hasEvidence = await outputHasEvidenceFile(ticketCode);
+      await ensureEvidenceFolders(ticketCode, outputsRoot);
+      const hasEvidence = await outputHasEvidenceFile(ticketCode, outputsRoot);
       if (!hasEvidence) {
         throw new ApiError(
           400,
           "VALIDATION_ERROR",
-          `Cannot move task to REVIEW without evidence in outputs/${ticketCode}/output`,
+          `Cannot move task to REVIEW without evidence in ${folderName}/${ticketCode}/output`,
           {
             ticketCode,
-            requiredOutputPath: `outputs/${ticketCode}/output`,
+            requiredOutputPath: `${folderName}/${ticketCode}/output`,
             rule: "Add at least one file to output before REVIEW",
           },
         );

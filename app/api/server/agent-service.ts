@@ -10,6 +10,106 @@ function toPrismaStatus(status?: string) {
   return status as unknown as PrismaAgentStatus | undefined;
 }
 
+function toPrismaTaskStatus(status: string) {
+  return status as unknown as Parameters<typeof prisma.task.update>[0]["data"]["status"] & string;
+}
+
+async function claimAssignedBacklogIfNeeded(agentId: string) {
+  const activeTask = await prisma.task.findFirst({
+    where: {
+      assignedAgentId: agentId,
+      status: toPrismaTaskStatus("IN_PROGRESS") as any,
+      archivedAt: null,
+    },
+    select: { id: true },
+  });
+
+  if (activeTask) {
+    return null;
+  }
+
+  const candidate = await prisma.task.findFirst({
+    where: {
+      assignedAgentId: agentId,
+      status: toPrismaTaskStatus("BACKLOG") as any,
+      archivedAt: null,
+    },
+    orderBy: [{ priority: "asc" }, { updatedAt: "asc" }],
+    select: { id: true, title: true },
+  });
+
+  if (!candidate) {
+    return null;
+  }
+
+  const result = await prisma.$transaction(async (tx) => {
+    const stillBacklog = await tx.task.findFirst({
+      where: {
+        id: candidate.id,
+        assignedAgentId: agentId,
+        status: toPrismaTaskStatus("BACKLOG") as any,
+        archivedAt: null,
+      },
+      select: { id: true, title: true },
+    });
+
+    if (!stillBacklog) {
+      return null;
+    }
+
+    const task = await tx.task.update({
+      where: { id: stillBacklog.id },
+      data: { status: toPrismaTaskStatus("IN_PROGRESS") as any },
+      select: { id: true, title: true, status: true, assignedAgentId: true },
+    });
+
+    const agent = await tx.agent.update({
+      where: { id: agentId },
+      data: {
+        status: toPrismaStatus("WORKING") as any,
+        currentTaskId: task.id,
+        statusMessage: `Working on ${task.title}`,
+        heartbeatAt: new Date(),
+      },
+    });
+
+    return { task, agent };
+  });
+
+  if (!result) {
+    return null;
+  }
+
+  emitEvent({
+    type: "task.updated",
+    data: {
+      id: result.task.id,
+      status: result.task.status,
+      assignedAgentId: result.task.assignedAgentId,
+    },
+  });
+
+  await activityService.log({
+    kind: "task",
+    action: "task.moved",
+    summary: `${result.agent.name} auto-claimed backlog task "${result.task.title}"`,
+    actor: {
+      type: "agent",
+      id: result.agent.id,
+      name: result.agent.name,
+    },
+    taskId: result.task.id,
+    agentId: result.agent.id,
+    payload: {
+      previousStatus: "BACKLOG",
+      nextStatus: "IN_PROGRESS",
+      autoClaim: true,
+    },
+  });
+
+  return result;
+}
+
 export const agentService = {
   async list() {
     return prisma.agent.findMany({ orderBy: { name: "asc" } });
@@ -37,6 +137,11 @@ export const agentService = {
         throw new ApiError(404, "NOT_FOUND", "Agent not found");
       }
       throw error;
+    }
+
+    const autoClaim = await claimAssignedBacklogIfNeeded(agent.id);
+    if (autoClaim?.agent) {
+      agent = autoClaim.agent;
     }
 
     emitEvent({
@@ -97,23 +202,6 @@ export const agentService = {
       data: {
         id: agent.id,
         avatarUrl,
-      },
-    });
-
-    await activityService.log({
-      kind: "agent",
-      action: "agent.avatar.updated",
-      summary: `${agent.name} avatar updated`,
-      actor: {
-        type: "human",
-        id: "operator",
-        name: "Operator",
-      },
-      agentId: agent.id,
-      payload: {
-        variant: payload.variant ?? "pixel-random",
-        prompt: payload.prompt ?? null,
-        traits: payload.traits ?? null,
       },
     });
 

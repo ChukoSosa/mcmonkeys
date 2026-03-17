@@ -45,7 +45,7 @@ const ROLE_CARDS = [
       "Surfaces events.",
       "Makes agent work visible.",
       "",
-      "Lucy is the operational layer.",
+      "mcLucy is the operational layer.",
     ],
     imageLabel: "mcLucy - MC-MONKEYS",
     imageSrc: "/office/imgs/landing/mclucy.png",

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Card } from "@/components/ui/Card";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 import type { Agent, Task } from "@/types";
 import type { ZoneId } from "@/lib/office/zones";
 import type { NormalizedSceneState } from "@/lib/office/sceneStateNormalizer";
@@ -103,11 +104,21 @@ export function AgentInspector({
       {/* Name + role */}
       <div>
         <p className="text-sm font-semibold text-slate-100">{agent.name}</p>
-        <p className="text-slate-400">{agent.role ?? "Unknown role"}</p>
+        <div className="flex items-center gap-2">
+          <p className="text-slate-400">{agent.role ?? "Unknown role"}</p>
+          {agent.id === "mclucy-chief" && (
+            <span className="rounded border border-cyan-400/40 bg-cyan-500/10 px-2 py-0.5 text-[10px] uppercase tracking-wide text-cyan-200">
+              Global Supervisor
+            </span>
+          )}
+        </div>
       </div>
 
-      <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-slate-300">
-        <span>Status: <span className="text-slate-100">{state?.label ?? "Unknown"}</span></span>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-slate-300">
+        <span className="inline-flex items-center gap-2">
+          <span>Status:</span>
+          <StatusBadge status={state?.label ?? "Unknown"} pulse={state?.state === "critical"} />
+        </span>
         <span>Zone: <span className="text-slate-100">{zone ?? "n/a"}</span></span>
       </div>
 

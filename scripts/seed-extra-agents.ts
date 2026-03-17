@@ -6,7 +6,7 @@ async function main() {
   await prisma.agent.upsert({
     where: { id: "00000000-0000-4000-8000-00000000a111" },
     update: {
-      name: "Lucy",
+      name: "Tammy",
       role: "Product Lead",
       status: AgentStatus.IDLE,
       statusMessage: "Prioritizing backlog",
@@ -14,7 +14,7 @@ async function main() {
     },
     create: {
       id: "00000000-0000-4000-8000-00000000a111",
-      name: "Lucy",
+      name: "Tammy",
       role: "Product Lead",
       status: AgentStatus.IDLE,
       statusMessage: "Prioritizing backlog",
