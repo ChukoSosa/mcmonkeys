@@ -7,18 +7,28 @@ import { faUser, faClock, faChevronDown } from "@fortawesome/free-solid-svg-icon
 import { faBoxArchive } from "@fortawesome/free-solid-svg-icons";
 import { getTasks, getTaskSubtasks, getTaskComments, addTaskComment } from "@/lib/api/tasks";
 import { archiveTask } from "@/lib/api/tasks";
+import { updateSubtaskStatus } from "@/lib/api/tasks";
 import { useDashboardStore } from "@/store/dashboardStore";
 import { Card, StatusBadge, SkeletonList, EmptyState, ErrorMessage } from "@/components/ui";
 import { fromNow } from "@/lib/utils/formatDate";
 import { priorityLabel, priorityVariant } from "@/lib/utils/formatStatus";
 import { isPublicDemoMode } from "@/lib/utils/demoMode";
-import type { Comment } from "@/lib/schemas";
+import type { Comment, Subtask } from "@/lib/schemas";
 
 const AUTHOR_STYLE: Record<string, string> = {
   agent: "rounded px-1.5 py-0.5 bg-purple-900/50 text-purple-300",
   human: "rounded px-1.5 py-0.5 bg-emerald-900/50 text-emerald-300",
   system: "rounded px-1.5 py-0.5 bg-slate-700/50 text-slate-400",
 };
+
+const SUBTASK_STATUS_FLOW = ["TODO", "DOING", "DONE", "BLOCKED"] as const;
+
+function getNextSubtaskStatus(current?: string | null): (typeof SUBTASK_STATUS_FLOW)[number] {
+  const normalized = (current ?? "").toUpperCase();
+  const currentIndex = SUBTASK_STATUS_FLOW.indexOf(normalized as (typeof SUBTASK_STATUS_FLOW)[number]);
+  if (currentIndex === -1) return "DOING";
+  return SUBTASK_STATUS_FLOW[(currentIndex + 1) % SUBTASK_STATUS_FLOW.length];
+}
 
 // ─── Main-agent structured comment renderer ──────────────────────────────────
 
@@ -176,11 +186,12 @@ function getCommentStatus(comment: {
 export function TaskDetailPanel() {
   const demoMode = isPublicDemoMode();
   const selectedTaskId = useDashboardStore((s) => s.selectedTaskId);
-    const setSelectedTaskId = useDashboardStore((s) => s.setSelectedTaskId);
+  const setSelectedTaskId = useDashboardStore((s) => s.setSelectedTaskId);
   const queryClient = useQueryClient();
   const [newComment, setNewComment] = useState("");
-    const [confirmArchive, setConfirmArchive] = useState(false);
-    const [isArchiving, setIsArchiving] = useState(false);
+  const [confirmArchive, setConfirmArchive] = useState(false);
+  const [isArchiving, setIsArchiving] = useState(false);
+  const [updatingSubtaskId, setUpdatingSubtaskId] = useState<string | null>(null);
 
   const { data: tasks = [] } = useQuery({ queryKey: ["tasks"], queryFn: () => getTasks() });
   const selectedTask = tasks.find((t) => t.id === selectedTaskId);
@@ -226,6 +237,42 @@ export function TaskDetailPanel() {
         return [...(current ?? []), createdComment];
       });
       setNewComment("");
+    },
+  });
+
+  const updateSubtaskStatusMutation = useMutation({
+    mutationFn: async ({ subtaskId, nextStatus }: { subtaskId: string; nextStatus: "TODO" | "DOING" | "DONE" | "BLOCKED" }) => {
+      return updateSubtaskStatus(subtaskId, nextStatus);
+    },
+    onMutate: async ({ subtaskId, nextStatus }) => {
+      if (!selectedTaskId) return { previousSubtasks: undefined as Subtask[] | undefined };
+
+      setUpdatingSubtaskId(subtaskId);
+      await queryClient.cancelQueries({ queryKey: ["subtasks", selectedTaskId] });
+      const previousSubtasks = queryClient.getQueryData<Subtask[]>(["subtasks", selectedTaskId]);
+
+      queryClient.setQueryData<Subtask[]>(["subtasks", selectedTaskId], (current = []) =>
+        current.map((item) =>
+          item.id === subtaskId
+            ? { ...item, status: nextStatus, updatedAt: new Date().toISOString() }
+            : item,
+        ),
+      );
+
+      return { previousSubtasks };
+    },
+    onError: (_error, _variables, context) => {
+      if (!selectedTaskId) return;
+      if (context?.previousSubtasks) {
+        queryClient.setQueryData(["subtasks", selectedTaskId], context.previousSubtasks);
+      }
+    },
+    onSettled: async () => {
+      setUpdatingSubtaskId(null);
+      await queryClient.invalidateQueries({ queryKey: ["activity"] });
+      if (selectedTaskId) {
+        await queryClient.invalidateQueries({ queryKey: ["subtasks", selectedTaskId] });
+      }
     },
   });
 
@@ -278,7 +325,7 @@ export function TaskDetailPanel() {
               </p>
             )}
 
-              {!demoMode && selectedTask.status === "DONE" && !selectedTask.archivedAt && (
+            {!demoMode && selectedTask.status === "DONE" && !selectedTask.archivedAt && (
                 <div className="flex items-center gap-2 pt-1">
                   <button
                     disabled={isArchiving}
@@ -311,7 +358,7 @@ export function TaskDetailPanel() {
                     </button>
                   )}
                 </div>
-              )}
+            )}
           </div>
 
           {/* Subtasks */}
@@ -345,7 +392,18 @@ export function TaskDetailPanel() {
                         {sub.ownerAgent.name}
                       </span>
                     )}
-                    <StatusBadge status={sub.status} />
+                    <button
+                      type="button"
+                      disabled={demoMode || updateSubtaskStatusMutation.isPending}
+                      onClick={() => {
+                        const nextStatus = getNextSubtaskStatus(sub.status);
+                        updateSubtaskStatusMutation.mutate({ subtaskId: sub.id, nextStatus });
+                      }}
+                      className="disabled:cursor-not-allowed disabled:opacity-60"
+                      title={demoMode ? "Read-only in demo mode" : "Click to cycle status"}
+                    >
+                      <StatusBadge status={sub.status} className={updatingSubtaskId === sub.id ? "opacity-70" : undefined} />
+                    </button>
                   </div>
                 ))}
               </div>
