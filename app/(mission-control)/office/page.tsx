@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { DashboardShell } from "@/components/mission-control/dashboard/DashboardShell";
@@ -155,7 +155,7 @@ const MCLUCY_AGENT: Agent = {
   avatarUrl: MCLUCY_AVATAR_URL,
 };
 
-export default function OfficePage() {
+function OfficeContent() {
   const demoMode = isPublicDemoMode();
   const searchParams = useSearchParams();
   const activeScenario = readScenario(searchParams);
@@ -439,5 +439,19 @@ export default function OfficePage() {
         </section>
       </div>
     </DashboardShell>
+  );
+}
+
+export default function OfficePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-full items-center justify-center text-slate-400 text-sm">
+          Loading office...
+        </div>
+      }
+    >
+      <OfficeContent />
+    </Suspense>
   );
 }
