@@ -4,7 +4,14 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBullseye, faCircleInfo, faGear } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBullseye,
+  faCircleInfo,
+  faEnvelope,
+  faGear,
+  faHandHoldingHeart,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import { SummaryBar } from "@/components/mission-control/dashboard/SummaryBar";
 import { FiltersBar } from "@/components/mission-control/dashboard/FiltersBar";
 import { FirstRunSetupModal } from "@/components/mission-control/dashboard/FirstRunSetupModal";
@@ -53,6 +60,7 @@ export function DashboardShell({ children, showFilters = true, topBar }: Dashboa
   const [pendingHref, setPendingHref] = useState<string | null>(null);
   const [pendingModalTop, setPendingModalTop] = useState<number | null>(null);
   const [isSetupModalOpen, setIsSetupModalOpen] = useState(false);
+  const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
   const [setupModalMode, setSetupModalMode] = useState<"first-run" | "settings">("first-run");
   const pendingPageLabel = getPendingPageLabel(pendingHref);
@@ -98,6 +106,21 @@ export function DashboardShell({ children, showFilters = true, topBar }: Dashboa
       window.removeEventListener("keydown", handleEscape);
     };
   }, [isSettingsMenuOpen]);
+
+  useEffect(() => {
+    if (!isAboutModalOpen) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsAboutModalOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => {
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [isAboutModalOpen]);
 
   useEffect(() => {
     setPendingHref(null);
@@ -188,14 +211,17 @@ export function DashboardShell({ children, showFilters = true, topBar }: Dashboa
 
             {isSettingsMenuOpen && (
               <div className="absolute right-0 top-11 z-50 w-52 rounded-lg border border-surface-700 bg-surface-900 p-1.5 shadow-xl">
-                <Link
-                  href="/web/manual"
+                <button
+                  type="button"
                   className="flex items-center gap-2 rounded-md px-3 py-2 text-xs font-semibold text-slate-300 transition hover:bg-surface-800 hover:text-slate-100"
-                  onClick={() => setIsSettingsMenuOpen(false)}
+                  onClick={() => {
+                    setIsSettingsMenuOpen(false);
+                    setIsAboutModalOpen(true);
+                  }}
                 >
                   <FontAwesomeIcon icon={faCircleInfo} className="text-cyan-300" />
                   About MC Monkeys
-                </Link>
+                </button>
 
                 <button
                   type="button"
@@ -250,6 +276,74 @@ export function DashboardShell({ children, showFilters = true, topBar }: Dashboa
           </div>
         )}
       </main>
+
+      {isAboutModalOpen && (
+        <div
+          className="fixed inset-0 z-[85] flex items-center justify-center bg-surface-950/80 p-4 backdrop-blur-sm"
+          onClick={() => setIsAboutModalOpen(false)}
+        >
+          <div
+            className="w-full max-w-2xl overflow-hidden rounded-2xl border border-cyan-500/30 bg-surface-900 shadow-2xl shadow-cyan-950/40"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="About MC Monkeys"
+          >
+            <div className="border-b border-surface-700 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.18),transparent_48%),radial-gradient(circle_at_top_right,rgba(34,197,94,0.12),transparent_44%)] px-6 py-5">
+              <div className="flex items-start justify-between gap-4">
+                <div className="space-y-2">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-cyan-300">About MC Monkeys</p>
+                  <h2 className="text-xl font-bold text-slate-100">Thank You For Supporting This Project</h2>
+                  <p className="text-sm leading-relaxed text-slate-300">
+                    We are grateful you are here. Every message and every contribution helps us improve Mission Control.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsAboutModalOpen(false)}
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-surface-600 text-slate-300 transition hover:border-surface-500 hover:text-slate-100"
+                  aria-label="Close About MC Monkeys modal"
+                >
+                  <FontAwesomeIcon icon={faXmark} />
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-4 px-6 py-5">
+              <div className="rounded-lg border border-surface-700 bg-surface-800/60 px-4 py-3 text-sm text-slate-300">
+                <p className="font-semibold uppercase tracking-[0.16em] text-slate-200">Contact</p>
+                <p className="mt-1.5 leading-relaxed">
+                  Would you like to send us a message? Write to us here. Your feedback means a lot.
+                </p>
+              </div>
+              <p className="text-xs text-slate-500">
+                Contact: billy@mc-monkeys.com
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-end gap-2 border-t border-surface-700 px-6 py-4">
+              <a
+                href="mailto:billy@mc-monkeys.com"
+                className="inline-flex items-center gap-2 rounded-md border border-cyan-500/40 bg-cyan-500/15 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-cyan-200 transition hover:bg-cyan-500/25"
+                aria-label="Send us a message by email"
+              >
+                <FontAwesomeIcon icon={faEnvelope} />
+                Write To Us
+              </a>
+              <a
+                href="#"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-md border border-amber-500/40 bg-amber-500/15 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-amber-200 transition hover:bg-amber-500/25"
+                aria-label="Open donation page"
+              >
+                <FontAwesomeIcon icon={faHandHoldingHeart} />
+                Donate
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       <FirstRunSetupModal
         open={isSetupModalOpen}

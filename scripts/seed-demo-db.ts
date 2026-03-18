@@ -124,7 +124,7 @@ const agents = [
     currentTaskId: "task-live-demo-dataset",
     avatar: "/office/demo/claudio.svg",
     specialties: ["planning", "orchestration", "research", "task-breakdown"],
-    assignedTaskIds: ["task-story-page", "task-live-demo-dataset"],
+    assignedTaskIds: ["task-story-page", "task-live-demo-dataset", "task-release-checklist", "task-competitor-intel"],
   },
   {
     id: "agent-tammy",
@@ -140,10 +140,10 @@ const agents = [
     priority: 2,
     heartbeat: "2026-03-12T14:38:00.000Z",
     lastSeenAt: "2026-03-12T14:38:00.000Z",
-    currentTaskId: "task-manual-page",
+    currentTaskId: "task-onboarding-emails",
     avatar: "/office/demo/lucy.svg",
     specialties: ["operations", "reporting", "documentation", "coordination"],
-    assignedTaskIds: ["task-manual-page", "task-pricing-flow"],
+    assignedTaskIds: ["task-manual-page", "task-pricing-flow", "task-onboarding-emails", "task-support-playbook"],
   },
   {
     id: "agent-ninja",
@@ -161,7 +161,7 @@ const agents = [
     currentTaskId: "task-install-prompt",
     avatar: "/office/demo/ninja.svg",
     specialties: ["backend", "api", "database", "validation", "infrastructure"],
-    assignedTaskIds: ["task-project-setup", "task-install-prompt"],
+    assignedTaskIds: ["task-project-setup", "task-install-prompt", "task-api-hardening", "task-telemetry-pipeline"],
   },
   {
     id: "agent-codi",
@@ -176,10 +176,10 @@ const agents = [
     priority: 2,
     heartbeat: "2026-03-12T14:39:00.000Z",
     lastSeenAt: "2026-03-12T14:39:00.000Z",
-    currentTaskId: "task-public-demo-polish",
+    currentTaskId: "task-office-ui-pass",
     avatar: "/office/demo/codi.svg",
     specialties: ["frontend", "ui", "layout", "design-implementation"],
-    assignedTaskIds: ["task-landing-page", "task-public-demo-polish"],
+    assignedTaskIds: ["task-landing-page", "task-public-demo-polish", "task-office-ui-pass", "task-conversion-copy"],
   },
 ] as const;
 
@@ -193,7 +193,7 @@ const tasks: SeedTask[] = [
     status: "DONE",
     priority: "P1",
     ownerAgentId: "agent-ninja",
-    createdByAgentId: "agent-claudio",
+    createdByAgentId: "agent-ninja",
     createdAt: "2026-03-12T09:05:00.000Z",
     updatedAt: "2026-03-12T11:10:00.000Z",
     startedAt: "2026-03-12T09:20:00.000Z",
@@ -216,7 +216,7 @@ const tasks: SeedTask[] = [
     status: "DONE",
     priority: "P1",
     ownerAgentId: "agent-codi",
-    createdByAgentId: "agent-claudio",
+    createdByAgentId: "agent-codi",
     createdAt: "2026-03-12T09:10:00.000Z",
     updatedAt: "2026-03-12T12:02:00.000Z",
     startedAt: "2026-03-12T09:40:00.000Z",
@@ -248,7 +248,7 @@ const tasks: SeedTask[] = [
       { id: "subtask-story-1", title: "Draft story structure", status: "DONE", ownerAgentId: "agent-claudio" },
       { id: "subtask-story-2", title: "Write frustration section", status: "DONE", ownerAgentId: "agent-claudio" },
       { id: "subtask-story-3", title: "Write Claudio collaboration section", status: "DONE", ownerAgentId: "agent-claudio" },
-      { id: "subtask-story-4", title: "Add naming explanation", status: "IN_PROGRESS", ownerAgentId: "agent-claudio" },
+      { id: "subtask-story-4", title: "Add naming explanation", status: "DOING", ownerAgentId: "agent-claudio" },
       { id: "subtask-story-5", title: "Add pricing origin story", status: "TODO", ownerAgentId: "agent-claudio" },
     ],
   },
@@ -260,7 +260,7 @@ const tasks: SeedTask[] = [
     status: "REVIEW",
     priority: "P2",
     ownerAgentId: "agent-tammy",
-    createdByAgentId: "agent-claudio",
+    createdByAgentId: "agent-tammy",
     createdAt: "2026-03-12T10:40:00.000Z",
     updatedAt: "2026-03-12T14:12:00.000Z",
     startedAt: "2026-03-12T11:00:00.000Z",
@@ -270,7 +270,7 @@ const tasks: SeedTask[] = [
       { id: "subtask-manual-2", title: "Explain role of main agent", status: "DONE", ownerAgentId: "agent-tammy" },
       { id: "subtask-manual-3", title: "Explain card lifecycle", status: "DONE", ownerAgentId: "agent-tammy" },
       { id: "subtask-manual-4", title: "Write quick start", status: "DONE", ownerAgentId: "agent-tammy" },
-      { id: "subtask-manual-5", title: "Review final copy clarity", status: "IN_PROGRESS", ownerAgentId: "agent-tammy" },
+      { id: "subtask-manual-5", title: "Review final copy clarity", status: "DOING", ownerAgentId: "agent-tammy" },
     ],
   },
   {
@@ -291,7 +291,7 @@ const tasks: SeedTask[] = [
       { id: "subtask-demo-1", title: "Create demo agents", status: "DONE", ownerAgentId: "agent-claudio" },
       { id: "subtask-demo-2", title: "Seed demo tasks", status: "DONE", ownerAgentId: "agent-claudio" },
       { id: "subtask-demo-3", title: "Seed comments", status: "DONE", ownerAgentId: "agent-claudio" },
-      { id: "subtask-demo-4", title: "Seed activity feed", status: "IN_PROGRESS", ownerAgentId: "agent-claudio" },
+      { id: "subtask-demo-4", title: "Seed activity feed", status: "DOING", ownerAgentId: "agent-claudio" },
       { id: "subtask-demo-5", title: "Validate read-only experience", status: "TODO", ownerAgentId: "agent-claudio" },
     ],
   },
@@ -303,7 +303,7 @@ const tasks: SeedTask[] = [
     status: "BACKLOG",
     priority: "P2",
     ownerAgentId: "agent-tammy",
-    createdByAgentId: "agent-claudio",
+    createdByAgentId: "agent-tammy",
     createdAt: "2026-03-12T11:45:00.000Z",
     updatedAt: "2026-03-12T11:45:00.000Z",
     tags: ["pricing", "activation", "copy"],
@@ -324,7 +324,7 @@ const tasks: SeedTask[] = [
     status: "BLOCKED",
     priority: "P2",
     ownerAgentId: "agent-ninja",
-    createdByAgentId: "agent-claudio",
+    createdByAgentId: "agent-ninja",
     createdAt: "2026-03-12T12:00:00.000Z",
     updatedAt: "2026-03-12T13:52:00.000Z",
     startedAt: "2026-03-12T12:20:00.000Z",
@@ -336,7 +336,7 @@ const tasks: SeedTask[] = [
     },
     subtasks: [
       { id: "subtask-install-1", title: "Draft install prompt", status: "DONE", ownerAgentId: "agent-ninja" },
-      { id: "subtask-install-2", title: "Validate command sequence", status: "IN_PROGRESS", ownerAgentId: "agent-ninja" },
+      { id: "subtask-install-2", title: "Validate command sequence", status: "DOING", ownerAgentId: "agent-ninja" },
       { id: "subtask-install-3", title: "Test startup flow", status: "TODO", ownerAgentId: "agent-ninja" },
       { id: "subtask-install-4", title: "Verify browser launch", status: "TODO", ownerAgentId: "agent-ninja" },
       { id: "subtask-install-5", title: "Confirm first-run task creation", status: "TODO", ownerAgentId: "agent-ninja" },
@@ -350,7 +350,7 @@ const tasks: SeedTask[] = [
     status: "BACKLOG",
     priority: "P3",
     ownerAgentId: "agent-codi",
-    createdByAgentId: "agent-claudio",
+    createdByAgentId: "agent-codi",
     createdAt: "2026-03-12T12:35:00.000Z",
     updatedAt: "2026-03-12T12:35:00.000Z",
     tags: ["demo", "ux", "polish"],
@@ -360,6 +360,175 @@ const tasks: SeedTask[] = [
       { id: "subtask-polish-3", title: "Highlight selected task details", status: "TODO", ownerAgentId: "agent-codi" },
       { id: "subtask-polish-4", title: "Improve activity feed empty states", status: "TODO", ownerAgentId: "agent-codi" },
       { id: "subtask-polish-5", title: "Add final CTA", status: "TODO", ownerAgentId: "agent-codi" },
+    ],
+  },
+  {
+    id: "task-release-checklist",
+    slug: "release-checklist",
+    title: "Release Checklist v0.6",
+    description:
+      "Prepare the release checklist for the next Mission Control build, including quality gates and rollback notes.",
+    status: "REVIEW",
+    priority: "P2",
+    ownerAgentId: "agent-claudio",
+    createdByAgentId: "agent-claudio",
+    createdAt: "2026-03-12T12:50:00.000Z",
+    updatedAt: "2026-03-12T14:20:00.000Z",
+    startedAt: "2026-03-12T13:05:00.000Z",
+    tags: ["release", "quality", "ops"],
+    subtasks: [
+      { id: "subtask-release-1", title: "Define release gates", status: "DONE", ownerAgentId: "agent-claudio" },
+      { id: "subtask-release-2", title: "Document rollback path", status: "DONE", ownerAgentId: "agent-claudio" },
+      { id: "subtask-release-3", title: "List risk owners", status: "DONE", ownerAgentId: "agent-claudio" },
+      { id: "subtask-release-4", title: "Run final checklist review", status: "DOING", ownerAgentId: "agent-claudio" },
+    ],
+  },
+  {
+    id: "task-competitor-intel",
+    slug: "competitor-intelligence-scan",
+    title: "Competitor Intelligence Scan",
+    description:
+      "Collect and summarize competitor positioning signals to sharpen MC-MONKEYS messaging for launch.",
+    status: "BACKLOG",
+    priority: "P3",
+    ownerAgentId: "agent-claudio",
+    createdByAgentId: "agent-claudio",
+    createdAt: "2026-03-12T13:05:00.000Z",
+    updatedAt: "2026-03-12T13:05:00.000Z",
+    tags: ["research", "strategy", "messaging"],
+    subtasks: [
+      { id: "subtask-intel-1", title: "List top competitors", status: "TODO", ownerAgentId: "agent-claudio" },
+      { id: "subtask-intel-2", title: "Capture key messaging", status: "TODO", ownerAgentId: "agent-claudio" },
+      { id: "subtask-intel-3", title: "Compare product promises", status: "TODO", ownerAgentId: "agent-claudio" },
+      { id: "subtask-intel-4", title: "Draft positioning delta", status: "TODO", ownerAgentId: "agent-claudio" },
+    ],
+  },
+  {
+    id: "task-onboarding-emails",
+    slug: "onboarding-email-sequence",
+    title: "Onboarding Email Sequence",
+    description:
+      "Draft and structure a concise onboarding email sequence for new operators after purchase.",
+    status: "IN_PROGRESS",
+    priority: "P2",
+    ownerAgentId: "agent-tammy",
+    createdByAgentId: "agent-tammy",
+    createdAt: "2026-03-12T12:15:00.000Z",
+    updatedAt: "2026-03-12T14:28:00.000Z",
+    startedAt: "2026-03-12T12:25:00.000Z",
+    tags: ["onboarding", "email", "retention"],
+    subtasks: [
+      { id: "subtask-onboarding-1", title: "Draft day-0 email", status: "DONE", ownerAgentId: "agent-tammy" },
+      { id: "subtask-onboarding-2", title: "Draft day-2 follow-up", status: "DONE", ownerAgentId: "agent-tammy" },
+      { id: "subtask-onboarding-3", title: "Add help links", status: "DOING", ownerAgentId: "agent-tammy" },
+      { id: "subtask-onboarding-4", title: "Review CTA clarity", status: "TODO", ownerAgentId: "agent-tammy" },
+    ],
+  },
+  {
+    id: "task-support-playbook",
+    slug: "support-playbook-v1",
+    title: "Support Playbook v1",
+    description:
+      "Create a first-pass support playbook with escalation rules, templates, and response standards.",
+    status: "DONE",
+    priority: "P2",
+    ownerAgentId: "agent-tammy",
+    createdByAgentId: "agent-tammy",
+    createdAt: "2026-03-12T10:05:00.000Z",
+    updatedAt: "2026-03-12T12:55:00.000Z",
+    startedAt: "2026-03-12T10:20:00.000Z",
+    completedAt: "2026-03-12T12:55:00.000Z",
+    tags: ["support", "ops", "playbook"],
+    subtasks: [
+      { id: "subtask-support-1", title: "Define response categories", status: "DONE", ownerAgentId: "agent-tammy" },
+      { id: "subtask-support-2", title: "Write escalation matrix", status: "DONE", ownerAgentId: "agent-tammy" },
+      { id: "subtask-support-3", title: "Add response templates", status: "DONE", ownerAgentId: "agent-tammy" },
+      { id: "subtask-support-4", title: "Review SLA expectations", status: "DONE", ownerAgentId: "agent-tammy" },
+    ],
+  },
+  {
+    id: "task-api-hardening",
+    slug: "api-hardening-pass",
+    title: "API Hardening Pass",
+    description:
+      "Harden API routes with stricter validations, error normalization, and observability touchpoints.",
+    status: "REVIEW",
+    priority: "P1",
+    ownerAgentId: "agent-ninja",
+    createdByAgentId: "agent-ninja",
+    createdAt: "2026-03-12T12:25:00.000Z",
+    updatedAt: "2026-03-12T14:30:00.000Z",
+    startedAt: "2026-03-12T12:35:00.000Z",
+    tags: ["backend", "security", "reliability"],
+    subtasks: [
+      { id: "subtask-hardening-1", title: "Audit payload schemas", status: "DONE", ownerAgentId: "agent-ninja" },
+      { id: "subtask-hardening-2", title: "Normalize API error format", status: "DONE", ownerAgentId: "agent-ninja" },
+      { id: "subtask-hardening-3", title: "Add route-level logging", status: "DONE", ownerAgentId: "agent-ninja" },
+      { id: "subtask-hardening-4", title: "Run final regression checks", status: "DOING", ownerAgentId: "agent-ninja" },
+    ],
+  },
+  {
+    id: "task-telemetry-pipeline",
+    slug: "telemetry-pipeline-cleanup",
+    title: "Telemetry Pipeline Cleanup",
+    description:
+      "Clean and stabilize the telemetry pipeline for clearer runtime visibility and lower noise.",
+    status: "IN_PROGRESS",
+    priority: "P2",
+    ownerAgentId: "agent-ninja",
+    createdByAgentId: "agent-ninja",
+    createdAt: "2026-03-12T12:45:00.000Z",
+    updatedAt: "2026-03-12T14:35:00.000Z",
+    startedAt: "2026-03-12T13:00:00.000Z",
+    tags: ["telemetry", "pipeline", "ops"],
+    subtasks: [
+      { id: "subtask-telemetry-1", title: "Clean duplicated events", status: "DONE", ownerAgentId: "agent-ninja" },
+      { id: "subtask-telemetry-2", title: "Tune event severity mapping", status: "DOING", ownerAgentId: "agent-ninja" },
+      { id: "subtask-telemetry-3", title: "Add alerting threshold notes", status: "TODO", ownerAgentId: "agent-ninja" },
+      { id: "subtask-telemetry-4", title: "Document feed fallback path", status: "TODO", ownerAgentId: "agent-ninja" },
+    ],
+  },
+  {
+    id: "task-office-ui-pass",
+    slug: "office-ui-consistency-pass",
+    title: "Office UI Consistency Pass",
+    description:
+      "Improve office scene consistency across statuses, labels, and interaction affordances.",
+    status: "IN_PROGRESS",
+    priority: "P2",
+    ownerAgentId: "agent-codi",
+    createdByAgentId: "agent-codi",
+    createdAt: "2026-03-12T12:40:00.000Z",
+    updatedAt: "2026-03-12T14:33:00.000Z",
+    startedAt: "2026-03-12T12:55:00.000Z",
+    tags: ["office", "ui", "consistency"],
+    subtasks: [
+      { id: "subtask-office-1", title: "Unify status label spacing", status: "DONE", ownerAgentId: "agent-codi" },
+      { id: "subtask-office-2", title: "Refine avatar focus state", status: "DOING", ownerAgentId: "agent-codi" },
+      { id: "subtask-office-3", title: "Improve inspector readability", status: "TODO", ownerAgentId: "agent-codi" },
+      { id: "subtask-office-4", title: "Tune responsive layout", status: "TODO", ownerAgentId: "agent-codi" },
+    ],
+  },
+  {
+    id: "task-conversion-copy",
+    slug: "conversion-copy-refresh",
+    title: "Conversion Copy Refresh",
+    description:
+      "Refresh conversion-oriented copy blocks across landing and pricing entry points.",
+    status: "DONE",
+    priority: "P2",
+    ownerAgentId: "agent-codi",
+    createdByAgentId: "agent-codi",
+    createdAt: "2026-03-12T10:55:00.000Z",
+    updatedAt: "2026-03-12T13:18:00.000Z",
+    startedAt: "2026-03-12T11:10:00.000Z",
+    completedAt: "2026-03-12T13:18:00.000Z",
+    tags: ["copy", "conversion", "web"],
+    subtasks: [
+      { id: "subtask-conversion-1", title: "Rewrite value proposition line", status: "DONE", ownerAgentId: "agent-codi" },
+      { id: "subtask-conversion-2", title: "Polish CTA microcopy", status: "DONE", ownerAgentId: "agent-codi" },
+      { id: "subtask-conversion-3", title: "Align trust messaging", status: "DONE", ownerAgentId: "agent-codi" },
+      { id: "subtask-conversion-4", title: "Review readability score", status: "DONE", ownerAgentId: "agent-codi" },
     ],
   },
 ] as const;
@@ -407,30 +576,167 @@ const comments = [
     createdAt: "2026-03-12T12:10:00.000Z",
     body: "Need to align annual pricing with the $3 launch story and make the annual plan the obvious choice.",
   },
+  {
+    id: "comment-project-setup-1",
+    taskId: "task-project-setup",
+    authorAgentId: "agent-ninja",
+    createdAt: "2026-03-12T11:12:00.000Z",
+    body: "Database setup is stable. Added final notes for quick recovery if the schema drifts.",
+  },
+  {
+    id: "comment-public-polish-1",
+    taskId: "task-public-demo-polish",
+    authorAgentId: "agent-codi",
+    createdAt: "2026-03-12T12:50:00.000Z",
+    body: "Queued for next pass. I want to improve section transitions and callout hierarchy.",
+  },
+  {
+    id: "comment-release-1",
+    taskId: "task-release-checklist",
+    authorAgentId: "agent-claudio",
+    createdAt: "2026-03-12T14:05:00.000Z",
+    body: "Release gates are defined. Running a final checklist walk-through before sign-off.",
+  },
+  {
+    id: "comment-intel-1",
+    taskId: "task-competitor-intel",
+    authorAgentId: "agent-claudio",
+    createdAt: "2026-03-12T13:08:00.000Z",
+    body: "Backlog item for strategic framing after this release milestone is closed.",
+  },
+  {
+    id: "comment-onboarding-1",
+    taskId: "task-onboarding-emails",
+    authorAgentId: "agent-tammy",
+    createdAt: "2026-03-12T14:11:00.000Z",
+    body: "Drafts are clear and short. I am refining links and support escalation wording.",
+  },
+  {
+    id: "comment-support-1",
+    taskId: "task-support-playbook",
+    authorAgentId: "agent-tammy",
+    createdAt: "2026-03-12T12:57:00.000Z",
+    body: "Playbook baseline is complete with categories, escalation paths, and response templates.",
+  },
+  {
+    id: "comment-hardening-1",
+    taskId: "task-api-hardening",
+    authorAgentId: "agent-tammy",
+    createdAt: "2026-03-12T14:22:00.000Z",
+    body: "From operations side this looks solid. Reviewing final error wording consistency.",
+  },
+  {
+    id: "comment-telemetry-1",
+    taskId: "task-telemetry-pipeline",
+    authorAgentId: "agent-ninja",
+    createdAt: "2026-03-12T14:24:00.000Z",
+    body: "Noise reduction is improving the feed. Need one more pass on severity mapping.",
+  },
+  {
+    id: "comment-office-1",
+    taskId: "task-office-ui-pass",
+    authorAgentId: "agent-codi",
+    createdAt: "2026-03-12T14:16:00.000Z",
+    body: "Inspector readability is better now. Next pass will focus on responsive behavior.",
+  },
+  {
+    id: "comment-conversion-1",
+    taskId: "task-conversion-copy",
+    authorAgentId: "agent-codi",
+    createdAt: "2026-03-12T13:19:00.000Z",
+    body: "Conversion copy pass is done and aligned with the launch narrative.",
+  },
 ] as const;
 
-const activityFeed = [
-  { id: "event-001", timestamp: "2026-03-12T09:05:00.000Z", type: "TASK_CREATED", agentId: "agent-claudio", taskId: "task-project-setup", message: "Claudio created task: Project Setup" },
-  { id: "event-002", timestamp: "2026-03-12T09:10:00.000Z", type: "TASK_CREATED", agentId: "agent-claudio", taskId: "task-landing-page", message: "Claudio created task: Landing Page" },
-  { id: "event-003", timestamp: "2026-03-12T09:48:00.000Z", type: "SUBTASK_COMPLETED", agentId: "agent-ninja", taskId: "task-project-setup", message: "Ninja completed subtask: Create isolated demo database" },
-  { id: "event-004", timestamp: "2026-03-12T10:22:00.000Z", type: "SUBTASK_COMPLETED", agentId: "agent-codi", taskId: "task-landing-page", message: "Codi completed subtask: Build hero section" },
-  { id: "event-005", timestamp: "2026-03-12T10:15:00.000Z", type: "TASK_CREATED", agentId: "agent-claudio", taskId: "task-story-page", message: "Claudio created task: Story Page" },
-  { id: "event-006", timestamp: "2026-03-12T10:40:00.000Z", type: "TASK_CREATED", agentId: "agent-claudio", taskId: "task-manual-page", message: "Claudio created task: Manual Page" },
-  { id: "event-007", timestamp: "2026-03-12T11:10:00.000Z", type: "TASK_COMPLETED", agentId: "agent-ninja", taskId: "task-project-setup", message: "Ninja moved task \"Project Setup\" to DONE" },
-  { id: "event-008", timestamp: "2026-03-12T11:20:00.000Z", type: "TASK_CREATED", agentId: "agent-claudio", taskId: "task-live-demo-dataset", message: "Claudio created task: Live Demo Dataset" },
-  { id: "event-009", timestamp: "2026-03-12T11:58:00.000Z", type: "COMMENT_ADDED", agentId: "agent-codi", taskId: "task-landing-page", message: "Codi added comment on task: Landing Page" },
-  { id: "event-010", timestamp: "2026-03-12T12:02:00.000Z", type: "TASK_COMPLETED", agentId: "agent-codi", taskId: "task-landing-page", message: "Codi moved task \"Landing Page\" to DONE" },
-  { id: "event-011", timestamp: "2026-03-12T12:00:00.000Z", type: "TASK_CREATED", agentId: "agent-claudio", taskId: "task-install-prompt", message: "Claudio created task: Install Prompt Experience" },
-  { id: "event-012", timestamp: "2026-03-12T12:35:00.000Z", type: "TASK_CREATED", agentId: "agent-claudio", taskId: "task-public-demo-polish", message: "Claudio created task: Public Demo Polish" },
-  { id: "event-013", timestamp: "2026-03-12T13:18:00.000Z", type: "COMMENT_ADDED", agentId: "agent-claudio", taskId: "task-story-page", message: "Claudio added comment on task: Story Page" },
-  { id: "event-014", timestamp: "2026-03-12T13:42:00.000Z", type: "COMMENT_ADDED", agentId: "agent-tammy", taskId: "task-manual-page", message: "Tammy added comment on task: Manual Page" },
-  { id: "event-015", timestamp: "2026-03-12T13:52:00.000Z", type: "TASK_BLOCKED", agentId: "agent-ninja", taskId: "task-install-prompt", message: "Ninja marked task \"Install Prompt Experience\" as BLOCKED" },
-  { id: "event-016", timestamp: "2026-03-12T14:02:00.000Z", type: "COMMENT_ADDED", agentId: "agent-claudio", taskId: "task-live-demo-dataset", message: "Claudio added comment on task: Live Demo Dataset" },
-  { id: "event-017", timestamp: "2026-03-12T14:12:00.000Z", type: "TASK_MOVED", agentId: "agent-tammy", taskId: "task-manual-page", message: "Tammy moved task \"Manual Page\" to REVIEW" },
-  { id: "event-018", timestamp: "2026-03-12T14:25:00.000Z", type: "SUBTASK_STARTED", agentId: "agent-claudio", taskId: "task-story-page", message: "Claudio started subtask: Add naming explanation" },
-  { id: "event-019", timestamp: "2026-03-12T14:34:00.000Z", type: "SUBTASK_COMPLETED", agentId: "agent-claudio", taskId: "task-live-demo-dataset", message: "Claudio completed subtask: Seed comments" },
-  { id: "event-020", timestamp: "2026-03-12T14:41:00.000Z", type: "SUBTASK_STARTED", agentId: "agent-claudio", taskId: "task-live-demo-dataset", message: "Claudio started subtask: Seed activity feed" },
-] as const;
+type ActivityEvent = {
+  id: string;
+  timestamp: string;
+  type: string;
+  agentId: string;
+  taskId: string;
+  message: string;
+};
+
+function buildActivityFeed(seedTasks: readonly SeedTask[], seedComments: readonly (typeof comments)[number][]): ActivityEvent[] {
+  const events: ActivityEvent[] = [];
+  const agentNames = new Map<string, string>(agents.map((agent) => [agent.id, agent.name]));
+  const tasksById = new Map(seedTasks.map((task) => [task.id, task]));
+  let eventIndex = 1;
+  let currentMs = Date.parse("2026-03-12T09:00:00.000Z");
+
+  const addEvent = (
+    type: string,
+    agentId: string,
+    taskId: string,
+    message: string,
+    minuteStep = 5,
+  ) => {
+    events.push({
+      id: `event-${String(eventIndex).padStart(3, "0")}`,
+      timestamp: new Date(currentMs).toISOString(),
+      type,
+      agentId,
+      taskId,
+      message,
+    });
+    eventIndex += 1;
+    currentMs += minuteStep * 60_000;
+  };
+
+  for (const task of seedTasks) {
+    const creator = agentNames.get(task.createdByAgentId) ?? "Agent";
+    const owner = agentNames.get(task.ownerAgentId) ?? "Agent";
+
+    addEvent("TASK_CREATED", task.createdByAgentId, task.id, `${creator} created task: ${task.title}`);
+
+    const completedSubtask = task.subtasks.find((subtask) => subtask.status === "DONE");
+    if (completedSubtask) {
+      addEvent(
+        "SUBTASK_COMPLETED",
+        task.ownerAgentId,
+        task.id,
+        `${owner} completed subtask: ${completedSubtask.title}`,
+        4,
+      );
+    }
+
+    if (task.status === "DONE") {
+      addEvent("TASK_COMPLETED", task.ownerAgentId, task.id, `${owner} moved task \"${task.title}\" to DONE`, 4);
+    } else if (task.status === "REVIEW") {
+      addEvent("TASK_MOVED", task.ownerAgentId, task.id, `${owner} moved task \"${task.title}\" to REVIEW`, 4);
+    } else if (task.status === "BLOCKED") {
+      addEvent("TASK_BLOCKED", task.ownerAgentId, task.id, `${owner} marked task \"${task.title}\" as BLOCKED`, 4);
+    } else if (task.status === "IN_PROGRESS") {
+      const inProgressSubtask = task.subtasks.find((subtask) => subtask.status === "DOING") ?? task.subtasks[0];
+      addEvent(
+        "SUBTASK_STARTED",
+        task.ownerAgentId,
+        task.id,
+        `${owner} started subtask: ${inProgressSubtask.title}`,
+        4,
+      );
+    }
+  }
+
+  const commentsChronological = [...seedComments].sort(
+    (a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt),
+  );
+  for (const comment of commentsChronological) {
+    const author = agentNames.get(comment.authorAgentId) ?? "Agent";
+    const task = tasksById.get(comment.taskId);
+    addEvent(
+      "COMMENT_ADDED",
+      comment.authorAgentId,
+      comment.taskId,
+      `${author} added comment on task: ${task?.title ?? comment.taskId}`,
+      3,
+    );
+  }
+
+  return events;
+}
+
+const activityFeed = buildActivityFeed(tasks, comments);
 
 async function main() {
   await prisma.systemEvent.deleteMany();
