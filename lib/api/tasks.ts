@@ -21,6 +21,33 @@ export interface CreateTaskCommentInput {
   inReplyToId?: string | null;
 }
 
+export async function updateSubtaskStatus(
+  subtaskId: string,
+  status: "TODO" | "DOING" | "DONE" | "BLOCKED",
+): Promise<Subtask> {
+  if (shouldUseMockData()) {
+    const now = new Date().toISOString();
+    return {
+      id: subtaskId,
+      title: "Mock subtask",
+      status,
+      updatedAt: now,
+    };
+  }
+
+  const raw = await apiFetch<unknown>(`/api/subtasks/${subtaskId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+  });
+
+  const parsed = SubtasksResponseSchema.shape.subtasks.element.safeParse(raw);
+  if (!parsed.success) {
+    throw new Error("Failed to parse updated subtask response");
+  }
+
+  return parsed.data;
+}
+
 export async function getTasks(options?: { includeArchived?: boolean }): Promise<Task[]> {
   if (shouldUseMockData()) {
     return MOCK_TASKS;
