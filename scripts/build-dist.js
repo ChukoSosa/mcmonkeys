@@ -22,6 +22,7 @@ const ROOT = path.join(__dirname, "..");
 const DIST = path.join(ROOT, "dist");
 const ZIP_DIR = path.join(ROOT, "public", "downloads");
 const ZIP_OUT = path.join(ZIP_DIR, "mclucy-latest.zip");
+const SKIP_NEXT_BUILD = process.argv.includes("--skip-next-build") || process.env.SKIP_NEXT_BUILD === "true";
 const CANONICAL_DOCS = [
   "MISSION_CONTROL_OVERVIEW.md",
   "WORKFLOW_GUIDE.md",
@@ -79,24 +80,29 @@ fs.mkdirSync(DIST, { recursive: true });
 ok("dist/ cleaned");
 
 // ── Step 2: Build Next.js (standalone) ─────────────────────────────────────
-step("2/7", "Building Next.js (standalone)");
-run(
-  "npx next build",
-  "Next.js build complete",
-  {
-    env: {
-      ...process.env,
-      NODE_ENV: "production",
-      APP_ONLY_INSTALL: "true",
-      NEXT_PUBLIC_APP_ONLY_INSTALL: "true",
-    },
-  }
-);
+if (SKIP_NEXT_BUILD) {
+  step("2/7", "Using existing Next.js build output");
+  ok("Skipping next build (--skip-next-build)");
+} else {
+  step("2/7", "Building Next.js (standalone)");
+  run(
+    "npx next build",
+    "Next.js build complete",
+    {
+      env: {
+        ...process.env,
+        NODE_ENV: "production",
+        APP_ONLY_INSTALL: "true",
+        NEXT_PUBLIC_APP_ONLY_INSTALL: "true",
+      },
+    }
+  );
+}
 
 // Validate standalone output exists
 const standaloneDir = path.join(ROOT, ".next", "standalone");
 if (!fs.existsSync(standaloneDir)) {
-  fail(".next/standalone/ not found. Make sure next.config.ts has output: 'standalone'.");
+  fail(".next/standalone/ not found. Run next build first or disable --skip-next-build.");
 }
 
 // ── Step 3: Assemble distribution folder ───────────────────────────────────
