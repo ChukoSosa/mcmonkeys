@@ -8,11 +8,14 @@ import {
   faSpinner,
   faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
-import { isPublicDemoMode } from "@/lib/utils/demoMode";
+import { getRuntimePolicy } from "@/lib/runtime/profile";
 
 const LS_KEY = "mc__license_key";
 const LS_VALIDATED_AT = "mc__license_validated_at";
 const REVALIDATE_DAYS = 30;
+const RUNTIME_POLICY = getRuntimePolicy();
+const SHOULD_SHORTCUT_LICENSE_IN_DEV =
+  process.env.NODE_ENV === "development" && RUNTIME_POLICY.devLicenseMode === "bypass";
 
 function isValidationFresh(validatedAt: string | null): boolean {
   if (!validatedAt) return false;
@@ -79,7 +82,7 @@ interface LicenseGateProps {
 }
 
 export function LicenseGate({ children }: LicenseGateProps) {
-  const demoMode = isPublicDemoMode();
+  const demoMode = RUNTIME_POLICY.isOnlineDemo;
 
   // "checking"  → running localStorage / silent re-validate
   // "gate"      → showing the license input overlay
@@ -91,15 +94,13 @@ export function LicenseGate({ children }: LicenseGateProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    // Demo mode is always open (no license required)
-    if (demoMode) {
+    if (SHOULD_SHORTCUT_LICENSE_IN_DEV) {
       setPhase("open");
       return;
     }
 
-    // Railway-hosted demo should bypass license activation.
-    const hostname = window.location.hostname.toLowerCase();
-    if (hostname === "railway.app" || hostname.endsWith(".railway.app")) {
+    // Demo mode is always open (no license required)
+    if (demoMode) {
       setPhase("open");
       return;
     }

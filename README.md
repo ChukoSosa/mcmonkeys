@@ -31,6 +31,18 @@ Front + API en un solo repo. Levantás con un comando y ya tenés agentes, tarea
 - API local completa integrada (Next.js API Routes + Prisma + PostgreSQL)
 - Auto-setup en primer arranque: sin pasos manuales
 
+## Runtime Profiles
+
+Ver guía completa en [docs/PROFILES.md](docs/PROFILES.md).
+
+Comandos recomendados:
+
+```bash
+npm run dev:local-mock     # mock editable persistido en JSON + /web visible
+npm run dev:online-demo    # demo readonly + /web visible
+npm run dev:install-local  # flujo instalación local (API real + onboarding)
+```
+
 ## Project Structure
 
 ```text
@@ -123,6 +135,9 @@ npm run dev
 
 ```bash
 npm run dev          # Auto-setup + levantar en modo desarrollo
+npm run dev:local-mock # Perfil local-dev: mock editable persistido
+npm run dev:online-demo # Perfil online-demo: demo readonly
+npm run dev:install-local # Perfil install-local: onboarding + API real
 npm run build        # Build de producción
 npm start            # Levantar build de producción
 npm run db:push      # Aplicar schema de DB manualmente
@@ -187,6 +202,8 @@ El usuario final recibe el ZIP, corre el instalador, y MC-MONKEYS levanta autom�
 | `/web/story` | Historia del proyecto |
 | `/web/payment` | Página de pago |
 | `/web/thank-you` | Prompt de instalación para OpenClaw |
+
+> Nota: la disponibilidad de `/web/*` depende del runtime profile. Ver [docs/PROFILES.md](docs/PROFILES.md).
 
 ## Arquitectura
 

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { taskService } from "@/app/api/server/task-service";
 import { apiErrorResponse, validationError } from "@/app/api/server/api-error";
-import { isMissionControlDemoMode, demoReadOnlyResponse } from "@/app/api/server/demo-mode";
+import { demoReadOnlyResponse, isLocalDevMockMode, isMissionControlDemoMode } from "@/app/api/server/demo-mode";
+import { localDevMockStore } from "@/lib/mock/store";
 import { z } from "zod";
 
 const TaskIdParamSchema = z.object({
@@ -39,6 +40,14 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     const { id } = parsedParams.data;
+    if (isLocalDevMockMode()) {
+      const task = localDevMockStore.getTaskById(id);
+      if (!task) {
+        return NextResponse.json({ error: "Task not found" }, { status: 404 });
+      }
+      return NextResponse.json(task);
+    }
+
     const task = await taskService.getById(id);
     if (!task) {
       return NextResponse.json({ error: "Task not found" }, { status: 404 });
@@ -67,6 +76,11 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     }
 
     const { id } = parsedParams.data;
+    if (isLocalDevMockMode()) {
+      const task = localDevMockStore.updateTask(id, parsedBody.data);
+      return NextResponse.json(task);
+    }
+
     const task = await taskService.update(id, parsedBody.data);
     return NextResponse.json(task);
   } catch (error) {
@@ -86,6 +100,11 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     }
 
     const { id } = parsedParams.data;
+    if (isLocalDevMockMode()) {
+      const task = localDevMockStore.deleteTask(id);
+      return NextResponse.json({ message: "Task deleted", id: task.id });
+    }
+
     const task = await taskService.delete(id);
     return NextResponse.json({ message: "Task deleted", id: task.id });
   } catch (error) {

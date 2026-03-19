@@ -1,15 +1,19 @@
 import { NextResponse } from "next/server";
 import { ApiError } from "@/app/api/server/api-error";
-import { getEnv } from "@/app/api/server/env";
+import { getRuntimePolicy } from "@/lib/runtime/profile";
 
 const READ_ONLY_MESSAGE = "The public live demo is read-only.";
 
 export function isMissionControlDemoMode(): boolean {
-  return getEnv().MISSION_CONTROL_DEMO_MODE;
+  return getRuntimePolicy().isOnlineDemo;
+}
+
+export function isLocalDevMockMode(): boolean {
+  return getRuntimePolicy().isLocalDev;
 }
 
 export function assertDemoWritable(): void {
-  if (isMissionControlDemoMode()) {
+  if (getRuntimePolicy().isReadOnly) {
     throw new ApiError(403, "BAD_REQUEST", READ_ONLY_MESSAGE);
   }
 }

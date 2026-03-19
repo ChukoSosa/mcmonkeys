@@ -1,9 +1,15 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/api/server/prisma";
 import { apiErrorResponse } from "@/app/api/server/api-error";
+import { isLocalDevMockMode } from "@/app/api/server/demo-mode";
+import { localDevMockStore } from "@/lib/mock/store";
 
 export async function GET() {
   try {
+    if (isLocalDevMockMode()) {
+      return NextResponse.json(localDevMockStore.getKpis());
+    }
+
     const [totalTasks, doneTasks, inProgressTasks, reviewTasks, blockedTasks, backlogTasks] = await Promise.all([
       prisma.task.count(),
       prisma.task.count({ where: { status: "DONE" } }),

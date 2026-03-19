@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/api/server/prisma";
 import { apiErrorResponse } from "@/app/api/server/api-error";
 import { activityService } from "@/app/api/server/activity-service";
-import { isMissionControlDemoMode, demoReadOnlyResponse } from "@/app/api/server/demo-mode";
+import { demoReadOnlyResponse, isLocalDevMockMode, isMissionControlDemoMode } from "@/app/api/server/demo-mode";
+import { localDevMockStore } from "@/lib/mock/store";
 
 const OPERATOR_ACTOR = {
   type: "human" as const,
@@ -52,6 +53,25 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
     const { id } = await params;
     const body = await request.json() as Record<string, unknown>;
+
+    if (isLocalDevMockMode()) {
+      const nextStatus =
+        typeof body.status === "string" && ["TODO", "DOING", "DONE", "BLOCKED"].includes(body.status.toUpperCase())
+          ? body.status.toUpperCase()
+          : undefined;
+
+      const nextTitle = typeof body.title === "string" && body.title.trim() ? body.title.trim() : undefined;
+      const nextOwnerAgentId = typeof body.ownerAgentId === "string"
+        ? body.ownerAgentId.trim() || null
+        : undefined;
+
+      const subtask = localDevMockStore.updateSubtask(id, {
+        status: nextStatus,
+        title: nextTitle,
+        ownerAgentId: nextOwnerAgentId,
+      });
+      return NextResponse.json(subtask);
+    }
 
     const existing = await prisma.subtask.findUnique({
       where: { id },

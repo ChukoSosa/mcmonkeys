@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { taskService } from "@/app/api/server/task-service";
 import { apiErrorResponse, validationError } from "@/app/api/server/api-error";
-import { isMissionControlDemoMode, demoReadOnlyResponse } from "@/app/api/server/demo-mode";
+import { demoReadOnlyResponse, isLocalDevMockMode, isMissionControlDemoMode } from "@/app/api/server/demo-mode";
 import { createRequestContext, withRequestHeaders } from "@/app/api/server/request-context";
+import { localDevMockStore } from "@/lib/mock/store";
 import { z } from "zod";
 
 const ListTasksQuerySchema = z.object({
@@ -34,6 +35,18 @@ export async function GET(request: NextRequest) {
     const { status, assignedAgentId, limit, cursor, archived } = parsed.data;
     const includeArchived = archived === "true";
 
+    if (isLocalDevMockMode()) {
+      let tasks = localDevMockStore.listTasks(includeArchived);
+      if (status) {
+        tasks = tasks.filter((task) => task.status === status);
+      }
+      if (assignedAgentId) {
+        tasks = tasks.filter((task) => task.assignedAgentId === assignedAgentId);
+      }
+      const page = typeof limit === "number" ? tasks.slice(0, limit) : tasks;
+      return withRequestHeaders(NextResponse.json({ tasks: page, nextCursor: null }), requestContext);
+    }
+
     const { tasks, nextCursor } = await taskService.list({
       status,
       assignedAgentId,
@@ -62,6 +75,17 @@ export async function POST(request: NextRequest) {
     }
 
     const { title, description, assignedAgentId, status, priority, pipelineStageId } = parsed.data;
+
+    if (isLocalDevMockMode()) {
+      const task = localDevMockStore.createTask({
+        title,
+        description,
+        assignedAgentId,
+        status,
+        priority,
+      });
+      return withRequestHeaders(NextResponse.json(task, { status: 201 }), requestContext);
+    }
 
     const task = await taskService.create({
       title,

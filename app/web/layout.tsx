@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { notFound, usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { getRuntimePolicy, shouldBlockWebExperience } from "@/lib/runtime/profile";
 
 const NAV_LINKS = [
   { href: "/web/landing", label: "Landing" },
@@ -13,8 +15,17 @@ const NAV_LINKS = [
 
 export default function WebLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const [hostname, setHostname] = useState<string | null>(null);
 
-  if (process.env.NEXT_PUBLIC_APP_ONLY_INSTALL === "true") {
+  useEffect(() => {
+    setHostname(window.location.hostname);
+  }, []);
+
+  if (hostname === null && !getRuntimePolicy().shouldShowWebPages) {
+    return null;
+  }
+
+  if (hostname && shouldBlockWebExperience(hostname)) {
     notFound();
   }
 

@@ -37,6 +37,14 @@ psql -U postgres -c "SELECT 1;"
 
 ## Instalación
 
+Antes de empezar, revisá el comportamiento por perfiles en [PROFILES.md](./PROFILES.md).
+
+Para instalación local de cliente (modo install-local), el flujo esperado es:
+1. Solo Mission Control (sin páginas `/web/*`)
+2. Onboarding/inicialización en primer arranque
+3. Conexión a API/DB real
+4. Licencia obligatoria
+
 ```bash
 git clone https://github.com/ChukoSosa/mclucy.git
 cd mclucy

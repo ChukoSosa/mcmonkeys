@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { activityService } from "@/app/api/server/activity-service";
 import { apiErrorResponse, validationError } from "@/app/api/server/api-error";
+import { isLocalDevMockMode } from "@/app/api/server/demo-mode";
+import { localDevMockStore } from "@/lib/mock/store";
 import { z } from "zod";
 
 const ActivityQuerySchema = z.object({
@@ -32,6 +34,19 @@ export async function GET(request: NextRequest) {
       actorId,
       actorType,
     } = parsed.data;
+
+    if (isLocalDevMockMode()) {
+      const { events, nextCursor } = localDevMockStore.listActivity({
+        limit,
+        taskId,
+        agentId,
+        subtaskId,
+        commentId,
+        actorId,
+        actorType,
+      });
+      return NextResponse.json({ activities: events, nextCursor, events });
+    }
 
     const { events, nextCursor } = await activityService.list({
       limit,

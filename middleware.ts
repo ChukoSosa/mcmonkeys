@@ -2,14 +2,12 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { authenticateRequest, hasRequiredRole, type AuthRole } from "@/lib/security/auth";
 import { checkRateLimit } from "@/lib/security/rate-limit";
+import { getRuntimePolicy } from "@/lib/runtime/profile";
 
 const MUTATING_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 
 function isReadOnlyDemoMode(): boolean {
-  return (
-    process.env.MISSION_CONTROL_DEMO_MODE === "true" ||
-    process.env.NEXT_PUBLIC_MISSION_CONTROL_DEMO_MODE === "true"
-  );
+  return getRuntimePolicy().isReadOnly;
 }
 
 function withSecurityHeaders(response: NextResponse): NextResponse {

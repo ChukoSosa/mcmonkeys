@@ -1,6 +1,8 @@
 import type { ActivityItem, Agent, Comment, Subtask, SupervisorKpis, Task } from "@/lib/schemas";
 
 const IS_PUBLIC_DEMO = process.env.NEXT_PUBLIC_MISSION_CONTROL_DEMO_MODE === "true";
+const IS_LOCAL_MOCK_OVERRIDE = process.env.NEXT_PUBLIC_USE_MOCK_DATA === "true";
+const USE_RICH_MOCK_DATA = IS_PUBLIC_DEMO || IS_LOCAL_MOCK_OVERRIDE;
 
 export const MOCK_AGENTS: Agent[] = [
   {
@@ -16,8 +18,8 @@ export const MOCK_AGENTS: Agent[] = [
     id: "agent-ninja",
     name: "Ninja",
     role: "Execution Specialist",
-    status: IS_PUBLIC_DEMO ? "BLOCKED" : "WORKING",
-    statusMessage: IS_PUBLIC_DEMO
+    status: USE_RICH_MOCK_DATA ? "BLOCKED" : "WORKING",
+    statusMessage: USE_RICH_MOCK_DATA
       ? "Blocked waiting for external dependency"
       : "Executing assigned tasks",
     avatarUrl: "/office/mcmonkes-library/012.png",
@@ -36,8 +38,8 @@ export const MOCK_AGENTS: Agent[] = [
     id: "agent-tammy",
     name: "Tammy",
     role: "Mission Coordination Assistant",
-    status: IS_PUBLIC_DEMO ? "THINKING" : "WORKING",
-    statusMessage: IS_PUBLIC_DEMO
+    status: USE_RICH_MOCK_DATA ? "THINKING" : "WORKING",
+    statusMessage: USE_RICH_MOCK_DATA
       ? "Analyzing mission coordination options"
       : "Handling installation onboarding",
     avatarUrl: "/office/mcmonkes-library/006.png",
@@ -121,7 +123,7 @@ const DEMO_TASKS: Task[] = [
   },
 ];
 
-export const MOCK_TASKS: Task[] = IS_PUBLIC_DEMO ? DEMO_TASKS : ONBOARDING_TASKS;
+export const MOCK_TASKS: Task[] = USE_RICH_MOCK_DATA ? DEMO_TASKS : ONBOARDING_TASKS;
 
 const ONBOARDING_SUBTASKS_BY_TASK: Record<string, Subtask[]> = {
   "task-onboarding-installation": [
@@ -265,11 +267,11 @@ const DEMO_COMMENTS_BY_TASK: Record<string, Comment[]> = {
   ],
 };
 
-const SUBTASKS_BY_TASK: Record<string, Subtask[]> = IS_PUBLIC_DEMO
+const SUBTASKS_BY_TASK: Record<string, Subtask[]> = USE_RICH_MOCK_DATA
   ? DEMO_SUBTASKS_BY_TASK
   : ONBOARDING_SUBTASKS_BY_TASK;
 
-const COMMENTS_BY_TASK: Record<string, Comment[]> = IS_PUBLIC_DEMO
+const COMMENTS_BY_TASK: Record<string, Comment[]> = USE_RICH_MOCK_DATA
   ? DEMO_COMMENTS_BY_TASK
   : ONBOARDING_COMMENTS_BY_TASK;
 
@@ -328,7 +330,7 @@ const DEMO_ACTIVITY: ActivityItem[] = [
   },
 ];
 
-export const MOCK_ACTIVITY: ActivityItem[] = IS_PUBLIC_DEMO ? DEMO_ACTIVITY : ONBOARDING_ACTIVITY;
+export const MOCK_ACTIVITY: ActivityItem[] = USE_RICH_MOCK_DATA ? DEMO_ACTIVITY : ONBOARDING_ACTIVITY;
 
 const ONBOARDING_KPIS: SupervisorKpis = {
   totalTasks: 1,
@@ -364,4 +366,4 @@ const DEMO_KPIS: SupervisorKpis = {
   updatedAt: new Date().toISOString(),
 };
 
-export const MOCK_KPIS: SupervisorKpis = IS_PUBLIC_DEMO ? DEMO_KPIS : ONBOARDING_KPIS;
+export const MOCK_KPIS: SupervisorKpis = USE_RICH_MOCK_DATA ? DEMO_KPIS : ONBOARDING_KPIS;

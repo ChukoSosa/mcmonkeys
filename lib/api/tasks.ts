@@ -9,7 +9,7 @@ import {
 } from "@/lib/schemas";
 import type { Task, Subtask, Comment } from "@/lib/schemas";
 import type { TaskValidationState, ValidationFlagItem } from "@/lib/schemas";
-import { shouldUseMockData } from "./mockMode";
+import { shouldUseMockData, usesMockDataSource } from "./mockMode";
 import { MOCK_TASKS, getMockSubtasks, getMockComments } from "@/lib/mock/data";
 
 export interface CreateTaskCommentInput {
@@ -148,7 +148,7 @@ export async function archiveTask(taskId: string): Promise<Task> {
 }
 
 export async function getTaskValidationState(taskId: string): Promise<TaskValidationState | null> {
-  if (shouldUseMockData()) {
+  if (usesMockDataSource()) {
     return null;
   }
 
@@ -165,7 +165,7 @@ export async function getValidationFlags(options?: {
   includeBlocked?: boolean;
   limit?: number;
 }): Promise<ValidationFlagItem[]> {
-  if (shouldUseMockData()) {
+  if (usesMockDataSource()) {
     return [];
   }
 

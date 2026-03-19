@@ -1,5 +1,7 @@
+import { getRuntimePolicy } from "@/lib/runtime/profile";
+
 export function isPublicDemoMode(): boolean {
-  return process.env.NEXT_PUBLIC_MISSION_CONTROL_DEMO_MODE === "true";
+  return getRuntimePolicy().isOnlineDemo;
 }
 
 export function getRealtimeRefetchInterval(intervalMs: number): number | false {

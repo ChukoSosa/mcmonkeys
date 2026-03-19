@@ -3,8 +3,9 @@ import { prisma } from "@/app/api/server/prisma";
 import { apiErrorResponse, validationError } from "@/app/api/server/api-error";
 import { emitEvent } from "@/app/api/server/event-bus";
 import { activityService } from "@/app/api/server/activity-service";
-import { isMissionControlDemoMode, demoReadOnlyResponse } from "@/app/api/server/demo-mode";
+import { demoReadOnlyResponse, isLocalDevMockMode, isMissionControlDemoMode } from "@/app/api/server/demo-mode";
 import { createRequestContext, withRequestHeaders } from "@/app/api/server/request-context";
+import { localDevMockStore } from "@/lib/mock/store";
 import { z } from "zod";
 
 const OPERATOR_ACTOR = {
@@ -50,6 +51,14 @@ export async function GET(
 
     const { id } = parsedParams.data;
     const limit = parsedQuery.data.limit ?? 50;
+
+    if (isLocalDevMockMode()) {
+      const { comments, openCount } = localDevMockStore.listComments(id);
+      return withRequestHeaders(
+        NextResponse.json({ comments: comments.slice(0, limit), nextCursor: null, openCount }),
+        requestContext,
+      );
+    }
 
     const comments = await prisma.taskComment.findMany({
       where: { taskId: id },
@@ -97,6 +106,18 @@ export async function POST(
 
     const { id } = parsedParams.data;
     const body = parsedBody.data.body.trim();
+
+    if (isLocalDevMockMode()) {
+      const comment = localDevMockStore.createComment(id, {
+        body,
+        authorType: parsedBody.data.authorType,
+        authorId: parsedBody.data.authorId ?? null,
+        requiresResponse: parsedBody.data.requiresResponse,
+        status: parsedBody.data.status?.trim() || "open",
+        inReplyToId: parsedBody.data.inReplyToId ?? null,
+      });
+      return withRequestHeaders(NextResponse.json(comment, { status: 201 }), requestContext);
+    }
 
     const task = await prisma.task.findUnique({
       where: { id },

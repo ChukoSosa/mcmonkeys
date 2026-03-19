@@ -1,17 +1,32 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { prisma } from "@/app/api/server/prisma";
+import { MISSION_CONTROL_ONBOARDING_TASK_TITLE } from "@/lib/mission/bootstrapTask";
+import { getRuntimePolicy, isLocalHost } from "@/lib/runtime/profile";
 
-const RAILWAY_PUBLIC_HOST = "mcmonkeys.up.railway.app";
+async function getRedirectTarget(hostname: string): Promise<string> {
+  const policy = getRuntimePolicy(hostname);
 
-function getRedirectTarget(hostname: string): string {
-  const normalized = hostname.toLowerCase();
+  if (policy.isOnlineDemo) {
+    return "/web/landing";
+  }
 
-  if (normalized.includes("localhost") || normalized.includes("127.0.0.1")) {
+  if (policy.isLocalDev) {
     return "/overview";
   }
 
-  if (normalized.includes(RAILWAY_PUBLIC_HOST)) {
-    return "/web/landing";
+  if (policy.isInstallLocal && isLocalHost(hostname)) {
+    try {
+      const bootstrapTaskExists = await prisma.task.findFirst({
+        where: { title: MISSION_CONTROL_ONBOARDING_TASK_TITLE },
+        select: { id: true },
+      });
+
+      return bootstrapTaskExists ? "/overview" : "/initializing";
+    } catch {
+      // If DB is not ready yet, keep startup flow on initializing.
+      return "/initializing";
+    }
   }
 
   return "/overview";
@@ -20,5 +35,5 @@ function getRedirectTarget(hostname: string): string {
 export default async function Home() {
   const requestHeaders = await headers();
   const hostHeader = requestHeaders.get("host") ?? "";
-  redirect(getRedirectTarget(hostHeader));
+  redirect(await getRedirectTarget(hostHeader));
 }

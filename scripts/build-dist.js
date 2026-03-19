@@ -87,6 +87,7 @@ run(
     env: {
       ...process.env,
       NODE_ENV: "production",
+      NEXT_PUBLIC_RUNTIME_PROFILE: "install-local",
       APP_ONLY_INSTALL: "true",
       NEXT_PUBLIC_APP_ONLY_INSTALL: "true",
     },
@@ -175,6 +176,7 @@ fs.writeFileSync(
   path.join(DIST, ".env.dist"),
   [
     'DATABASE_URL="postgresql://postgres:postgres@localhost:5432/mission_control"',
+    'NEXT_PUBLIC_RUNTIME_PROFILE="install-local"',
     'APP_ONLY_INSTALL="true"',
     'NEXT_PUBLIC_APP_ONLY_INSTALL="true"',
     'NEXT_PUBLIC_MISSION_CONTROL_API_BASE_URL="http://localhost:3001"',

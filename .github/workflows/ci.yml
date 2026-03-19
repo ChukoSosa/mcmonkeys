@@ -39,3 +39,47 @@ jobs:
 
       - name: Run tests
         run: npm run test:ci
+
+  smoke-build-start:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: quality
+    env:
+      NEXT_PUBLIC_RUNTIME_PROFILE: install-local
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build app
+        run: npm run build
+
+      - name: Start app and healthcheck
+        run: |
+          npm run start > /tmp/next-start.log 2>&1 &
+          NEXT_PID=$!
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:3001/api/health > /tmp/health.json; then
+              echo "Healthcheck passed"
+              cat /tmp/health.json
+              kill $NEXT_PID
+              wait $NEXT_PID || true
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "Healthcheck failed. Last server log lines:"
+          tail -n 120 /tmp/next-start.log || true
+          kill $NEXT_PID || true
+          wait $NEXT_PID || true
+          exit 1

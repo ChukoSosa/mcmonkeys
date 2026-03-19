@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,7 +19,7 @@ import { FirstRunSetupModal } from "@/components/mission-control/dashboard/First
 import { cn } from "@/lib/utils/cn";
 import { useOnboardingState } from "@/lib/utils/useOnboardingState";
 import { useOutputFolderPreference } from "@/lib/utils/useOutputFolderPreference";
-import { isPublicDemoMode } from "@/lib/utils/demoMode";
+import { getRuntimePolicy } from "@/lib/runtime/profile";
 
 interface DashboardShellProps {
   children: React.ReactNode;
@@ -46,6 +47,8 @@ function computePendingModalTop(mainElement: HTMLElement | null) {
 }
 
 export function DashboardShell({ children, showFilters = true, topBar }: DashboardShellProps) {
+  const runtimePolicy = getRuntimePolicy();
+  const queryClient = useQueryClient();
   const pathname = usePathname();
   const { hasSeenOnboarding, isReady, markOnboardingSeen } = useOnboardingState();
   const {
@@ -53,7 +56,7 @@ export function DashboardShell({ children, showFilters = true, topBar }: Dashboa
     setOutputFolderPath,
     isReady: isOutputPreferenceReady,
   } = useOutputFolderPreference();
-  const demoMode = isPublicDemoMode();
+  const demoMode = runtimePolicy.isOnlineDemo;
   const mainRef = useRef<HTMLElement | null>(null);
   const settingsMenuRef = useRef<HTMLDivElement | null>(null);
   const hasInitializedSetupRef = useRef(false);
@@ -62,13 +65,30 @@ export function DashboardShell({ children, showFilters = true, topBar }: Dashboa
   const [isSetupModalOpen, setIsSetupModalOpen] = useState(false);
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
+  const [isResettingMock, setIsResettingMock] = useState(false);
   const [setupModalMode, setSetupModalMode] = useState<"first-run" | "settings">("first-run");
   const pendingPageLabel = getPendingPageLabel(pendingHref);
   const hasConfiguredOutputFolder = outputFolderPath.trim().length > 0;
   // Output folder setup is only relevant on localhost — in demo/mock mode agents don't produce real outputs.
-  const requiresInitialSetup = !demoMode && (!hasSeenOnboarding || !hasConfiguredOutputFolder);
+  const requiresInitialSetup = runtimePolicy.shouldRequireWorkspaceSetup && (!hasSeenOnboarding || !hasConfiguredOutputFolder);
   const isWorkspaceReady = isReady && isOutputPreferenceReady;
   const shouldBlockNavigation = isWorkspaceReady && requiresInitialSetup;
+
+  async function handleResetMockData() {
+    setIsResettingMock(true);
+
+    try {
+      const response = await fetch("/api/mock/reset", { method: "POST" });
+      if (!response.ok) {
+        throw new Error("Unable to reset mock data");
+      }
+
+      await queryClient.invalidateQueries();
+      setIsSettingsMenuOpen(false);
+    } finally {
+      setIsResettingMock(false);
+    }
+  }
 
   useEffect(() => {
     if (!isWorkspaceReady) return;
@@ -235,6 +255,20 @@ export function DashboardShell({ children, showFilters = true, topBar }: Dashboa
                   <FontAwesomeIcon icon={faGear} className="text-cyan-300" />
                   Settings
                 </button>
+
+                {runtimePolicy.isLocalDev && (
+                  <button
+                    type="button"
+                    disabled={isResettingMock}
+                    className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-xs font-semibold text-amber-200 transition hover:bg-surface-800 hover:text-amber-100 disabled:opacity-50"
+                    onClick={() => {
+                      void handleResetMockData();
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faGear} className="text-amber-300" />
+                    {isResettingMock ? "Resetting mock data..." : "Reset mock data"}
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -317,13 +351,13 @@ export function DashboardShell({ children, showFilters = true, topBar }: Dashboa
                 </p>
               </div>
               <p className="text-xs text-slate-500">
-                Contact: billy@mc-monkeys.com
+                Contact: billy.mcmonkeys@gmail.com
               </p>
             </div>
 
             <div className="flex flex-wrap items-center justify-end gap-2 border-t border-surface-700 px-6 py-4">
               <a
-                href="mailto:billy@mc-monkeys.com"
+                href="mailto:billy.mcmonkeys@gmail.com"
                 className="inline-flex items-center gap-2 rounded-md border border-cyan-500/40 bg-cyan-500/15 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-cyan-200 transition hover:bg-cyan-500/25"
                 aria-label="Send us a message by email"
               >

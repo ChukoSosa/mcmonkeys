@@ -25,7 +25,7 @@ export default function InitializingPage() {
     if (systemState?.state !== "READY") return;
 
     const timeout = window.setTimeout(() => {
-      router.replace("/web/manual");
+      router.replace("/overview");
     }, 1500);
 
     return () => window.clearTimeout(timeout);
@@ -85,7 +85,7 @@ export default function InitializingPage() {
                     Mission Control is ready.
                   </p>
                   <p className="text-xs text-green-200/90">
-                    Redirecting to onboarding...
+                    Redirecting to Mission Control...
                   </p>
                 </div>
               ) : (
@@ -121,13 +121,13 @@ export default function InitializingPage() {
           <div className="rounded border border-surface-700 bg-surface-900 px-3 py-2.5 text-xs text-slate-400">
             <p className="mb-1 flex items-center gap-1.5 text-slate-300">
               <FontAwesomeIcon icon={faArrowRight} className="text-green-300" />
-              Manual fallback
+              Dashboard fallback
             </p>
             <button
-              onClick={() => router.push("/web/manual")}
+              onClick={() => router.push("/overview")}
               className="rounded border border-surface-600 bg-surface-800 px-2 py-1 text-[11px] text-slate-300 hover:bg-surface-700"
             >
-              Continue to Manual
+              Continue to Dashboard
             </button>
           </div>
         </div>
