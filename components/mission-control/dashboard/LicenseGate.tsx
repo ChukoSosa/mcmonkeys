@@ -97,6 +97,13 @@ export function LicenseGate({ children }: LicenseGateProps) {
       return;
     }
 
+    // Railway-hosted demo should bypass license activation.
+    const hostname = window.location.hostname.toLowerCase();
+    if (hostname === "railway.app" || hostname.endsWith(".railway.app")) {
+      setPhase("open");
+      return;
+    }
+
     const { key, validatedAt } = readStorage();
 
     if (isValidationFresh(validatedAt)) {
