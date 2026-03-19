@@ -157,7 +157,15 @@ copyFile(
   path.join(ROOT, "scripts", "dist", "install.bat"),
   path.join(DIST, "install.bat")
 );
-ok("install.sh + install.bat copied");
+copyFile(
+  path.join(ROOT, "scripts", "dist", "_start.sh"),
+  path.join(DIST, "_start.sh")
+);
+copyFile(
+  path.join(ROOT, "scripts", "dist", "_start.bat"),
+  path.join(DIST, "_start.bat")
+);
+ok("install.sh + install.bat + _start.sh + _start.bat copied");
 
 // ── Step 4: Write generated files ──────────────────────────────────────────
 step("4/7", "Writing generated files");
@@ -264,6 +272,8 @@ const requiredFiles = [
   "prisma/seed.ts",
   "install.sh",
   "install.bat",
+  "_start.sh",
+  "_start.bat",
   ".env.dist",
   "OPENCLAW-BOOTSTRAP.txt",
   "README-INSTALL.txt",

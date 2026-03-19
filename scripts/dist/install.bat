@@ -84,16 +84,40 @@ if not exist "_setup\node_modules" (
 )
 echo [OK] Setup tools ready
 
-set DATABASE_URL=!DATABASE_URL!
-.\node_modules\.bin\prisma db push --schema=.\prisma\schema.prisma --skip-generate --accept-data-loss 2>nul
+echo   Installing app dependencies...
+npm install --silent
 if errorlevel 1 (
-  .\_setup\node_modules\.bin\prisma db push --schema=.\prisma\schema.prisma --skip-generate --accept-data-loss
+  echo [ERROR] npm install failed. Check your Node.js installation.
+  pause
+  exit /b 1
+)
+echo [OK] node_modules ready
+
+set DATABASE_URL=!DATABASE_URL!
+.\_setup\node_modules\.bin\prisma db push --schema=.\prisma\schema.prisma --skip-generate --accept-data-loss
+if errorlevel 1 (
+  echo [ERROR] prisma db push failed. Check DATABASE_URL and ensure PostgreSQL is running.
+  pause
+  exit /b 1
 )
 echo [OK] Database schema applied
 
-.\_setup\node_modules\.bin\prisma generate --schema=.\prisma\schema.prisma 2>nul
+echo   Generating Prisma client...
+.\_setup\node_modules\.bin\prisma generate --schema=.\prisma\schema.prisma
+if errorlevel 1 (
+  echo [ERROR] prisma generate failed. See output above.
+  pause
+  exit /b 1
+)
+echo [OK] Prisma client generated
+
 copy "prisma\seed.ts" "_setup\seed.ts" >nul
 .\_setup\node_modules\.bin\tsx .\_setup\seed.ts
+if errorlevel 1 (
+  echo [ERROR] Database seed failed. See output above.
+  pause
+  exit /b 1
+)
 echo [OK] Database seeded
 
 if not exist "outputs" mkdir outputs
@@ -108,10 +132,18 @@ for /f "tokens=5" %%p in ('netstat -aon ^| findstr ":3001 " ^| findstr "LISTENIN
   taskkill /PID %%p /F >nul 2>&1
 )
 
+REM Load .env vars before starting server
+for /f "usebackq tokens=1,* delims==" %%a in (".env") do (
+  set "LINE=%%a"
+  if not "!LINE:~0,1!"=="#" (
+    set "%%a=%%b"
+  )
+)
+
 set PORT=3001
 set HOSTNAME=0.0.0.0
 start /B "MC-MONKEYS" node server.js > mc-lucy.log 2>&1
-echo [OK] Server starting — logs in mc-lucy.log
+echo [OK] Server starting (with .env loaded) — logs in mc-lucy.log
 
 REM ── Step 5: Wait and open browser ─────────────────────────────────────────
 echo.
@@ -129,6 +161,11 @@ echo.
 echo ============================================
 if "!READY!"=="true" (
   echo [OK] MC-MONKEYS is running at http://localhost:3001
+  REM Check system state
+  for /f %%s in ('curl -sf http://localhost:3001/api/system/state 2^>nul') do set SYS_STATE=%%s
+  if not "!SYS_STATE!"=="" (
+    echo [INFO] System state: !SYS_STATE!
+  )
   echo.
   echo   Opening browser...
   start http://localhost:3001
