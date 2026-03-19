@@ -43,7 +43,8 @@ export async function middleware(request: NextRequest) {
   const baseRequestHeaders = new Headers(request.headers);
   baseRequestHeaders.set("x-request-id", requestId);
 
-  if (pathname === "/api/health") {
+  // Public endpoints — no auth or demo-mode guard required
+  if (pathname === "/api/health" || pathname === "/api/license/validate") {
     return withSecurityHeaders(
       NextResponse.next({
         request: {

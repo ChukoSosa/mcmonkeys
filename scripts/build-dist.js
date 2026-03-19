@@ -2,7 +2,7 @@
 /**
  * build-dist.js — Assembles and zips the MC-MONKEYS distribution package.
  *
- * Output: public/downloads/mclucy-latest.zip
+ * Output: public/downloads/mcmonkeys-latest.zip
  *
  * What it builds:
  *   - Next.js standalone server (no source code, no devDependencies)
@@ -21,8 +21,7 @@ const path = require("path");
 const ROOT = path.join(__dirname, "..");
 const DIST = path.join(ROOT, "dist");
 const ZIP_DIR = path.join(ROOT, "public", "downloads");
-const ZIP_OUT = path.join(ZIP_DIR, "mclucy-latest.zip");
-const SKIP_NEXT_BUILD = process.argv.includes("--skip-next-build") || process.env.SKIP_NEXT_BUILD === "true";
+const ZIP_OUT = path.join(ZIP_DIR, "mcmonkeys-latest.zip");
 const CANONICAL_DOCS = [
   "MISSION_CONTROL_OVERVIEW.md",
   "WORKFLOW_GUIDE.md",
@@ -80,29 +79,24 @@ fs.mkdirSync(DIST, { recursive: true });
 ok("dist/ cleaned");
 
 // ── Step 2: Build Next.js (standalone) ─────────────────────────────────────
-if (SKIP_NEXT_BUILD) {
-  step("2/7", "Using existing Next.js build output");
-  ok("Skipping next build (--skip-next-build)");
-} else {
-  step("2/7", "Building Next.js (standalone)");
-  run(
-    "npx next build",
-    "Next.js build complete",
-    {
-      env: {
-        ...process.env,
-        NODE_ENV: "production",
-        APP_ONLY_INSTALL: "true",
-        NEXT_PUBLIC_APP_ONLY_INSTALL: "true",
-      },
-    }
-  );
-}
+step("2/7", "Building Next.js (standalone)");
+run(
+  "npx next build",
+  "Next.js build complete",
+  {
+    env: {
+      ...process.env,
+      NODE_ENV: "production",
+      APP_ONLY_INSTALL: "true",
+      NEXT_PUBLIC_APP_ONLY_INSTALL: "true",
+    },
+  }
+);
 
 // Validate standalone output exists
 const standaloneDir = path.join(ROOT, ".next", "standalone");
 if (!fs.existsSync(standaloneDir)) {
-  fail(".next/standalone/ not found. Run next build first or disable --skip-next-build.");
+  fail(".next/standalone/ not found. Make sure next.config.ts has output: 'standalone'.");
 }
 
 // ── Step 3: Assemble distribution folder ───────────────────────────────────
@@ -163,7 +157,15 @@ copyFile(
   path.join(ROOT, "scripts", "dist", "install.bat"),
   path.join(DIST, "install.bat")
 );
-ok("install.sh + install.bat copied");
+copyFile(
+  path.join(ROOT, "scripts", "dist", "_start.sh"),
+  path.join(DIST, "_start.sh")
+);
+copyFile(
+  path.join(ROOT, "scripts", "dist", "_start.bat"),
+  path.join(DIST, "_start.bat")
+);
+ok("install.sh + install.bat + _start.sh + _start.bat copied");
 
 // ── Step 4: Write generated files ──────────────────────────────────────────
 step("4/7", "Writing generated files");
@@ -259,7 +261,7 @@ if (process.platform === "win32") {
 }
 
 const zipSizeMb = (fs.statSync(ZIP_OUT).size / 1024 / 1024).toFixed(1);
-ok(`ZIP created: public/downloads/mclucy-latest.zip (${zipSizeMb} MB)`);
+ok(`ZIP created: public/downloads/mcmonkeys-latest.zip (${zipSizeMb} MB)`);
 
 // ── Step 6: Validate ZIP ───────────────────────────────────────────────────
 step("6/7", "Validating ZIP contents");
@@ -270,6 +272,8 @@ const requiredFiles = [
   "prisma/seed.ts",
   "install.sh",
   "install.bat",
+  "_start.sh",
+  "_start.bat",
   ".env.dist",
   "OPENCLAW-BOOTSTRAP.txt",
   "README-INSTALL.txt",
@@ -294,11 +298,11 @@ ${c.green}${"─".repeat(48)}
 ✨  Distribution build complete!
 ${"─".repeat(48)}${c.reset}
 
-  Package: public/downloads/mclucy-latest.zip
+  Package: public/downloads/mcmonkeys-latest.zip
   Size:    ${zipSizeMb} MB
 
   To install on a new machine:
-    1. Copy mclucy-latest.zip to the target machine
+    1. Copy mcmonkeys-latest.zip to the target machine
     2. Extract the ZIP
     3. Run: bash install.sh    (macOS/Linux)
          or: install.bat       (Windows)

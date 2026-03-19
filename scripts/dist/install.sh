@@ -98,19 +98,26 @@ PKGJSON
 fi
 ok "Setup tools ready"
 
+# Regenerate app node_modules so @prisma/client is available to server.js
+echo "  Installing app dependencies (this may take a minute)..."
+npm install --silent
+ok "node_modules ready"
+
 DATABASE_URL="$DATABASE_URL" ./_setup/node_modules/.bin/prisma db push \
   --schema=./prisma/schema.prisma \
   --skip-generate \
-  --accept-data-loss \
-  2>&1 | tail -5
+  --accept-data-loss || fail "prisma db push failed — check DATABASE_URL and ensure PostgreSQL is running."
 ok "Database schema applied"
 
-DATABASE_URL="$DATABASE_URL" ./_setup/node_modules/.bin/prisma generate \
-  --schema=./prisma/schema.prisma \
-  2>&1 | tail -3
+echo "  Generating Prisma client..."
+if ! DATABASE_URL="$DATABASE_URL" ./_setup/node_modules/.bin/prisma generate \
+  --schema=./prisma/schema.prisma; then
+  fail "prisma generate failed. Full output above. Ensure prisma and @prisma/client are in package.json."
+fi
+ok "Prisma client generated"
 
 cp prisma/seed.ts _setup/seed.ts
-DATABASE_URL="$DATABASE_URL" ./_setup/node_modules/.bin/tsx ./_setup/seed.ts
+DATABASE_URL="$DATABASE_URL" ./_setup/node_modules/.bin/tsx ./_setup/seed.ts || fail "Database seed failed. See output above."
 ok "Database seeded"
 
 mkdir -p outputs
@@ -126,12 +133,25 @@ if lsof -Pi :3001 -sTCP:LISTEN -t &>/dev/null; then
   sleep 1
 fi
 
-# Write startup wrapper
+# Write startup wrapper (loads .env before starting server)
 cat > _start.sh <<'STARTSCRIPT'
-#!/bin/sh
+#!/usr/bin/env bash
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$ROOT_DIR"
+
+# Load environment variables from .env
+if [ -f .env ]; then
+  set -a
+  # shellcheck disable=SC1091
+  source .env
+  set +a
+else
+  echo "[WARN] .env not found — server may start in demo mode. Run install.sh first."
+fi
+
 export PORT=3001
 export HOSTNAME=0.0.0.0
-node server.js
+exec node server.js
 STARTSCRIPT
 chmod +x _start.sh
 
@@ -157,6 +177,13 @@ echo ""
 
 if [ "$READY" = "true" ]; then
   ok "MC-MONKEYS is running at http://localhost:3001"
+  # Verify system state
+  SYS_STATE=$(curl -sf http://localhost:3001/api/system/state 2>/dev/null || echo '{}')
+  if echo "$SYS_STATE" | grep -q '"READY"'; then
+    ok "System state: READY"
+  else
+    warn "System state not yet READY — OpenClaw will retry on boot. State: $SYS_STATE"
+  fi
 else
   warn "Server is taking longer than expected. Check mc-lucy.log for details."
   warn "Once ready, open http://localhost:3001 in your browser."

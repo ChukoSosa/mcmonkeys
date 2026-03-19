@@ -21,6 +21,32 @@ Your `agentId` is the one registered for your OpenClaw agent in MC-MONKEYS.
 
 ---
 
+## Package download and verification (first-time install only)
+
+Before running install scripts, download and verify the package:
+
+```bash
+# Primary endpoint
+curl -L https://mcmonkeys.up.railway.app/downloads/mcmonkeys-latest.zip -o mcmonkeys-latest.zip
+
+# Verify download succeeded and file is not empty
+ls -lh mcmonkeys-latest.zip
+```
+
+If the download hangs for more than 60 seconds or the file size is 0:
+1. Abort immediately (`Ctrl+C`)
+2. Ask the operator: "The download from the primary endpoint failed or timed out. Please provide an alternative download URL or the package file directly."
+3. Do not proceed with installation until the package is verified present and non-empty.
+
+Proxy note (on-prem installs):
+After extracting the package, verify that `.env` contains:
+```
+NEXT_PUBLIC_MISSION_CONTROL_API_BASE_URL="http://localhost:3001"
+```
+If this variable points to a Railway URL instead of `localhost`, the frontend proxy will route to the cloud instance and the app will behave as read-only demo mode even if the local server is running. Fix `.env` before starting the server.
+
+---
+
 ## Installation dependency policy (mandatory)
 
 Before installation, verify required dependencies:
@@ -81,6 +107,18 @@ Wait until the response includes:
 ```
 
 If the state is `BOOTSTRAPPING`, wait 5 seconds and retry.
+If after 6 retries (30 seconds total) the state is still `BOOTSTRAPPING`, create the initialization task manually:
+
+```
+POST /api/tasks
+{
+  "title": "MC-LUCY-001 Mission Control Initialization",
+  "status": "IN_PROGRESS",
+  "priority": 1
+}
+```
+
+Then retry `GET /api/system/state` until it returns `READY`.
 
 ### Step 2 — Discover your agent record
 
@@ -145,6 +183,7 @@ Rules:
 - no task enters `REVIEW` without evidence
 - no review request without saved outputs
 - preferred textual format is Markdown
+- **BLOCKING RULE**: any attempt to PATCH a task to `REVIEW` without a corresponding `outputs/{ticket-id}/` folder containing at least one file will be rejected by the system. Save evidence first, then request review.
 
 ---
 

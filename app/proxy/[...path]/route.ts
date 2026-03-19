@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 export const dynamic = "force-dynamic";
 
 const API_BASE =
-  process.env.NEXT_PUBLIC_MISSION_CONTROL_API_BASE_URL ?? "http://localhost:3000";
+  process.env.NEXT_PUBLIC_MISSION_CONTROL_API_BASE_URL ?? "http://localhost:3001";
 
 function buildTargetUrl(path: string[], searchParams: URLSearchParams): string {
   const normalizedPath = path.join("/");

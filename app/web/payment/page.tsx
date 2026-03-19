@@ -171,13 +171,24 @@ export default function PaymentPage() {
       </section>
 
       {/* ── Section 3: Pricing + Form ── */}
-      <section className="flex flex-row gap-10 items-center justify-center flex-wrap">
+      <section className="flex flex-row gap-5 items-center justify-center">
+
+        {/* ── Section 4: Why support ── */}
+        <section className="flex flex-col gap-5 self-start pr-20">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Why support MC-MONKEYS?</p>
+          <h2 className="text-2xl font-semibold text-white">An independent project, not a platform.</h2>
+          <p className="text-sm leading-relaxed text-slate-400">
+            MC-MONKEYS is not venture-backed. It is an independent project built by a developer and an AI agent experimenting with better ways to coordinate agent work.
+            Supporting the project helps continue development and improve the system.
+          </p>
+          <p className="text-sm text-slate-300">And you get Mission Control for your agents.</p>
+        </section>
 
         {/* Annual — highlighted */}
         <a
           href="https://mcmonkeys.lemonsqueezy.com/checkout/buy/4a37f2be-24ab-4135-a075-d99966dd673a"
           target="_blank"
-          className={`relative flex h-full sm:min-h-[430px] w-full sm:max-w-[320px] flex-col rounded-2xl border p-6 text-left transition border-cyan-400 bg-cyan-500/10 ring-1 ring-cyan-400/30 shadow-[0_0_32px_rgba(34,211,238,0.12)]`}
+          className={`relative flex flex-col h-full sm:min-h-[430px] w-full rounded-2xl border p-6 text-left transition border-cyan-400 bg-cyan-500/10 ring-1 ring-cyan-400/30 shadow-[0_0_32px_rgba(34,211,238,0.12)]`}
         >
           <div className="flex flex-col items-start justify-between gap-2">
             <span className="rounded-full border border-cyan-500/40 bg-cyan-500/15 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-cyan-200">
@@ -211,7 +222,7 @@ export default function PaymentPage() {
         <a
           href="https://mcmonkeys.lemonsqueezy.com/checkout/buy/d2066129-a43e-450c-82b6-49b36554483a"
           target="_blank"
-          className={`w-full sm:max-w-[320px] flex h-full sm:min-h-[430px] flex-col rounded-2xl border p-6 text-left transition border-amber-400/70 bg-amber-500/12 ring-1 ring-amber-300/30 shadow-[0_0_28px_rgba(245,158,11,0.12)] `}
+          className={`w-full flex flex-col h-full sm:min-h-[430px] rounded-2xl border p-6 text-left transition border-amber-400/70 bg-amber-500/12 ring-1 ring-amber-300/30 shadow-[0_0_28px_rgba(245,158,11,0.12)] `}
         >
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-amber-300 mt-7">Monthly Operator</p>
           <div>
@@ -234,93 +245,8 @@ export default function PaymentPage() {
             </div>
           </div>
         </a>
+        
 
-        {/* Checkout form 
-        <form onSubmit={handleSubmit} className="space-y-4 rounded-2xl border border-slate-800 bg-slate-900/70 p-6">
-          <div>
-            <h2 className="text-base font-semibold text-white">Card Details</h2>
-            <p className="mt-1 text-xs text-slate-500">
-              Activating:{" "}
-              <span className="text-slate-300">
-                {plan === "annual" ? "Founding Operator — $36/yr" : "Monthly Operator — $5/mo"}
-              </span>
-            </p>
-          </div>
-          <div className="space-y-3">
-            <input
-              value={cardholder}
-              onChange={(e) => setCardholder(e.target.value)}
-              placeholder="Cardholder name"
-              aria-label="Cardholder name"
-              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
-              required
-            />
-            <input
-              value={formatCardNumber(cardNumber)}
-              onChange={(e) => setCardNumber(normalizeCardNumber(e.target.value))}
-              placeholder="Card number"
-              aria-label="Card number"
-              inputMode="numeric"
-              autoComplete="cc-number"
-              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
-              required
-            />
-            <div className="grid grid-cols-2 gap-3">
-              <input
-                value={expiry}
-                onChange={(e) => setExpiry(normalizeExpiry(e.target.value))}
-                placeholder="MM/YY"
-                aria-label="Expiry date"
-                inputMode="numeric"
-                autoComplete="cc-exp"
-                className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
-                required
-              />
-              <input
-                value={cvv}
-                onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0, 4))}
-                placeholder="CVV"
-                aria-label="CVV"
-                inputMode="numeric"
-                autoComplete="cc-csc"
-                className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
-                required
-              />
-            </div>
-          </div>
-          {formError && (
-            <p className="rounded-md border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-300">
-              {formError}
-            </p>
-          )}
-          <button
-            type="submit"
-            disabled={isSubmitting || !isPaymentEnabled}
-            className="w-full rounded-md bg-cyan-400 py-2.5 text-sm font-semibold uppercase tracking-[0.12em] text-slate-950 transition hover:bg-cyan-300 disabled:opacity-60"
-          >
-            {isSubmitting ? "Activating…" : "Activate Mission Control"}
-          </button>
-          {!isPaymentEnabled && (
-            <p className="text-center text-xs font-medium text-amber-300">
-              Activation is temporarily unavailable.
-            </p>
-          )}
-          <p className="text-center text-[11px] text-slate-600">
-            This is a demo checkout. Payment gateway integration will be added next.
-          </p>
-        </form>
-        */}
-      </section>
-
-      {/* ── Section 4: Why support ── */}
-      <section className="mx-auto max-w-2xl space-y-4 text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Why support MC-MONKEYS?</p>
-        <h2 className="text-2xl font-semibold text-white">An independent project, not a platform.</h2>
-        <p className="text-sm leading-relaxed text-slate-400">
-          MC-MONKEYS is not venture-backed. It is an independent project built by a developer and an AI agent experimenting with better ways to coordinate agent work.
-          Supporting the project helps continue development and improve the system.
-        </p>
-        <p className="text-sm text-slate-300">And you get Mission Control for your agents.</p>
       </section>
 
       {/* ── Section 5: What happens after purchase ── */}
@@ -344,12 +270,6 @@ export default function PaymentPage() {
             </div>
           ))}
         </div>
-      </section>
-
-      {/* ── Section 6: Trust signal ── */}
-      <section className="space-y-2 text-center">
-        <p className="text-sm italic text-slate-500">MC-MONKEYS was built while running real AI agents.</p>
-        <p className="text-sm italic text-slate-500">It exists because agent workflows needed visibility.</p>
       </section>
 
       {/* ── Section 7: Final CTA ── */}
@@ -376,6 +296,12 @@ export default function PaymentPage() {
           </Link>
         </div>
       </section>
+
+      {/* ── Section 6: Trust signal ── */}
+          <section className="space-y-2 text-center mt-5">
+            <p className="text-sm italic text-slate-500">MC-MONKEYS was built while running real AI agents.</p>
+            <p className="text-sm italic text-slate-500">It exists because agent workflows needed visibility.</p>
+          </section>
 
     </div>
   );

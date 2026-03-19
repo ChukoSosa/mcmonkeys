@@ -1,10 +1,13 @@
 import DashboardPage from "../dashboard-page";
 import { DashboardShell } from "@/components/mission-control/dashboard/DashboardShell";
+import { LicenseGate } from "@/components/mission-control/dashboard/LicenseGate";
 
 export default function OverviewPage() {
   return (
-    <DashboardShell>
-      <DashboardPage />
-    </DashboardShell>
+    <LicenseGate>
+      <DashboardShell>
+        <DashboardPage />
+      </DashboardShell>
+    </LicenseGate>
   );
 }
