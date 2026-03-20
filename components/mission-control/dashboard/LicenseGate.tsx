@@ -13,6 +13,7 @@ import { getRuntimePolicy } from "@/lib/runtime/profile";
 const LS_KEY = "mc__license_key";
 const LS_VALIDATED_AT = "mc__license_validated_at";
 const REVALIDATE_DAYS = 30;
+const VALIDATION_TIMEOUT_MS = 8000;
 const RUNTIME_POLICY = getRuntimePolicy();
 const SHOULD_SHORTCUT_LICENSE_IN_DEV =
   process.env.NODE_ENV === "development" && RUNTIME_POLICY.devLicenseMode === "bypass";
@@ -46,19 +47,31 @@ function persistValidation(key: string) {
 async function callValidateApi(
   key: string,
 ): Promise<{ success: boolean; error?: string }> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), VALIDATION_TIMEOUT_MS);
+
   let res: Response;
   try {
     res = await fetch("/api/license/validate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ licenseKey: key }),
+      signal: controller.signal,
     });
-  } catch {
-    return { success: false, error: "Could not reach the validation server. Check your connection." };
-  }
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      return {
+        success: false,
+        error: "Validation timed out. Please try again.",
+      };
+    }
 
-  if (!res.ok) {
-    return { success: false, error: "Validation server returned an error. Please try again." };
+    return {
+      success: false,
+      error: "Could not reach the validation server. Check your connection.",
+    };
+  } finally {
+    clearTimeout(timeoutId);
   }
 
   let data: Record<string, unknown>;
@@ -69,6 +82,13 @@ async function callValidateApi(
   }
 
   if (data.valid === true) return { success: true };
+
+  if (!res.ok && typeof data.error !== "string") {
+    return {
+      success: false,
+      error: "Validation server returned an error. Please try again.",
+    };
+  }
 
   const msg =
     typeof data.error === "string" && data.error.length > 0
@@ -114,16 +134,22 @@ export function LicenseGate({ children }: LicenseGateProps) {
 
     if (key) {
       // Silent re-validation with the stored key
-      callValidateApi(key).then((result) => {
-        if (result.success) {
-          persistValidation(key);
-          setPhase("open");
-        } else {
-          // Re-validation failed — show gate, pre-fill the key
+      callValidateApi(key)
+        .then((result) => {
+          if (result.success) {
+            persistValidation(key);
+            setPhase("open");
+          } else {
+            // Re-validation failed — show gate, pre-fill the key
+            setLicenseKey(key);
+            setPhase("gate");
+          }
+        })
+        .catch(() => {
+          // Safety net: never leave the user blocked in "checking"
           setLicenseKey(key);
           setPhase("gate");
-        }
-      });
+        });
       return;
     }
 
