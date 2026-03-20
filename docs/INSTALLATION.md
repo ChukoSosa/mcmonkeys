@@ -147,7 +147,7 @@ El script:
 2. Ensambla `dist/` con el servidor standalone (sin source code)
 3. Incluye `install.sh` y `install.bat`, schema Prisma, seed y bootstrap prompt
 4. Incluye los documentos canónicos para OpenClaw y la carpeta `outputs/`
-5. Zippea todo en `public/downloads/mclucy-latest.zip`
+5. Zippea todo en `public/downloads/mcmonkeys-latest.zip`
 
 > El ZIP no se commitea a git. Generarlo manualmente antes de cada deploy o en CI.
 

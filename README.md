@@ -175,7 +175,7 @@ Para generar el ZIP distribuible que solo contiene Mission Control (sin landing 
 npm run dist:build
 ```
 
-Esto genera `public/downloads/mclucy-latest.zip` con:
+Esto genera `public/downloads/mcmonkeys-latest.zip` con:
 - Servidor Next.js standalone compilado (sin source code)
 - Scripts de instalación (`install.sh` / `install.bat`)
 - Schema Prisma + seed
