@@ -5,6 +5,7 @@ import * as path from "path";
 const prisma = new PrismaClient();
 
 const OPENCLAW_AGENT_ID = "agent-openclaw";
+const OPENCLAW_AVATAR_URL = "/office/mcmonkes-library/001.png";
 const ONBOARDING_TASK_ID = "task-onboarding-installation";
 
 const DISCOVERY_PIPELINE_ID = "pipeline-discovery";
@@ -87,6 +88,7 @@ async function main() {
     update: {
       name: "OpenClaw",
       role: "Primary Mission Operator",
+      avatar: OPENCLAW_AVATAR_URL,
       status: "WORKING",
       statusMessage: "Handling installation onboarding",
       heartbeatAt: new Date(),
@@ -95,6 +97,7 @@ async function main() {
       id: OPENCLAW_AGENT_ID,
       name: "OpenClaw",
       role: "Primary Mission Operator",
+      avatar: OPENCLAW_AVATAR_URL,
       status: "WORKING",
       statusMessage: "Handling installation onboarding",
       heartbeatAt: new Date(),

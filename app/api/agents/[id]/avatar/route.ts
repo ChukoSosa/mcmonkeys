@@ -3,6 +3,7 @@ import { agentService } from "@/app/api/server/agent-service";
 import { apiErrorResponse } from "@/app/api/server/api-error";
 import { demoReadOnlyResponse, isLocalDevMockMode, isMissionControlDemoMode } from "@/app/api/server/demo-mode";
 import { localDevMockStore } from "@/lib/mock/store";
+import { isMcMonkeysAvatarUrl } from "@/lib/office/mcMonkeysServerPool";
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -20,6 +21,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const avatarUrl = typeof body.avatarUrl === "string" ? body.avatarUrl.trim() : "";
     if (!avatarUrl) {
       return NextResponse.json({ error: "avatarUrl is required" }, { status: 400 });
+    }
+    if (!isMcMonkeysAvatarUrl(avatarUrl)) {
+      return NextResponse.json({ error: "avatarUrl must come from the MC MONKEYS library" }, { status: 400 });
     }
 
     const prompt = typeof body.prompt === "string" ? body.prompt.slice(0, 8000) : undefined;

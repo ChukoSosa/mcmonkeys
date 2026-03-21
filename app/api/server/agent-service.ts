@@ -5,6 +5,7 @@ import { emitEvent } from "./event-bus";
 import { activityService } from "./activity-service";
 import { ApiError } from "./api-error";
 import { assertDemoWritable } from "./demo-mode";
+import { isMcMonkeysAvatarUrl, pickDeterministicMcMonkeyAvatar } from "@/lib/office/mcMonkeysServerPool";
 
 function toPrismaStatus(status?: string) {
   return status as unknown as PrismaAgentStatus | undefined;
@@ -144,6 +145,24 @@ export const agentService = {
       agent = autoClaim.agent;
     }
 
+    if (!agent.avatar) {
+      const autoAvatar = pickDeterministicMcMonkeyAvatar(agent.id);
+      if (autoAvatar) {
+        agent = await prisma.agent.update({
+          where: { id: agent.id },
+          data: { avatar: autoAvatar },
+        });
+
+        emitEvent({
+          type: "agent.avatar",
+          data: {
+            id: agent.id,
+            avatarUrl: autoAvatar,
+          },
+        });
+      }
+    }
+
     emitEvent({
       type: "agent.status",
       data: {
@@ -180,6 +199,9 @@ export const agentService = {
     const avatarUrl = payload.avatarUrl.trim();
     if (!avatarUrl) {
       throw new ApiError(400, "BAD_REQUEST", "avatarUrl is required");
+    }
+    if (!isMcMonkeysAvatarUrl(avatarUrl)) {
+      throw new ApiError(400, "BAD_REQUEST", "avatarUrl must come from the MC MONKEYS library");
     }
 
     let agent;

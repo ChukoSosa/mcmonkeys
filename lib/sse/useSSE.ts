@@ -56,10 +56,11 @@ export function useSSE() {
       "activity.logged",
       "task.updated",
       "run.updated",
+      "agent.avatar",
       "supervisor.kpis",
       "task.comment.created",
       "task.comment.answered",
-        "task.archived",
+      "task.archived",
     ];
 
     const handlers = trackedEvents.map((name) => {
@@ -74,6 +75,9 @@ export function useSSE() {
         if (name === "supervisor.kpis") {
           void queryClient.invalidateQueries({ queryKey: ["kpis"] });
         }
+        if (name === "agent.avatar") {
+          void queryClient.invalidateQueries({ queryKey: ["agents"] });
+        }
         if (name === "task.comment.created" || name === "task.comment.answered") {
           try {
             const raw = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
@@ -87,9 +91,9 @@ export function useSSE() {
           }
           void queryClient.invalidateQueries({ queryKey: ["activity"] });
         }
-          if (name === "task.archived") {
-            void queryClient.invalidateQueries({ queryKey: ["tasks"] });
-          }
+        if (name === "task.archived") {
+          void queryClient.invalidateQueries({ queryKey: ["tasks"] });
+        }
       };
       es.addEventListener(name, handler);
       return { name, handler };

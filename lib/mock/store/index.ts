@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { ApiError } from "@/app/api/server/api-error";
+import { isMcMonkeysAvatarUrl, pickDeterministicMcMonkeyAvatar } from "@/lib/office/mcMonkeysServerPool";
 import type { ActivityItem, Agent, Comment, SupervisorKpis, Subtask, Task } from "@/lib/schemas";
 import { MockStoreSchema, type MockStoreState, type StoredSubtask } from "./schema";
 
@@ -419,6 +420,13 @@ export const localDevMockStore = {
       agent.status = payload.status ?? agent.status;
       agent.statusMessage = payload.statusMessage ?? agent.statusMessage;
       agent.heartbeatAt = nowIso();
+      if (!agent.avatarUrl && !agent.avatar) {
+        const autoAvatar = pickDeterministicMcMonkeyAvatar(agent.id);
+        if (autoAvatar) {
+          agent.avatarUrl = autoAvatar;
+          agent.avatar = autoAvatar;
+        }
+      }
 
       logActivity(state, {
         kind: "agent",
@@ -436,6 +444,10 @@ export const localDevMockStore = {
 
   updateAvatar(agentId: string, avatarUrl: string) {
     return withState((state) => {
+      if (!isMcMonkeysAvatarUrl(avatarUrl)) {
+        throw new ApiError(400, "BAD_REQUEST", "avatarUrl must come from the MC MONKEYS library");
+      }
+
       const agent = state.agents.find((item) => item.id === agentId);
       if (!agent) {
         throw new ApiError(404, "NOT_FOUND", "Agent not found");
