@@ -119,17 +119,17 @@ if (fs.existsSync(webDistDir)) {
   warn("web/ dir not found in dist — may already be excluded");
 }
 
-// 3b. Static assets (.next/static/ → dist/.next/static/)
+// 3b. Static assets (runtime distDir static/ → dist/.next-dist/static/)
 const nextStaticSrc = path.join(NEXT_DIST_DIR, "static");
-const nextStaticDest = path.join(DIST, ".next", "static");
+const nextStaticDest = path.join(DIST, ".next-dist", "static");
 if (!fs.existsSync(nextStaticSrc)) {
   fail(`Missing Next static assets at ${nextStaticSrc}. Build output is incomplete.`);
 }
 copyDir(nextStaticSrc, nextStaticDest);
 if (!fs.existsSync(nextStaticDest)) {
-  fail("Failed to copy .next/static/ into dist package.");
+  fail("Failed to copy .next-dist/static/ into dist package.");
 }
-ok(".next/static/ copied");
+ok(".next-dist/static/ copied");
 
 // 3c. Public assets (except downloads/)
 const publicSrc = path.join(ROOT, "public");
@@ -281,7 +281,7 @@ ok(`ZIP created: public/downloads/mcmonkeys-latest.zip (${zipSizeMb} MB)`);
 step("6/7", "Validating ZIP contents");
 const requiredFiles = [
   "server.js",
-  ".next/static",
+  ".next-dist/static",
   "prisma/schema.prisma",
   "prisma/seed.ts",
   "install.sh",
@@ -315,7 +315,7 @@ if (process.platform === "win32") {
       `$zip=[System.IO.Compression.ZipFile]::OpenRead("${ZIP_OUT}"); ` +
       `try { ` +
       `$names=$zip.Entries | ForEach-Object FullName; ` +
-      `$hasStatic=($names | Where-Object { $_ -like '.next\\static\\*' -or $_ -like '.next/static/*' } | Select-Object -First 1); ` +
+      `$hasStatic=($names | Where-Object { $_ -like '.next-dist\\static\\*' -or $_ -like '.next-dist/static/*' } | Select-Object -First 1); ` +
       `$hasServer=($names -contains 'server.js'); ` +
       `if (-not $hasStatic -or -not $hasServer) { exit 2 } ` +
       `} finally { $zip.Dispose() }`,
@@ -324,10 +324,10 @@ if (process.platform === "win32") {
   );
 
   if (zipCheck.status !== 0) {
-    fail("ZIP validation failed: expected .next/static/* and server.js in archive.");
+    fail("ZIP validation failed: expected .next-dist/static/* and server.js in archive.");
   }
 
-  ok("ZIP archive contains .next/static/* and server.js");
+  ok("ZIP archive contains .next-dist/static/* and server.js");
 }
 
 // ── Step 7: Summary ────────────────────────────────────────────────────────
