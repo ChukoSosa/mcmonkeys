@@ -122,7 +122,13 @@ if (fs.existsSync(webDistDir)) {
 // 3b. Static assets (.next/static/ → dist/.next/static/)
 const nextStaticSrc = path.join(NEXT_DIST_DIR, "static");
 const nextStaticDest = path.join(DIST, ".next", "static");
+if (!fs.existsSync(nextStaticSrc)) {
+  fail(`Missing Next static assets at ${nextStaticSrc}. Build output is incomplete.`);
+}
 copyDir(nextStaticSrc, nextStaticDest);
+if (!fs.existsSync(nextStaticDest)) {
+  fail("Failed to copy .next/static/ into dist package.");
+}
 ok(".next/static/ copied");
 
 // 3c. Public assets (except downloads/)
@@ -249,17 +255,20 @@ fs.mkdirSync(ZIP_DIR, { recursive: true });
 if (fs.existsSync(ZIP_OUT)) fs.rmSync(ZIP_OUT);
 
 if (process.platform === "win32") {
-  // PowerShell Compress-Archive
+  // Build ZIP via .NET to ensure dot-directories (e.g. .next/) are included.
   const ps = spawnSync(
     "powershell",
     [
       "-NoProfile",
       "-Command",
-      `Compress-Archive -Path "${DIST}\\*" -DestinationPath "${ZIP_OUT}" -Force`,
+      `$src=(Resolve-Path "${DIST}").Path; ` +
+      `$dst="${ZIP_OUT}"; ` +
+      `Add-Type -AssemblyName System.IO.Compression.FileSystem; ` +
+      `[System.IO.Compression.ZipFile]::CreateFromDirectory($src, $dst, [System.IO.Compression.CompressionLevel]::Optimal, $false)`,
     ],
     { stdio: "inherit" }
   );
-  if (ps.status !== 0) fail("PowerShell Compress-Archive failed.");
+  if (ps.status !== 0) fail("PowerShell ZIP creation failed.");
 } else {
   // Unix zip
   run(`zip -r "${ZIP_OUT}" .`, "ZIP created", { cwd: DIST });
@@ -294,6 +303,31 @@ if (missingFromDist.length > 0) {
   warn(`Some expected files are missing from dist/: ${missingFromDist.join(", ")}`);
 } else {
   ok("All required files present in dist/");
+}
+
+if (process.platform === "win32") {
+  const zipCheck = spawnSync(
+    "powershell",
+    [
+      "-NoProfile",
+      "-Command",
+      `Add-Type -AssemblyName System.IO.Compression.FileSystem; ` +
+      `$zip=[System.IO.Compression.ZipFile]::OpenRead("${ZIP_OUT}"); ` +
+      `try { ` +
+      `$names=$zip.Entries | ForEach-Object FullName; ` +
+      `$hasStatic=($names | Where-Object { $_ -like '.next\\static\\*' -or $_ -like '.next/static/*' } | Select-Object -First 1); ` +
+      `$hasServer=($names -contains 'server.js'); ` +
+      `if (-not $hasStatic -or -not $hasServer) { exit 2 } ` +
+      `} finally { $zip.Dispose() }`,
+    ],
+    { stdio: "inherit" }
+  );
+
+  if (zipCheck.status !== 0) {
+    fail("ZIP validation failed: expected .next/static/* and server.js in archive.");
+  }
+
+  ok("ZIP archive contains .next/static/* and server.js");
 }
 
 // ── Step 7: Summary ────────────────────────────────────────────────────────
