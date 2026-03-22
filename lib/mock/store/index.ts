@@ -1,7 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { ApiError } from "@/app/api/server/api-error";
 import { isMcMonkeysAvatarUrl, pickDeterministicMcMonkeyAvatar } from "@/lib/office/mcMonkeysServerPool";
+import { checkLucyGoldRules } from "@/lib/mission/goldRules";
 import type { ActivityItem, Agent, Comment, SupervisorKpis, Subtask, Task } from "@/lib/schemas";
 import { MockStoreSchema, type MockStoreState, type StoredSubtask } from "./schema";
 
@@ -16,6 +18,42 @@ const OPERATOR_ACTOR = {
   id: "operator",
   name: "Operator",
 };
+
+const GOLD_RULES_ACTIVE_STATUSES = new Set<TaskStatus>(["IN_PROGRESS", "REVIEW", "DONE"]);
+const MCLUCY_COMMENT_MARKER = "[mcLucy-flag]";
+const MCLUCY_COMMENT_AUTHOR_ID = "mclucy-guardian";
+
+function buildGoldRulesFingerprint(input: { taskId: string; title: string; errors: string[] }): string {
+  const base = `${input.taskId}|${input.title}|${input.errors.join("|")}`;
+  return createHash("sha1").update(base).digest("hex").slice(0, 12);
+}
+
+function buildGoldRulesFlagCommentBody(params: {
+  taskTitle: string;
+  fingerprint: string;
+  errors: string[];
+}): string {
+  const missingLines = params.errors.map((error, index) => `${index + 1}. ${error}`);
+
+  return [
+    `${MCLUCY_COMMENT_MARKER} fingerprint:${params.fingerprint}`,
+    "",
+    `mcLucy detected this BACKLOG card is not ready to start: \"${params.taskTitle}\".`,
+    "",
+    "OpenClaw Main action required:",
+    "1. Read this checklist and complete missing info in task title/description/subtasks.",
+    "2. If human context is missing, ask a concrete follow-up question in this task comments thread.",
+    "3. Once resolved, clear this flag by posting a comment that includes:",
+    `   [mclucy-clear:${params.fingerprint}]`,
+    "",
+    "Missing checklist:",
+    ...missingLines,
+  ].join("\n");
+}
+
+function countTaskSubtasks(state: MockStoreState, taskId: string): number {
+  return state.subtasks.filter((subtask) => subtask.taskId === taskId).length;
+}
 
 function nowIso(): string {
   return new Date().toISOString();
@@ -202,16 +240,28 @@ function createSeedState(): MockStoreState {
       resolvedAt: null,
     },
     {
+      id: "comment-demo-qa-pending",
+      taskId: "task-demo-release-qa",
+      authorType: "human",
+      authorId: null,
+      body: "Need blockers list ASAP before we can proceed with release signoff. What are the outstanding issues?",
+      requiresResponse: true,
+      status: "open",
+      createdAt: new Date(new Date(timestamp).getTime() - 35 * 60 * 1000).toISOString(),
+      updatedAt: new Date(new Date(timestamp).getTime() - 35 * 60 * 1000).toISOString(),
+      resolvedAt: null,
+    },
+    {
       id: "comment-demo-security-1",
       taskId: "task-demo-security-audit",
       authorType: "agent",
       authorId: "agent-codi",
       body: "Blocked until infra rotation is confirmed. Keeping this task visible in dashboard.",
-      requiresResponse: true,
-      status: "open",
+      requiresResponse: false,
+      status: "answered",
       createdAt: timestamp,
       updatedAt: timestamp,
-      resolvedAt: null,
+      resolvedAt: timestamp,
     },
   ];
 
@@ -478,12 +528,34 @@ export const localDevMockStore = {
     priority?: number;
   }): Task {
     return withState((state) => {
+      const requestedStatus = ((data.status as TaskStatus | undefined) ?? "BACKLOG") as TaskStatus;
+      const goldRules = checkLucyGoldRules({
+        title: data.title,
+        description: data.description ?? "",
+        subtaskCount: 0,
+      });
+
+      if (GOLD_RULES_ACTIVE_STATUSES.has(requestedStatus) && goldRules.errors.length > 0) {
+        throw new ApiError(
+          400,
+          "VALIDATION_ERROR",
+          "Lucy policy blocked task creation: task does not comply with Gold Rules",
+          {
+            rule: "gold-rules",
+            attemptedStatus: requestedStatus,
+            errors: goldRules.errors,
+            warnings: goldRules.warnings,
+            checks: goldRules.checks,
+          },
+        );
+      }
+
       const assignment = resolveAssignedAgent(state, data.assignedAgentId);
       const task: Task = {
         id: nextId(state, "task", "task-local-dev"),
         title: data.title,
         description: data.description ?? "",
-        status: (data.status as TaskStatus | undefined) ?? "BACKLOG",
+        status: requestedStatus,
         priority: data.priority ?? 1,
         assignedAgentId: assignment.assignedAgentId,
         assignedAgent: assignment.assignedAgent,
@@ -492,6 +564,45 @@ export const localDevMockStore = {
       };
 
       state.tasks.unshift(task);
+
+      if (requestedStatus === "BACKLOG" && goldRules.errors.length > 0) {
+        const fingerprint = buildGoldRulesFingerprint({
+          taskId: task.id,
+          title: task.title,
+          errors: goldRules.errors,
+        });
+
+        const flagComment: Comment = {
+          id: nextId(state, "comment", "comment-local-dev"),
+          taskId: task.id,
+          authorType: "system",
+          authorId: MCLUCY_COMMENT_AUTHOR_ID,
+          body: buildGoldRulesFlagCommentBody({
+            taskTitle: task.title,
+            fingerprint,
+            errors: goldRules.errors,
+          }),
+          requiresResponse: true,
+          status: "open",
+          createdAt: nowIso(),
+          updatedAt: nowIso(),
+          resolvedAt: null,
+        };
+
+        state.comments.push(flagComment);
+
+        logActivity(state, {
+          kind: "task",
+          action: "task.escalated",
+          summary: `mcLucy raised backlog readiness flag for task "${task.title}" at creation time`,
+          taskId: task.id,
+          commentId: flagComment.id,
+          actorType: "system",
+          actorId: "mclucy",
+          actorName: "mcLucy",
+        });
+      }
+
       logActivity(state, {
         kind: "task",
         action: "task.created",
@@ -515,6 +626,36 @@ export const localDevMockStore = {
       const task = state.tasks.find((item) => item.id === taskId);
       if (!task) {
         throw new ApiError(404, "NOT_FOUND", "Task not found");
+      }
+
+      const targetTitle = updates.title ?? task.title;
+      const targetDescription = updates.description ?? (task.description ?? "");
+      const targetStatus = ((updates.status as TaskStatus | undefined) ??
+        (task.status as TaskStatus | undefined) ??
+        "BACKLOG") as TaskStatus;
+
+      if (GOLD_RULES_ACTIVE_STATUSES.has(targetStatus)) {
+        const goldRules = checkLucyGoldRules({
+          title: targetTitle,
+          description: targetDescription,
+          subtaskCount: countTaskSubtasks(state, taskId),
+        });
+
+        if (goldRules.errors.length > 0) {
+          throw new ApiError(
+            400,
+            "VALIDATION_ERROR",
+            "Lucy policy blocked task start/review: task does not comply with Gold Rules",
+            {
+              rule: "gold-rules",
+              previousStatus: task.status,
+              attemptedStatus: targetStatus,
+              errors: goldRules.errors,
+              warnings: goldRules.warnings,
+              checks: goldRules.checks,
+            },
+          );
+        }
       }
 
       if (updates.title !== undefined) task.title = updates.title;

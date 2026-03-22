@@ -1,4 +1,5 @@
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { Prisma } from "@prisma/client";
 import { prisma } from "./prisma";
 import { emitEvent } from "./event-bus";
@@ -19,6 +20,38 @@ const OPERATOR_ACTOR = {
   id: "operator",
   name: "Operator",
 };
+
+const GOLD_RULES_ACTIVE_STATUSES = new Set(["IN_PROGRESS", "REVIEW", "DONE"]);
+const MCLUCY_COMMENT_MARKER = "[mcLucy-flag]";
+const MCLUCY_COMMENT_AUTHOR_ID = "mclucy-guardian";
+
+function buildGoldRulesFingerprint(input: { taskId: string; title: string; errors: string[] }): string {
+  const base = `${input.taskId}|${input.title}|${input.errors.join("|")}`;
+  return createHash("sha1").update(base).digest("hex").slice(0, 12);
+}
+
+function buildGoldRulesFlagCommentBody(params: {
+  taskTitle: string;
+  fingerprint: string;
+  errors: string[];
+}): string {
+  const missingLines = params.errors.map((error, index) => `${index + 1}. ${error}`);
+
+  return [
+    `${MCLUCY_COMMENT_MARKER} fingerprint:${params.fingerprint}`,
+    "",
+    `mcLucy detected this BACKLOG card is not ready to start: \"${params.taskTitle}\".`,
+    "",
+    "OpenClaw Main action required:",
+    "1. Read this checklist and complete missing info in task title/description/subtasks.",
+    "2. If human context is missing, ask a concrete follow-up question in this task comments thread.",
+    "3. Once resolved, clear this flag by posting a comment that includes:",
+    `   [mclucy-clear:${params.fingerprint}]`,
+    "",
+    "Missing checklist:",
+    ...missingLines,
+  ].join("\n");
+}
 
 function buildTaskUpdateActivity(params: {
   previous: {
@@ -166,6 +199,28 @@ export const taskService = {
   }) {
     assertDemoWritable();
 
+    const requestedStatus = data.status ?? "BACKLOG";
+    const goldRules = checkLucyGoldRules({
+      title: data.title,
+      description: data.description ?? "",
+      subtaskCount: 0,
+    });
+
+    if (GOLD_RULES_ACTIVE_STATUSES.has(requestedStatus) && goldRules.errors.length > 0) {
+      throw new ApiError(
+        400,
+        "VALIDATION_ERROR",
+        "Lucy policy blocked task creation: task does not comply with Gold Rules",
+        {
+          rule: "gold-rules",
+          attemptedStatus: requestedStatus,
+          errors: goldRules.errors,
+          warnings: goldRules.warnings,
+          checks: goldRules.checks,
+        },
+      );
+    }
+
     if (typeof data.priority === "number" && (data.priority < 1 || data.priority > 5)) {
       throw new ApiError(400, "VALIDATION_ERROR", "Priority must be between 1 and 5");
     }
@@ -193,7 +248,7 @@ export const taskService = {
       data: {
         title: data.title,
         description: data.description ?? "",
-        status: toPrismaTaskStatus(data.status ?? "BACKLOG"),
+        status: toPrismaTaskStatus(requestedStatus),
         priority: typeof data.priority === "number" ? data.priority : 1,
         createdByType: "operator",
         createdById: "operator-root",
@@ -213,6 +268,65 @@ export const taskService = {
         pipelineStage: { select: { id: true, name: true, position: true, pipelineId: true } },
       },
     });
+
+    if (requestedStatus === "BACKLOG" && goldRules.errors.length > 0) {
+      const fingerprint = buildGoldRulesFingerprint({
+        taskId: task.id,
+        title: task.title,
+        errors: goldRules.errors,
+      });
+
+      await prisma.taskComment.create({
+        data: {
+          taskId: task.id,
+          authorType: "system",
+          authorId: MCLUCY_COMMENT_AUTHOR_ID,
+          body: buildGoldRulesFlagCommentBody({
+            taskTitle: task.title,
+            fingerprint,
+            errors: goldRules.errors,
+          }),
+          requiresResponse: true,
+          status: "open",
+        },
+      });
+
+      const currentMetadata = asObjectMetadata(task.metadata);
+      await prisma.task.update({
+        where: { id: task.id },
+        data: {
+          metadata: {
+            ...currentMetadata,
+            mcLucy: {
+              ...(asObjectMetadata(currentMetadata.mcLucy) ?? {}),
+              state: "needs_attention",
+              flagged: true,
+              lastFingerprint: fingerprint,
+              lastEscalatedFingerprint: fingerprint,
+              lastErrors: goldRules.errors,
+              lastWarnings: goldRules.warnings,
+              awaitingHumanInput: true,
+              lastReviewAt: new Date().toISOString(),
+            },
+          } as Prisma.InputJsonValue,
+        },
+      });
+
+      await activityService.log({
+        kind: "task",
+        action: "task.escalated",
+        summary: `mcLucy raised backlog readiness flag for task "${task.title}" at creation time`,
+        actor: { type: "system", id: "mclucy", name: "mcLucy" },
+        taskId: task.id,
+        payload: {
+          fingerprint,
+          errors: goldRules.errors,
+          warnings: goldRules.warnings,
+          handoffTarget: "openclaw-main",
+          source: "task.create",
+        },
+      });
+    }
 
     emitEvent({
       type: "task.created",
@@ -275,7 +389,7 @@ export const taskService = {
       typeof updates.description === "string" ? updates.description : existing.description;
     const targetStatus = updates.status ?? existing.status;
 
-    if (["IN_PROGRESS", "REVIEW", "DONE"].includes(targetStatus)) {
+    if (GOLD_RULES_ACTIVE_STATUSES.has(targetStatus)) {
       const goldRules = checkLucyGoldRules({
         title: targetTitle,
         description: targetDescription,

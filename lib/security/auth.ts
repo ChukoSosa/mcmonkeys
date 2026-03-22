@@ -1,4 +1,5 @@
 import { jwtVerify } from "jose/jwt/verify";
+import { getRuntimePolicy } from "@/lib/runtime/profile";
 
 const encoder = new TextEncoder();
 
@@ -81,6 +82,17 @@ export async function authenticateRequest(authHeader: string | null): Promise<Au
       subject: "dev-mode",
       role: "admin",
     };
+  }
+
+  // Allow install-local in development to work without Authorization header
+  if (process.env.NODE_ENV === "development") {
+    const policy = getRuntimePolicy();
+    if (policy.isInstallLocal && !authHeader) {
+      return {
+        subject: "dev-install-local",
+        role: "admin",
+      };
+    }
   }
 
   const token = parseBearerToken(authHeader);

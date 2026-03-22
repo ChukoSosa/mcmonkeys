@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { trackBuyCtaClick } from "@/lib/analytics/ga";
 
 export function BlockFinalCta() {
   return (
@@ -16,6 +17,13 @@ export function BlockFinalCta() {
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/web/payment"
+              onClick={() => {
+                trackBuyCtaClick({
+                  cta_location: "landing_final_get_mc_monkeys",
+                  destination_type: "internal_payment",
+                  destination: "/web/payment",
+                });
+              }}
               className="rounded-xl bg-cyan-300 px-7 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-200 hover:shadow-[0_0_26px_rgba(103,232,249,0.42)]"
             >
               Get MC-MONKEYS

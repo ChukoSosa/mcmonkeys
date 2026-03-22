@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { trackBuyCtaClick } from "@/lib/analytics/ga";
 
 export const metadata = {
   title: "MC-MONKEYS | Story",
@@ -263,6 +264,13 @@ export default function StoryPage() {
       <footer className="flex flex-wrap gap-3 border-t border-slate-800 pt-10">
         <Link
           href="/web/payment"
+          onClick={() => {
+            trackBuyCtaClick({
+              cta_location: "story_footer_get_mc_monkeys",
+              destination_type: "internal_payment",
+              destination: "/web/payment",
+            });
+          }}
           className="rounded-md bg-cyan-400 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
         >
           Get MC-MONKEYS

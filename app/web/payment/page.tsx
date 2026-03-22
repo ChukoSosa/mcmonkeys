@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { z } from "zod";
+import { trackBuyCtaClick, trackCheckoutRedirectClick } from "@/lib/analytics/ga";
 
 type Plan = "annual" | "monthly";
 
@@ -188,6 +189,19 @@ export default function PaymentPage() {
         <a
           href="https://mcmonkeys.lemonsqueezy.com/checkout/buy/4a37f2be-24ab-4135-a075-d99966dd673a"
           target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => {
+            trackBuyCtaClick({
+              cta_location: "payment_annual_founding_operator",
+              destination_type: "external_checkout",
+              destination: "https://mcmonkeys.lemonsqueezy.com/checkout/buy/4a37f2be-24ab-4135-a075-d99966dd673a",
+            });
+            trackCheckoutRedirectClick({
+              plan: "annual",
+              provider: "lemonsqueezy",
+              checkout_url: "4a37f2be-24ab-4135-a075-d99966dd673a",
+            });
+          }}
           className={`relative flex flex-col h-full sm:min-h-[430px] w-full rounded-2xl border p-6 text-left transition border-cyan-400 bg-cyan-500/10 ring-1 ring-cyan-400/30 shadow-[0_0_32px_rgba(34,211,238,0.12)]`}
         >
           <div className="flex flex-col items-start justify-between gap-2">
@@ -222,6 +236,19 @@ export default function PaymentPage() {
         <a
           href="https://mcmonkeys.lemonsqueezy.com/checkout/buy/d2066129-a43e-450c-82b6-49b36554483a"
           target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => {
+            trackBuyCtaClick({
+              cta_location: "payment_monthly_operator",
+              destination_type: "external_checkout",
+              destination: "https://mcmonkeys.lemonsqueezy.com/checkout/buy/d2066129-a43e-450c-82b6-49b36554483a",
+            });
+            trackCheckoutRedirectClick({
+              plan: "monthly",
+              provider: "lemonsqueezy",
+              checkout_url: "d2066129-a43e-450c-82b6-49b36554483a",
+            });
+          }}
           className={`w-full flex flex-col h-full sm:min-h-[430px] rounded-2xl border p-6 text-left transition border-amber-400/70 bg-amber-500/12 ring-1 ring-amber-300/30 shadow-[0_0_28px_rgba(245,158,11,0.12)] `}
         >
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-amber-300 mt-7">Monthly Operator</p>
@@ -279,6 +306,11 @@ export default function PaymentPage() {
           <button
             type="button"
             onClick={() => {
+              trackBuyCtaClick({
+                cta_location: "payment_final_cta_scroll_to_checkout",
+                destination_type: "onpage_checkout_form",
+                destination: "payment_checkout_form",
+              });
               document.querySelector("form")?.scrollIntoView({ behavior: "smooth" });
               setPlan("annual");
             }}

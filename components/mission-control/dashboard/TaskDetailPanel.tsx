@@ -186,6 +186,7 @@ function getCommentStatus(comment: {
 export function TaskDetailPanel() {
   const demoMode = isPublicDemoMode();
   const selectedTaskId = useDashboardStore((s) => s.selectedTaskId);
+  const showArchived = useDashboardStore((s) => s.showArchived);
   const setSelectedTaskId = useDashboardStore((s) => s.setSelectedTaskId);
   const queryClient = useQueryClient();
   const [newComment, setNewComment] = useState("");
@@ -193,7 +194,10 @@ export function TaskDetailPanel() {
   const [isArchiving, setIsArchiving] = useState(false);
   const [updatingSubtaskId, setUpdatingSubtaskId] = useState<string | null>(null);
 
-  const { data: tasks = [] } = useQuery({ queryKey: ["tasks"], queryFn: () => getTasks() });
+  const { data: tasks = [] } = useQuery({
+    queryKey: ["tasks", showArchived],
+    queryFn: () => getTasks({ includeArchived: showArchived }),
+  });
   const selectedTask = tasks.find((t) => t.id === selectedTaskId);
 
   const {

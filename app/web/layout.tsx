@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { notFound, usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { getRuntimePolicy, shouldBlockWebExperience } from "@/lib/runtime/profile";
+import { trackBuyCtaClick } from "@/lib/analytics/ga";
 
 const NAV_LINKS = [
   { href: "/web/landing", label: "Landing" },
@@ -43,6 +44,15 @@ export default function WebLayout({ children }: { children: ReactNode }) {
                 <Link
                   key={item.href}
                   href={item.href}
+                  onClick={() => {
+                    if (item.href === "/web/payment") {
+                      trackBuyCtaClick({
+                        cta_location: "web_header_get_mc_monkeys",
+                        destination_type: "internal_payment",
+                        destination: item.href,
+                      });
+                    }
+                  }}
                   className={`rounded px-2 py-1 transition ${
                     isActive
                       ? "bg-cyan-500/20 text-cyan-200 ring-1 ring-cyan-400/40"

@@ -251,6 +251,20 @@ const DEMO_COMMENTS_BY_TASK: Record<string, Comment[]> = {
       resolvedAt: null,
     },
   ],
+  "task-demo-release-qa": [
+    {
+      id: "comment-demo-qa-pending",
+      taskId: "task-demo-release-qa",
+      authorType: "human",
+      authorId: null,
+      body: "Need blockers list ASAP before we can proceed with release signoff. What are the outstanding issues?",
+      requiresResponse: true,
+      status: "open",
+      createdAt: new Date(Date.now() - 35 * 60 * 1000).toISOString(),
+      updatedAt: new Date(Date.now() - 35 * 60 * 1000).toISOString(),
+      resolvedAt: null,
+    },
+  ],
   "task-demo-security-audit": [
     {
       id: "comment-demo-security-1",
@@ -258,11 +272,11 @@ const DEMO_COMMENTS_BY_TASK: Record<string, Comment[]> = {
       authorType: "agent",
       authorId: "agent-codi",
       body: "Blocked until infra rotation is confirmed. Keeping this task visible in dashboard.",
-      requiresResponse: true,
-      status: "open",
+      requiresResponse: false,
+      status: "answered",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      resolvedAt: null,
+      resolvedAt: new Date().toISOString(),
     },
   ],
 };

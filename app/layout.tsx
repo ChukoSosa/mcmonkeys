@@ -4,6 +4,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import "./globals.css";
 import { Providers } from "./providers";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
+import { AnalyticsTracker } from "@/components/analytics/AnalyticsTracker";
 
 config.autoAddCss = false;
 
@@ -16,6 +17,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" className="dark">
       <body>
+        <AnalyticsTracker />
         <ErrorBoundary fallbackMessage="The application hit an unexpected error. Refresh the page and try again.">
           <Providers>{children}</Providers>
         </ErrorBoundary>

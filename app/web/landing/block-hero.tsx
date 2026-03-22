@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { trackBuyCtaClick } from "@/lib/analytics/ga";
 
 export function BlockHero() {
   const images = [
@@ -42,6 +43,13 @@ export function BlockHero() {
           <div className="flex flex-wrap items-center gap-4 pt-2">
             <Link
               href="/web/payment"
+              onClick={() => {
+                trackBuyCtaClick({
+                  cta_location: "landing_hero_get_mc_monkeys",
+                  destination_type: "internal_payment",
+                  destination: "/web/payment",
+                });
+              }}
               className="rounded-xl bg-cyan-400 px-6 py-3 text-sm font-semibold text-slate-950 shadow-[0_0_0_rgba(56,189,248,0)] transition hover:-translate-y-0.5 hover:bg-cyan-300 hover:shadow-[0_0_24px_rgba(34,211,238,0.35)]"
             >
               Get <strong>MC-MONKEYS</strong>

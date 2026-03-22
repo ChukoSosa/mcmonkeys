@@ -25,6 +25,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Card } from "@/components/ui";
 import { useOnboardingState } from "@/lib/utils/useOnboardingState";
+import { trackBuyCtaClick } from "@/lib/analytics/ga";
 
 const TOPIC_LINKS = [
   { id: "hero", label: "What is MC-MONKEYS" },
@@ -214,7 +215,21 @@ export default function ManualPage() {
     router.push("/app");
   };
 
-  const handleChooseLicensePlan = () => {
+  const openLicenseModal = (location: string) => {
+    trackBuyCtaClick({
+      cta_location: location,
+      destination_type: "license_modal",
+      destination: "manual_license_modal",
+    });
+    setShowLicenseModal(true);
+  };
+
+  const handleChooseLicensePlan = (plan: "monthly" | "annual") => {
+    trackBuyCtaClick({
+      cta_location: `manual_license_modal_choose_${plan}`,
+      destination_type: "internal_payment",
+      destination: "/web/payment",
+    });
     setShowLicenseModal(false);
     router.push("/web/payment");
   };
@@ -254,7 +269,7 @@ export default function ManualPage() {
             </button>
 
             <button
-              onClick={() => setShowLicenseModal(true)}
+              onClick={() => openLicenseModal("manual_sidebar_get_license")}
               className="w-full rounded-lg border border-amber-500/40 bg-amber-500/15 px-4 py-2.5 text-sm font-semibold text-amber-200 transition hover:bg-amber-500/25"
             >
               Get License
@@ -291,7 +306,7 @@ export default function ManualPage() {
                         Live Demo
                       </a>
                       <button
-                        onClick={() => setShowLicenseModal(true)}
+                        onClick={() => openLicenseModal("manual_hero_view_plans")}
                         className="inline-flex items-center gap-2 rounded-lg border border-amber-500/40 bg-amber-500/15 px-4 py-2 text-sm font-semibold text-amber-200 transition hover:bg-amber-500/25"
                       >
                         <FontAwesomeIcon icon={faCrown} />
@@ -433,7 +448,7 @@ export default function ManualPage() {
                     </p>
                   </div>
                   <button
-                    onClick={() => setShowLicenseModal(true)}
+                    onClick={() => openLicenseModal("manual_license_section_buy_license")}
                     className="inline-flex items-center gap-2 rounded-lg border border-amber-500/40 bg-amber-500/15 px-4 py-2 text-sm font-semibold text-amber-200 transition hover:bg-amber-500/25"
                   >
                     <FontAwesomeIcon icon={faCrown} />
@@ -651,7 +666,7 @@ export default function ManualPage() {
                     </div>
 
                     <button
-                      onClick={handleChooseLicensePlan}
+                      onClick={() => handleChooseLicensePlan(plan.id as "monthly" | "annual")}
                       className="w-full rounded-lg border border-amber-500/40 bg-amber-500/15 px-4 py-2 text-sm font-semibold text-amber-200 transition hover:bg-amber-500/25"
                     >
                       Choose {plan.name}

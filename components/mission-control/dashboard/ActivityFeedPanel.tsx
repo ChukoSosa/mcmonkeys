@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBolt, faClock, faTag, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { getActivity } from "@/lib/api/activity";
 import { getSlaAlerts } from "@/lib/api/sla";
+import { getTasks } from "@/lib/api/tasks";
 import type { SlaTaskAlert } from "@/lib/api/sla";
 import { useDashboardStore } from "@/store/dashboardStore";
 import { Card, SkeletonList, EmptyState, ErrorMessage } from "@/components/ui";
@@ -21,6 +22,7 @@ export function ActivityFeedPanel() {
   const setSelectedTaskId = useDashboardStore((s) => s.setSelectedTaskId);
   const setSlaFocusedTaskId = useDashboardStore((s) => s.setSlaFocusedTaskId);
   const setSelectedAgentId = useDashboardStore((s) => s.setSelectedAgentId);
+  const setShowArchived = useDashboardStore((s) => s.setShowArchived);
   const setTaskStatusFilter = useDashboardStore((s) => s.setTaskStatusFilter);
   const setSearchQuery = useDashboardStore((s) => s.setSearchQuery);
 
@@ -28,6 +30,7 @@ export function ActivityFeedPanel() {
     setSelectedAgentId(null);
     setTaskStatusFilter("ALL");
     setSearchQuery("");
+    setShowArchived(true);
     setSelectedTaskId(taskId);
     setSlaFocusedTaskId(taskId);
   };
@@ -48,6 +51,15 @@ export function ActivityFeedPanel() {
     queryFn: getSlaAlerts,
     refetchInterval: getRealtimeRefetchInterval(60_000),
   });
+
+  const { data: availableTasks = [] } = useQuery({
+    queryKey: ["tasks", "sla-alert-lookup"],
+    queryFn: () => getTasks({ includeArchived: true }),
+    refetchInterval: getRealtimeRefetchInterval(60_000),
+  });
+
+  const resolvableTaskIds = new Set(availableTasks.map((task) => task.id));
+  const visibleSlaAlerts = slaAlerts.filter((alert) => resolvableTaskIds.has(alert.taskId));
 
   const normalizedSearch = searchQuery.trim().toLowerCase();
   const filteredActivity = (activity ?? []).filter((item) => {
@@ -73,10 +85,10 @@ export function ActivityFeedPanel() {
       title="Activity Feed"
       titleRight={
         <span className="flex items-center gap-2">
-          {slaAlerts.length > 0 && (
+          {visibleSlaAlerts.length > 0 && (
             <span className="inline-flex items-center gap-1 rounded border border-red-500/50 bg-red-500/15 px-1.5 py-0.5 text-[10px] font-bold text-red-400">
               <FontAwesomeIcon icon={faTriangleExclamation} className="text-[9px]" />
-              {slaAlerts.length} SLA
+              {visibleSlaAlerts.length} SLA
             </span>
           )}
           <span className="font-mono text-[10px] text-slate-500">{filteredActivity.length} · limit {activityLimit}</span>
@@ -85,13 +97,13 @@ export function ActivityFeedPanel() {
       className="h-full"
     >
       {/* SLA Alerts section */}
-      {slaAlerts.length > 0 && (
+      {visibleSlaAlerts.length > 0 && (
         <div className="mb-2 rounded border border-red-500/30 bg-red-950/20 px-3 py-2 space-y-1.5">
           <p className="text-[10px] font-semibold text-red-400 uppercase tracking-wide flex items-center gap-1.5">
             <FontAwesomeIcon icon={faTriangleExclamation} />
-            {slaAlerts.length === 1 ? "1 tarea con SLA vencido" : `${slaAlerts.length} tareas con SLA vencido`}
+            {visibleSlaAlerts.length === 1 ? "1 tarea con SLA vencido" : `${visibleSlaAlerts.length} tareas con SLA vencido`}
           </p>
-          {slaAlerts.map((alert) => {
+          {visibleSlaAlerts.map((alert) => {
             const oldest = alert.breachedComments[0];
             const count = alert.breachedComments.length;
             return (
