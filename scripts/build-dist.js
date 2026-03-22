@@ -121,6 +121,23 @@ if (fs.existsSync(webDistDir)) {
   warn("web/ dir not found in dist — may already be excluded");
 }
 
+// Strip backoffice pages from install package
+const adminDistDir = path.join(DIST, ".next", "server", "app", "admin");
+if (fs.existsSync(adminDistDir)) {
+  fs.rmSync(adminDistDir, { recursive: true, force: true });
+  ok("Admin pages stripped from dist (APP_ONLY_INSTALL)");
+} else {
+  warn("admin/ dir not found in dist — may already be excluded");
+}
+
+const loginDistDir = path.join(DIST, ".next", "server", "app", "login");
+if (fs.existsSync(loginDistDir)) {
+  fs.rmSync(loginDistDir, { recursive: true, force: true });
+  ok("Login page stripped from dist (APP_ONLY_INSTALL)");
+} else {
+  warn("login/ dir not found in dist — may already be excluded");
+}
+
 // 3b. Static assets (runtime distDir static/ → dist/.next-dist/static/)
 const nextStaticSrc = path.join(NEXT_DIST_DIR, "static");
 const nextStaticDest = path.join(DIST, ".next-dist", "static");

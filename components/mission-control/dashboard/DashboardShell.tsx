@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faBug,
   faBullseye,
   faCircleInfo,
   faEnvelope,
@@ -67,6 +68,7 @@ export function DashboardShell({ children, showFilters = true, topBar }: Dashboa
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
   const [isResettingMock, setIsResettingMock] = useState(false);
   const [setupModalMode, setSetupModalMode] = useState<"first-run" | "settings">("first-run");
+  const [isBugReportOpen, setIsBugReportOpen] = useState(false);
   const pendingPageLabel = getPendingPageLabel(pendingHref);
   const hasConfiguredOutputFolder = outputFolderPath.trim().length > 0;
   // Output folder setup is only relevant on localhost — in demo/mock mode agents don't produce real outputs.
@@ -219,7 +221,16 @@ export function DashboardShell({ children, showFilters = true, topBar }: Dashboa
             })}
           </nav>
 
-          <div ref={settingsMenuRef} className="relative">
+          <div ref={settingsMenuRef} className="flex flex-row gap-2 ">
+            <button
+              type="button"
+              onClick={() => setIsBugReportOpen(true)}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-surface-700 bg-surface-800 text-slate-400 transition hover:border-surface-600 hover:text-red-400"
+              aria-label="Report a bug"
+            >
+              <FontAwesomeIcon icon={faBug} />
+            </button>
+
             <button
               type="button"
               onClick={() => setIsSettingsMenuOpen((current) => !current)}
@@ -399,6 +410,132 @@ export function DashboardShell({ children, showFilters = true, topBar }: Dashboa
           setIsSetupModalOpen(false);
         }}
       />
+
+      {isBugReportOpen && (
+        <BugReportModal onClose={() => setIsBugReportOpen(false)} />
+      )}
+    </div>
+  );
+}
+
+function BugReportModal({ onClose }: { onClose: () => void }) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [description, setDescription] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/bugs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reporterName: name, reporterEmail: email, description, source: "dashboard" }),
+      });
+      setStatus(res.ok ? "done" : "error");
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-[85] flex items-center justify-center bg-surface-950/80 p-4 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-md overflow-hidden rounded-2xl border border-surface-700 bg-surface-900 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Report a bug"
+      >
+        <div className="flex items-center justify-between border-b border-surface-700 px-6 py-4">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-red-400">Bug Report</p>
+            <h2 className="mt-0.5 text-base font-bold text-slate-100">Report an issue</h2>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-surface-600 text-slate-300 transition hover:text-slate-100"
+            aria-label="Close bug report modal"
+          >
+            <FontAwesomeIcon icon={faXmark} />
+          </button>
+        </div>
+
+        {status === "done" ? (
+          <div className="px-6 py-8 text-center">
+            <p className="text-sm font-semibold text-green-400">Thank you! Your report was submitted.</p>
+            <p className="mt-1 text-xs text-slate-500">We will look into it and may reach out via email.</p>
+            <button
+              type="button"
+              onClick={onClose}
+              className="mt-5 rounded-md bg-surface-800 px-4 py-2 text-xs font-semibold text-slate-300 hover:bg-surface-700 transition"
+            >
+              Close
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4 px-6 py-5">
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-400">Your name</label>
+              <input
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full rounded-md border border-surface-700 bg-surface-800 px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:border-cyan-500 focus:outline-none"
+                placeholder="John Doe"
+              />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-400">Email</label>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full rounded-md border border-surface-700 bg-surface-800 px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:border-cyan-500 focus:outline-none"
+                placeholder="you@example.com"
+              />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-400">Describe the issue</label>
+              <textarea
+                required
+                rows={4}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full rounded-md border border-surface-700 bg-surface-800 px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:border-cyan-500 focus:outline-none"
+                placeholder="Steps to reproduce, expected vs actual behavior..."
+              />
+            </div>
+            {status === "error" && (
+              <p className="rounded-md bg-red-500/10 px-3 py-2 text-xs text-red-400">
+                Could not submit the report. Please try again.
+              </p>
+            )}
+            <div className="flex justify-end gap-2 pt-1">
+              <button
+                type="button"
+                onClick={onClose}
+                className="rounded-md px-4 py-2 text-xs font-semibold text-slate-400 hover:text-slate-200 transition"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={status === "sending"}
+                className="rounded-md bg-red-500/20 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-red-300 hover:bg-red-500/30 disabled:opacity-50 transition"
+              >
+                {status === "sending" ? "Sending..." : "Submit report"}
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
     </div>
   );
 }

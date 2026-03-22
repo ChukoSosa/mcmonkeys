@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { jwtVerify } from "jose";
 import { authenticateRequest, hasRequiredRole, type AuthRole } from "@/lib/security/auth";
 import { checkRateLimit } from "@/lib/security/rate-limit";
 import { getRuntimePolicy } from "@/lib/runtime/profile";
@@ -33,6 +34,21 @@ function requiredRoleFor(request: NextRequest): AuthRole {
   return "viewer";
 }
 
+async function verifyAdminSession(request: NextRequest): Promise<boolean> {
+  const secret = process.env.BUGS_SESSION_SECRET;
+  if (!secret) return false;
+  const token = request.cookies.get("admin_session")?.value;
+  if (!token) return false;
+  try {
+    const { payload } = await jwtVerify(token, new TextEncoder().encode(secret), {
+      algorithms: ["HS256"],
+    });
+    return payload.role === "admin";
+  } catch {
+    return false;
+  }
+}
+
 export async function middleware(request: NextRequest) {
   const method = request.method.toUpperCase();
   const pathname = request.nextUrl.pathname;
@@ -40,6 +56,49 @@ export async function middleware(request: NextRequest) {
   const requestId = request.headers.get("x-request-id") ?? crypto.randomUUID();
   const baseRequestHeaders = new Headers(request.headers);
   baseRequestHeaders.set("x-request-id", requestId);
+
+  // ── Backoffice guard (/login page, /admin/* pages, /api/admin/* endpoints) ──
+  const isAdminPage = pathname.startsWith("/admin");
+  const isLoginPage = pathname === "/login";
+  const isAdminApiRoute = pathname.startsWith("/api/admin");
+
+  if (isAdminPage || isLoginPage || isAdminApiRoute) {
+    const enabled = process.env.BACKOFFICE_ENABLED === "true";
+    if (!enabled) {
+      if (isAdminApiRoute) {
+        return withSecurityHeaders(
+          NextResponse.json({ error: "Not found" }, { status: 404 }),
+        );
+      }
+      return new NextResponse(null, { status: 404 });
+    }
+
+    if (isLoginPage) {
+      const authed = await verifyAdminSession(request);
+      if (authed) {
+        return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+      }
+      return withSecurityHeaders(
+        NextResponse.next({ request: { headers: baseRequestHeaders } }),
+      );
+    }
+
+    if (isAdminPage) {
+      const authed = await verifyAdminSession(request);
+      if (!authed) {
+        return NextResponse.redirect(new URL("/login", request.url));
+      }
+      return withSecurityHeaders(
+        NextResponse.next({ request: { headers: baseRequestHeaders } }),
+      );
+    }
+
+    // isAdminApiRoute — route handlers do their own session check; just add headers
+    return withSecurityHeaders(
+      NextResponse.next({ request: { headers: baseRequestHeaders } }),
+    );
+  }
+
 
   // Public endpoints — no auth or demo-mode guard required
   if (pathname === "/api/health" || pathname === "/api/license/validate") {
@@ -132,5 +191,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/api/:path*"],
+  matcher: ["/api/:path*", "/admin/:path*", "/login"],
 };

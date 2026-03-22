@@ -44,6 +44,28 @@ enum CalendarEntryType {
   DEADLINE
 }
 
+enum BugStatus {
+  NEW
+  TRIAGED
+  IN_PROGRESS
+  FIXED
+  CLOSED
+}
+
+enum BugSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum BugPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
 model Operator {
   id          String   @id @default(uuid())
   name        String
@@ -243,4 +265,25 @@ model SystemEvent {
   @@index([commentId])
   @@index([agentId])
   @@index([actorType, actorId])
+}
+
+model BugReport {
+  id                String      @id @default(uuid())
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  reporterName      String
+  reporterEmail     String
+  description       String
+  status            BugStatus   @default(NEW)
+  severity          BugSeverity @default(MEDIUM)
+  priority          BugPriority @default(MEDIUM)
+  resolutionSummary String?
+  internalNotes     String?
+  notifiedAt        DateTime?
+  source            String      @default("dashboard")
+  requestId         String?
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([reporterEmail])
 }
