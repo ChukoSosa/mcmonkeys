@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { trackBuyCtaClick } from "@/lib/analytics/ga";
 

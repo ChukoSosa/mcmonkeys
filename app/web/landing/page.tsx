@@ -1,3 +1,5 @@
+"use client";
+
 import { BlockHero } from "./block-hero";
 import { BlockScreenshots } from "./block-screenshots";
 import { BlockOrigin } from "./block-origin";
@@ -7,11 +9,6 @@ import { BlockMeetMissionControl } from "./block-meet-mission-control";
 import { BlockFourQuestions } from "./block-four-questions";
 import { BlockThreeDollarStory } from "./block-three-dollar-story";
 import { BlockFinalCta } from "./block-final-cta";
-
-export const metadata = {
-  title: "MC-MONKEYS | Landing",
-  description: "Mission Control for AI agents. Built by a human, designed with an agent, and operated by intelligence.",
-};
 
 export default function LandingPage() {
   return (

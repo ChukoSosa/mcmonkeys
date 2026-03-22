@@ -1,11 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { trackBuyCtaClick } from "@/lib/analytics/ga";
-
-export const metadata = {
-  title: "MC-MONKEYS | Story",
-  description: "The story behind MC-MONKEYS — why it exists, who built it, and what it's trying to solve.",
-};
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
