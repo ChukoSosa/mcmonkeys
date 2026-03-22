@@ -175,7 +175,7 @@ function OfficeContent() {
   const hydrateAvatarMapping = useOfficeStore((s) => s.hydrateAvatarMapping);
 
   const { data: agentsData, isLoading: agentsLoading } = useQuery({
-    queryKey: ["office-agents"],
+    queryKey: ["agents"],
     queryFn: getAgents,
     enabled: !useLocalScenarioData,
     refetchInterval: getRealtimeRefetchInterval(12_000),
