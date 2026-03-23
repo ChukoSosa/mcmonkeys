@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 const FROM = process.env.RESEND_FROM ?? "MC Monkeys <noreply@mcmonkeys.up.railway.app>";
 const ADMIN_EMAIL = process.env.BUGS_ADMIN_EMAIL ?? "billy.mcmonkeys@gmail.com";
 
@@ -10,7 +10,7 @@ export async function sendBugConfirmation(opts: {
   description: string;
   bugId: string;
 }) {
-  if (!process.env.RESEND_API_KEY) return;
+  if (!resend) return;
 
   await resend.emails.send({
     from: FROM,
@@ -38,7 +38,7 @@ export async function sendBugResolved(opts: {
   resolution: string;
   bugId: string;
 }) {
-  if (!process.env.RESEND_API_KEY) return;
+  if (!resend) return;
 
   await resend.emails.send({
     from: FROM,
@@ -64,7 +64,7 @@ export async function notifyAdminNewBug(opts: {
   description: string;
   bugId: string;
 }) {
-  if (!process.env.RESEND_API_KEY) return;
+  if (!resend) return;
 
   await resend.emails.send({
     from: FROM,
