@@ -11,7 +11,7 @@ import { CreateTaskModal } from "@/components/mission-control/dashboard/CreateTa
 import { PipelineBoard } from "@/components/mission-control/dashboard/PipelineBoard";
 import { Card, EmptyState, ErrorMessage, SkeletonList, StatusBadge } from "@/components/ui";
 import { deleteTask, archiveTask, getTasks } from "@/lib/api/tasks";
-import { getSlaAlerts } from "@/lib/api/sla";
+import { getSlaAlerts, selectVisibleSlaAlerts } from "@/lib/api/sla";
 import type { SlaTaskAlert } from "@/lib/api/sla";
 import { useDashboardStore } from "@/store/dashboardStore";
 import { fromNow } from "@/lib/utils/formatDate";
@@ -92,7 +92,7 @@ export default function BoardPage() {
   });
 
   const slaByTaskId = useMemo(
-    () => new Map(slaAlerts.map((a) => [a.taskId, a])),
+    () => new Map(selectVisibleSlaAlerts(slaAlerts).map((a) => [a.taskId, a])),
     [slaAlerts],
   );
 

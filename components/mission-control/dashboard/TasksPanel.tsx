@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils/cn";
 import { fromNow } from "@/lib/utils/formatDate";
 import { priorityLabel, priorityVariant } from "@/lib/utils/formatStatus";
 import { getRealtimeRefetchInterval } from "@/lib/utils/demoMode";
-import { getSlaAlerts } from "@/lib/api/sla";
+import { getSlaAlerts, selectVisibleSlaAlerts } from "@/lib/api/sla";
 
 const STATUS_SORT_ORDER: Record<string, number> = {
   BLOCKED: 1,
@@ -46,7 +46,7 @@ export function TasksPanel() {
     refetchInterval: getRealtimeRefetchInterval(60_000),
   });
 
-  const slaTaskIds = new Set(slaAlerts.map((alert) => alert.taskId));
+  const slaTaskIds = new Set(selectVisibleSlaAlerts(slaAlerts).map((alert) => alert.taskId));
 
   const normalizedSearch = searchQuery.trim().toLowerCase();
   const filteredTasks = (tasks ?? []).filter((task) => {

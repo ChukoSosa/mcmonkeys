@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBolt, faClock, faTag, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { getActivity } from "@/lib/api/activity";
-import { getSlaAlerts } from "@/lib/api/sla";
+import { getSlaAlerts, selectVisibleSlaAlerts } from "@/lib/api/sla";
 import { getTasks } from "@/lib/api/tasks";
 import type { SlaTaskAlert } from "@/lib/api/sla";
 import { useDashboardStore } from "@/store/dashboardStore";
@@ -59,7 +59,9 @@ export function ActivityFeedPanel() {
   });
 
   const resolvableTaskIds = new Set(availableTasks.map((task) => task.id));
-  const visibleSlaAlerts = slaAlerts.filter((alert) => resolvableTaskIds.has(alert.taskId));
+  const visibleSlaAlerts = selectVisibleSlaAlerts(
+    slaAlerts.filter((alert) => resolvableTaskIds.has(alert.taskId)),
+  );
 
   const normalizedSearch = searchQuery.trim().toLowerCase();
   const filteredActivity = (activity ?? []).filter((item) => {
