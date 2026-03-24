@@ -103,7 +103,7 @@ export function ActivityFeedPanel() {
         <div className="mb-2 rounded border border-red-500/30 bg-red-950/20 px-3 py-2 space-y-1.5">
           <p className="text-[10px] font-semibold text-red-400 uppercase tracking-wide flex items-center gap-1.5">
             <FontAwesomeIcon icon={faTriangleExclamation} />
-            {visibleSlaAlerts.length === 1 ? "1 tarea con SLA vencido" : `${visibleSlaAlerts.length} tareas con SLA vencido`}
+            {visibleSlaAlerts.length === 1 ? "1 task with SLA breached" : `${visibleSlaAlerts.length} tasks with SLA breached`}
           </p>
           {visibleSlaAlerts.map((alert) => {
             const oldest = alert.breachedComments[0];
