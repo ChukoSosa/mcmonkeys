@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { jwtVerify } from "jose";
+import { jwtVerify } from "jose/jwt/verify";
 import { authenticateRequest, hasRequiredRole, type AuthRole } from "@/lib/security/auth";
 import { checkRateLimit } from "@/lib/security/rate-limit";
 import { getRuntimePolicy } from "@/lib/runtime/profile";
