@@ -19,8 +19,17 @@ interface ActivityPanelProps {
 
 export function ActivityPanel({ selectedAgentId, selectedAgentName, showAllActivity = false }: ActivityPanelProps) {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["office-activity"],
-    queryFn: () => getActivity({ limit: 100 }),
+    queryKey: ["office-activity", showAllActivity ? "all" : selectedAgentId ?? "none"],
+    queryFn: () => {
+      if (showAllActivity) {
+        return getActivity({ limit: 100 });
+      }
+      if (!selectedAgentId) {
+        return Promise.resolve([]);
+      }
+      // Filter at API level so agent-specific activity is not dropped by the global limit.
+      return getActivity({ limit: 100, agentId: selectedAgentId });
+    },
     refetchInterval: getRealtimeRefetchInterval(10_000),
   });
 
