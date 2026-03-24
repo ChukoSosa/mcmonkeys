@@ -155,10 +155,10 @@ El script:
 
 ```bash
 # Descargar
-curl -L https://tu-dominio.com/downloads/mclucy-latest.zip -o mclucy-latest.zip
+curl -L https://tu-dominio.com/downloads/mcmonkeys-latest.zip -o mcmonkeys-latest.zip
 
 # Extraer
-unzip mclucy-latest.zip -d mclucy && cd mclucy
+unzip mcmonkeys-latest.zip -d mcmonkeys && cd mcmonkeys
 
 # Instalar (macOS/Linux)
 bash install.sh
@@ -169,6 +169,26 @@ install.bat
 
 El instalador crea la DB, corre el seed, levanta el servidor en `:3001` y abre el browser.
 También deja lista la carpeta `outputs/` y los documentos que OpenClaw debe leer antes de operar.
+
+### Publicar ZIP desde Railway Volume
+
+Si querés servir el ZIP desde Railway sin depender del filesystem efimero del contenedor:
+
+1. Crear un Volume en el servicio Railway y montarlo, por ejemplo, en `/data/downloads`.
+2. Configurar variable de entorno en Railway:
+
+```env
+DOWNLOADS_VOLUME_DIR="/data/downloads"
+```
+
+3. Subir `mcmonkeys-latest.zip` al directorio montado.
+4. Usar la URL publica estable:
+
+```text
+https://tu-dominio.com/downloads/mcmonkeys-latest.zip
+```
+
+La aplicacion tambien busca fallback local en `public/downloads` cuando `DOWNLOADS_VOLUME_DIR` no existe.
 
 ### Regla de dependencias para OpenClaw
 
@@ -196,7 +216,7 @@ npm run dist:build
 
 # 2. Extraer en carpeta limpia
 mkdir /tmp/mclucy-test && cd /tmp/mclucy-test
-unzip /ruta/al/repo/public/downloads/mclucy-latest.zip
+unzip /ruta/al/repo/public/downloads/mcmonkeys-latest.zip
 
 # 3. Correr el instalador
 bash install.sh
