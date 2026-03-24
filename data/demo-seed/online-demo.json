@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "lastResetAt": "2026-03-23T18:25:00.000Z",
+  "lastResetAt": "2026-03-24T14:48:43.047Z",
   "counters": {
-    "task": 120,
-    "subtask": 260,
-    "comment": 180,
-    "activity": 427
+    "task": 24,
+    "subtask": 59,
+    "comment": 11,
+    "activity": 5
   },
   "agents": [
     {
@@ -14,9 +14,8 @@
       "role": "Technical PM - Main Agent",
       "status": "WORKING",
       "statusMessage": "Coordinating sprint delivery from main desk",
-      "heartbeatAt": "2026-03-23T18:25:00.000Z",
       "avatarUrl": "/office/mcmonkes-library/013.png",
-      "avatar": "/office/mcmonkes-library/013.png"
+      "heartbeatAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "agent-alex",
@@ -24,8 +23,8 @@
       "role": "Fullstack Developer",
       "status": "WORKING",
       "statusMessage": "Implementing final landing sections and form integration",
-      "heartbeatAt": "2026-03-23T18:25:00.000Z",
-      "avatarUrl": "/office/mcmonkes-library/002.png"
+      "avatarUrl": "/office/mcmonkes-library/002.png",
+      "heartbeatAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "agent-morgan",
@@ -33,8 +32,8 @@
       "role": "Backend DevOps API Specialist",
       "status": "WORKING",
       "statusMessage": "Deploying API fixes and stabilizing staging",
-      "heartbeatAt": "2026-03-23T18:25:00.000Z",
-      "avatarUrl": "/office/mcmonkes-library/003.png"
+      "avatarUrl": "/office/mcmonkes-library/003.png",
+      "heartbeatAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "agent-casey",
@@ -42,8 +41,8 @@
       "role": "Growth Marketing Strategist",
       "status": "WORKING",
       "statusMessage": "Building campaign strategy and budget split with marketing ops",
-      "heartbeatAt": "2026-03-23T18:25:00.000Z",
-      "avatarUrl": "/office/mcmonkes-library/008.png"
+      "avatarUrl": "/office/mcmonkes-library/008.png",
+      "heartbeatAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "agent-jordan",
@@ -51,9 +50,8 @@
       "role": "QA Engineer",
       "status": "BLOCKED",
       "statusMessage": "Blocked waiting for staging pagination hotfix",
-      "heartbeatAt": "2026-03-23T18:25:00.000Z",
       "avatarUrl": "/office/mcmonkes-library/009.png",
-      "avatar": "/office/mcmonkes-library/009.png"
+      "heartbeatAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "agent-sam",
@@ -61,533 +59,1115 @@
       "role": "UI UX Designer",
       "status": "REVIEWING",
       "statusMessage": "Reviewing latest creative and landing visual consistency",
-      "heartbeatAt": "2026-03-23T18:25:00.000Z",
       "avatarUrl": "/office/mcmonkes-library/011.png",
-      "avatar": "/office/mcmonkes-library/011.png"
+      "heartbeatAt": "2026-03-24T14:48:43.047Z"
     }
   ],
   "tasks": [
     {
       "id": "task-001-kickoff-plan",
       "title": "Client Kickoff and Delivery Plan",
+      "description": "Sprint scope, owners, and timeline confirmed with client.",
       "status": "DONE",
       "priority": 1,
+      "assignedAgentId": "agent-brian",
       "assignedAgent": {
         "id": "agent-brian",
         "name": "Brian"
       },
-      "assignedAgentId": "agent-brian",
-      "updatedAt": "2026-03-23T09:35:00.000Z",
-      "description": "Sprint scope, owners, and timeline confirmed with client.",
+      "updatedAt": "2026-03-24T14:48:43.047Z",
       "archivedAt": null
     },
     {
       "id": "task-002-landing-wire-setup",
       "title": "Landing Wireframe to Build Handoff",
+      "description": "Wireframe handoff is queued again and pending restart.",
       "status": "BACKLOG",
       "priority": 2,
+      "assignedAgentId": "agent-sam",
       "assignedAgent": {
         "id": "agent-sam",
         "name": "Sam"
       },
-      "assignedAgentId": "agent-sam",
-      "updatedAt": "2026-03-23T18:47:00.000Z",
-      "description": "Wireframe handoff is queued again and pending restart.",
+      "updatedAt": "2026-03-24T14:48:43.047Z",
       "archivedAt": null
     },
     {
       "id": "task-003-design-token-pass",
       "title": "Design Tokens and CTA Variants",
-      "status": "BACKLOG",
+      "description": "Color, spacing, and button variants are pending and queued in backlog.",
+      "status": "IN_PROGRESS",
       "priority": 2,
+      "assignedAgentId": "agent-sam",
       "assignedAgent": {
         "id": "agent-sam",
         "name": "Sam"
       },
-      "assignedAgentId": "agent-sam",
-      "updatedAt": "2026-03-23T18:40:00.000Z",
-      "description": "Color, spacing, and button variants are pending and queued in backlog.",
+      "updatedAt": "2026-03-24T14:48:43.047Z",
       "archivedAt": null
     },
     {
       "id": "task-004-landing-core-build",
       "title": "Landing Core Build and CMS Wiring",
-      "status": "IN_PROGRESS",
+      "description": "Hero and core sections are delivered; final CMS wiring is still in progress.",
+      "status": "REVIEW",
       "priority": 1,
+      "assignedAgentId": "agent-alex",
       "assignedAgent": {
         "id": "agent-alex",
         "name": "Alex"
       },
-      "assignedAgentId": "agent-alex",
-      "updatedAt": "2026-03-23T18:32:00.000Z",
-      "description": "Hero and core sections are delivered; final CMS wiring is still in progress.",
+      "updatedAt": "2026-03-24T14:48:43.047Z",
       "archivedAt": null
     },
     {
       "id": "task-005-api-auth-session",
       "title": "Auth Session Endpoint and Token Refresh",
+      "description": "Session endpoint and refresh strategy merged and deployed.",
       "status": "DONE",
       "priority": 1,
+      "assignedAgentId": "agent-morgan",
       "assignedAgent": {
         "id": "agent-morgan",
         "name": "Morgan"
       },
-      "assignedAgentId": "agent-morgan",
-      "updatedAt": "2026-03-23T12:05:00.000Z",
-      "description": "Session endpoint and refresh strategy merged and deployed.",
+      "updatedAt": "2026-03-24T14:48:43.047Z",
       "archivedAt": null
     },
     {
       "id": "task-006-ad-brief-v1",
       "title": "Paid Ads Brief and Channel Hypothesis",
+      "description": "Campaign goals are defined; channel split is being refined with new assumptions.",
       "status": "IN_PROGRESS",
       "priority": 2,
+      "assignedAgentId": "agent-casey",
       "assignedAgent": {
         "id": "agent-casey",
         "name": "Casey"
       },
-      "assignedAgentId": "agent-casey",
-      "updatedAt": "2026-03-23T18:26:00.000Z",
-      "description": "Campaign goals are defined; channel split is being refined with new assumptions.",
+      "updatedAt": "2026-03-24T14:48:43.047Z",
       "archivedAt": null
     },
     {
       "id": "task-007-qa-smoke-pass",
       "title": "QA Smoke Pass on Main Funnel",
+      "description": "Critical path smoke checks completed with baseline report.",
       "status": "DONE",
       "priority": 2,
+      "assignedAgentId": "agent-jordan",
       "assignedAgent": {
         "id": "agent-jordan",
         "name": "Jordan"
       },
-      "assignedAgentId": "agent-jordan",
-      "updatedAt": "2026-03-23T13:25:00.000Z",
-      "description": "Critical path smoke checks completed with baseline report.",
+      "updatedAt": "2026-03-24T14:48:43.047Z",
       "archivedAt": null
     },
     {
       "id": "task-008-client-sync-midday",
       "title": "Midday Client Sync and Scope Reconfirm",
+      "description": "Client accepted progress and requested softer CTA tone.",
       "status": "DONE",
       "priority": 1,
+      "assignedAgentId": "agent-brian",
       "assignedAgent": {
         "id": "agent-brian",
         "name": "Brian"
       },
-      "assignedAgentId": "agent-brian",
-      "updatedAt": "2026-03-23T15:05:00.000Z",
-      "description": "Client accepted progress and requested softer CTA tone.",
+      "updatedAt": "2026-03-24T14:48:43.047Z",
       "archivedAt": null
     },
     {
       "id": "task-009-final-copy-iteration",
       "title": "Final Landing Copy Iteration",
+      "description": "Applying final hero + CTA copy updates requested by client.",
       "status": "IN_PROGRESS",
       "priority": 1,
+      "assignedAgentId": "agent-alex",
       "assignedAgent": {
         "id": "agent-alex",
         "name": "Alex"
       },
-      "assignedAgentId": "agent-alex",
-      "updatedAt": "2026-03-23T18:20:00.000Z",
-      "description": "Applying final hero + CTA copy updates requested by client.",
+      "updatedAt": "2026-03-24T14:48:43.047Z",
       "archivedAt": null
     },
     {
       "id": "task-010-api-pagination-hotfix",
       "title": "Staging Pagination Hotfix for QA",
+      "description": "Hotfix deployed to staging, awaiting QA validation cycle.",
       "status": "REVIEW",
       "priority": 1,
+      "assignedAgentId": "agent-morgan",
       "assignedAgent": {
         "id": "agent-morgan",
         "name": "Morgan"
       },
-      "assignedAgentId": "agent-morgan",
-      "updatedAt": "2026-03-23T18:10:00.000Z",
-      "description": "Hotfix deployed to staging, awaiting QA validation cycle.",
+      "updatedAt": "2026-03-24T14:48:43.047Z",
       "archivedAt": null
     },
     {
       "id": "task-011-regression-cycle-2",
       "title": "Regression Cycle 2 on Staging",
+      "description": "Waiting for stable staging seed to start full regression rerun.",
       "status": "BLOCKED",
       "priority": 1,
+      "assignedAgentId": "agent-jordan",
       "assignedAgent": {
         "id": "agent-jordan",
         "name": "Jordan"
       },
-      "assignedAgentId": "agent-jordan",
-      "updatedAt": "2026-03-23T18:22:00.000Z",
-      "description": "Waiting for stable staging seed to start full regression rerun.",
+      "updatedAt": "2026-03-24T14:48:43.047Z",
       "archivedAt": null
     },
     {
       "id": "task-012-creative-final-review",
       "title": "Creative Final Review for Ads and Social",
+      "description": "Final visual check in progress before export and handoff to marketing.",
       "status": "REVIEW",
       "priority": 2,
+      "assignedAgentId": "agent-sam",
       "assignedAgent": {
         "id": "agent-sam",
         "name": "Sam"
       },
-      "assignedAgentId": "agent-sam",
-      "updatedAt": "2026-03-23T18:18:00.000Z",
-      "description": "Final visual check in progress before export and handoff to marketing.",
+      "updatedAt": "2026-03-24T14:48:43.047Z",
       "archivedAt": null
     },
     {
       "id": "task-013-campaign-budget-model",
       "title": "Campaign Budget Model and Scenario Split",
+      "description": "Finalize budget model after creative and conversion assumptions are confirmed.",
       "status": "BACKLOG",
       "priority": 3,
+      "assignedAgentId": "agent-casey",
       "assignedAgent": {
         "id": "agent-casey",
         "name": "Casey"
       },
+      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "archivedAt": null
+    },
+    {
+      "id": "task-014-onboarding-email-flow",
+      "title": "Onboarding Email Flow Draft",
+      "description": "Draft lifecycle onboarding emails for first-week activation.",
+      "status": "BACKLOG",
+      "priority": 2,
       "assignedAgentId": "agent-casey",
-      "updatedAt": "2026-03-23T17:55:00.000Z",
-      "description": "Finalize budget model after creative and conversion assumptions are confirmed.",
+      "assignedAgent": {
+        "id": "agent-casey",
+        "name": "Casey"
+      },
+      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "archivedAt": null
+    },
+    {
+      "id": "task-015-analytics-event-map",
+      "title": "Analytics Event Mapping Review",
+      "description": "Review and document event naming consistency across funnel steps.",
+      "status": "BACKLOG",
+      "priority": 2,
+      "assignedAgentId": "agent-morgan",
+      "assignedAgent": {
+        "id": "agent-morgan",
+        "name": "Morgan"
+      },
+      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "archivedAt": null
+    },
+    {
+      "id": "task-016-help-center-outline",
+      "title": "Help Center Article Outline",
+      "description": "Prepare initial article structure for common setup questions.",
+      "status": "BACKLOG",
+      "priority": 3,
+      "assignedAgentId": "agent-brian",
+      "assignedAgent": {
+        "id": "agent-brian",
+        "name": "Brian"
+      },
+      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "archivedAt": null
+    },
+    {
+      "id": "task-017-signup-form-validation",
+      "title": "Signup Form Validation Tightening",
+      "description": "Improve validation rules and field-level feedback in onboarding form.",
+      "status": "IN_PROGRESS",
+      "priority": 1,
+      "assignedAgentId": "agent-alex",
+      "assignedAgent": {
+        "id": "agent-alex",
+        "name": "Alex"
+      },
+      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "archivedAt": null
+    },
+    {
+      "id": "task-018-dashboard-kpi-refresh",
+      "title": "Dashboard KPI Refresh Tuning",
+      "description": "Reduce stale KPI windows and align refresh cadence with API cache.",
+      "status": "IN_PROGRESS",
+      "priority": 1,
+      "assignedAgentId": "agent-morgan",
+      "assignedAgent": {
+        "id": "agent-morgan",
+        "name": "Morgan"
+      },
+      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "archivedAt": null
+    },
+    {
+      "id": "task-019-agent-prompt-cleanup",
+      "title": "Agent Prompt Cleanup Pass",
+      "description": "Clean duplicated prompt instructions and tighten role boundaries.",
+      "status": "IN_PROGRESS",
+      "priority": 2,
+      "assignedAgentId": "agent-brian",
+      "assignedAgent": {
+        "id": "agent-brian",
+        "name": "Brian"
+      },
+      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "archivedAt": null
+    },
+    {
+      "id": "task-020-metrics-export-csv",
+      "title": "Metrics Export CSV Endpoint",
+      "description": "Expose CSV export endpoint for weekly board metrics snapshots.",
+      "status": "DONE",
+      "priority": 2,
+      "assignedAgentId": "agent-morgan",
+      "assignedAgent": {
+        "id": "agent-morgan",
+        "name": "Morgan"
+      },
+      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "archivedAt": null
+    },
+    {
+      "id": "task-021-office-avatar-audit",
+      "title": "Office Avatar Assignment Audit",
+      "description": "Audit avatar collisions and fix duplicate assignments in office view.",
+      "status": "DONE",
+      "priority": 3,
+      "assignedAgentId": "agent-sam",
+      "assignedAgent": {
+        "id": "agent-sam",
+        "name": "Sam"
+      },
+      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "archivedAt": null
+    },
+    {
+      "id": "task-022-release-note-template",
+      "title": "Release Notes Template Refresh",
+      "description": "Refresh release-note template with clearer risk and rollback sections.",
+      "status": "REVIEW",
+      "priority": 2,
+      "assignedAgentId": "agent-sam",
+      "assignedAgent": {
+        "id": "agent-sam",
+        "name": "Sam"
+      },
+      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "archivedAt": null
+    },
+    {
+      "id": "task-023-payment-copy-legal-check",
+      "title": "Payment Copy Legal Check",
+      "description": "Pending legal sign-off on payment copy before go-live.",
+      "status": "BLOCKED",
+      "priority": 1,
+      "assignedAgentId": "agent-jordan",
+      "assignedAgent": {
+        "id": "agent-jordan",
+        "name": "Jordan"
+      },
+      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "archivedAt": null
+    },
+    {
+      "id": "task-024-webhook-retry-policy",
+      "title": "Webhook Retry Policy Hardening",
+      "description": "Tune retry windows and dead-letter handling for intermittent webhook failures.",
+      "status": "IN_PROGRESS",
+      "priority": 1,
+      "assignedAgentId": "agent-morgan",
+      "assignedAgent": {
+        "id": "agent-morgan",
+        "name": "Morgan"
+      },
+      "updatedAt": "2026-03-24T14:48:43.047Z",
       "archivedAt": null
     }
   ],
   "subtasks": [
     {
       "id": "subtask-001-1",
+      "taskId": "task-001-kickoff-plan",
       "title": "Collect requirements and acceptance criteria",
       "status": "DONE",
       "ownerAgent": {
         "id": "agent-brian",
         "name": "Brian"
       },
+      "ownerAgentId": "agent-brian",
       "position": 1,
-      "updatedAt": "2026-03-23T09:10:00.000Z",
-      "taskId": "task-001-kickoff-plan",
-      "ownerAgentId": "agent-brian"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-001-2",
+      "taskId": "task-001-kickoff-plan",
       "title": "Assign owners and define milestones",
       "status": "DONE",
       "ownerAgent": {
         "id": "agent-brian",
         "name": "Brian"
       },
+      "ownerAgentId": "agent-brian",
       "position": 2,
-      "updatedAt": "2026-03-23T09:35:00.000Z",
-      "taskId": "task-001-kickoff-plan",
-      "ownerAgentId": "agent-brian"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-002-1",
+      "taskId": "task-002-landing-wire-setup",
       "title": "Deliver wireframe package for hero and sections",
       "status": "TODO",
       "ownerAgent": {
         "id": "agent-sam",
         "name": "Sam"
       },
+      "ownerAgentId": "agent-sam",
       "position": 1,
-      "updatedAt": "2026-03-23T18:47:00.000Z",
-      "taskId": "task-002-landing-wire-setup",
-      "ownerAgentId": "agent-sam"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-002-2",
+      "taskId": "task-002-landing-wire-setup",
       "title": "Review handoff with development",
       "status": "TODO",
       "ownerAgent": {
         "id": "agent-sam",
         "name": "Sam"
       },
+      "ownerAgentId": "agent-sam",
       "position": 2,
-      "updatedAt": "2026-03-23T18:47:00.000Z",
-      "taskId": "task-002-landing-wire-setup",
-      "ownerAgentId": "agent-sam"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-003-1",
+      "taskId": "task-003-design-token-pass",
       "title": "Define CTA hierarchy and button states",
       "status": "TODO",
       "ownerAgent": {
         "id": "agent-sam",
         "name": "Sam"
       },
+      "ownerAgentId": "agent-sam",
       "position": 1,
-      "updatedAt": "2026-03-23T18:40:00.000Z",
-      "taskId": "task-003-design-token-pass",
-      "ownerAgentId": "agent-sam"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-003-2",
+      "taskId": "task-003-design-token-pass",
       "title": "Finalize token naming for dev implementation",
       "status": "TODO",
       "ownerAgent": {
         "id": "agent-sam",
         "name": "Sam"
       },
+      "ownerAgentId": "agent-sam",
       "position": 2,
-      "updatedAt": "2026-03-23T18:40:00.000Z",
-      "taskId": "task-003-design-token-pass",
-      "ownerAgentId": "agent-sam"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-004-1",
+      "taskId": "task-004-landing-core-build",
       "title": "Implement hero and benefit blocks",
       "status": "DONE",
       "ownerAgent": {
         "id": "agent-alex",
         "name": "Alex"
       },
+      "ownerAgentId": "agent-alex",
       "position": 1,
-      "updatedAt": "2026-03-23T13:10:00.000Z",
-      "taskId": "task-004-landing-core-build",
-      "ownerAgentId": "agent-alex"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-004-2",
+      "taskId": "task-004-landing-core-build",
       "title": "Connect lead form to CRM webhook",
       "status": "DOING",
       "ownerAgent": {
         "id": "agent-alex",
         "name": "Alex"
       },
+      "ownerAgentId": "agent-alex",
       "position": 2,
-      "updatedAt": "2026-03-23T18:32:00.000Z",
-      "taskId": "task-004-landing-core-build",
-      "ownerAgentId": "agent-alex"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-005-1",
+      "taskId": "task-005-api-auth-session",
       "title": "Implement refresh token rotation",
       "status": "DONE",
       "ownerAgent": {
         "id": "agent-morgan",
         "name": "Morgan"
       },
+      "ownerAgentId": "agent-morgan",
       "position": 1,
-      "updatedAt": "2026-03-23T11:20:00.000Z",
-      "taskId": "task-005-api-auth-session",
-      "ownerAgentId": "agent-morgan"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-005-2",
+      "taskId": "task-005-api-auth-session",
       "title": "Deploy auth endpoint to staging",
       "status": "DONE",
       "ownerAgent": {
         "id": "agent-morgan",
         "name": "Morgan"
       },
+      "ownerAgentId": "agent-morgan",
       "position": 2,
-      "updatedAt": "2026-03-23T12:05:00.000Z",
-      "taskId": "task-005-api-auth-session",
-      "ownerAgentId": "agent-morgan"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-006-1",
+      "taskId": "task-006-ad-brief-v1",
       "title": "Draft campaign objective and KPI baseline",
       "status": "DONE",
       "ownerAgent": {
         "id": "agent-casey",
         "name": "Casey"
       },
+      "ownerAgentId": "agent-casey",
       "position": 1,
-      "updatedAt": "2026-03-23T12:30:00.000Z",
-      "taskId": "task-006-ad-brief-v1",
-      "ownerAgentId": "agent-casey"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-006-2",
+      "taskId": "task-006-ad-brief-v1",
       "title": "Prepare first channel hypothesis",
       "status": "DOING",
       "ownerAgent": {
         "id": "agent-casey",
         "name": "Casey"
       },
+      "ownerAgentId": "agent-casey",
       "position": 2,
-      "updatedAt": "2026-03-23T18:26:00.000Z",
-      "taskId": "task-006-ad-brief-v1",
-      "ownerAgentId": "agent-casey"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-007-1",
+      "taskId": "task-007-qa-smoke-pass",
       "title": "Run smoke checks on key conversion path",
       "status": "DONE",
       "ownerAgent": {
         "id": "agent-jordan",
         "name": "Jordan"
       },
+      "ownerAgentId": "agent-jordan",
       "position": 1,
-      "updatedAt": "2026-03-23T13:10:00.000Z",
-      "taskId": "task-007-qa-smoke-pass",
-      "ownerAgentId": "agent-jordan"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-007-2",
+      "taskId": "task-007-qa-smoke-pass",
       "title": "Publish smoke report for team",
       "status": "DONE",
       "ownerAgent": {
         "id": "agent-jordan",
         "name": "Jordan"
       },
+      "ownerAgentId": "agent-jordan",
       "position": 2,
-      "updatedAt": "2026-03-23T13:25:00.000Z",
-      "taskId": "task-007-qa-smoke-pass",
-      "ownerAgentId": "agent-jordan"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-008-1",
+      "taskId": "task-008-client-sync-midday",
       "title": "Present progress and risks to client",
       "status": "DONE",
       "ownerAgent": {
         "id": "agent-brian",
         "name": "Brian"
       },
+      "ownerAgentId": "agent-brian",
       "position": 1,
-      "updatedAt": "2026-03-23T14:50:00.000Z",
-      "taskId": "task-008-client-sync-midday",
-      "ownerAgentId": "agent-brian"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-008-2",
+      "taskId": "task-008-client-sync-midday",
       "title": "Capture feedback and update priorities",
       "status": "DONE",
       "ownerAgent": {
         "id": "agent-brian",
         "name": "Brian"
       },
+      "ownerAgentId": "agent-brian",
       "position": 2,
-      "updatedAt": "2026-03-23T15:05:00.000Z",
-      "taskId": "task-008-client-sync-midday",
-      "ownerAgentId": "agent-brian"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-009-1",
+      "taskId": "task-009-final-copy-iteration",
       "title": "Apply softer CTA copy variant",
       "status": "DOING",
       "ownerAgent": {
         "id": "agent-alex",
         "name": "Alex"
       },
+      "ownerAgentId": "agent-alex",
       "position": 1,
-      "updatedAt": "2026-03-23T18:12:00.000Z",
-      "taskId": "task-009-final-copy-iteration",
-      "ownerAgentId": "agent-alex"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-009-2",
+      "taskId": "task-009-final-copy-iteration",
       "title": "Run visual QA for updated copy layout",
       "status": "TODO",
       "ownerAgent": {
         "id": "agent-alex",
         "name": "Alex"
       },
+      "ownerAgentId": "agent-alex",
       "position": 2,
-      "updatedAt": "2026-03-23T18:20:00.000Z",
-      "taskId": "task-009-final-copy-iteration",
-      "ownerAgentId": "agent-alex"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-010-1",
+      "taskId": "task-010-api-pagination-hotfix",
       "title": "Patch pagination query and ordering",
       "status": "DONE",
       "ownerAgent": {
         "id": "agent-morgan",
         "name": "Morgan"
       },
+      "ownerAgentId": "agent-morgan",
       "position": 1,
-      "updatedAt": "2026-03-23T17:40:00.000Z",
-      "taskId": "task-010-api-pagination-hotfix",
-      "ownerAgentId": "agent-morgan"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-010-2",
+      "taskId": "task-010-api-pagination-hotfix",
       "title": "Deploy hotfix to staging and open review",
       "status": "DONE",
       "ownerAgent": {
         "id": "agent-morgan",
         "name": "Morgan"
       },
+      "ownerAgentId": "agent-morgan",
       "position": 2,
-      "updatedAt": "2026-03-24T01:59:10.482Z",
-      "taskId": "task-010-api-pagination-hotfix",
-      "ownerAgentId": "agent-morgan"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-011-1",
+      "taskId": "task-011-regression-cycle-2",
       "title": "Prepare regression checklist v2",
       "status": "DONE",
       "ownerAgent": {
         "id": "agent-jordan",
         "name": "Jordan"
       },
+      "ownerAgentId": "agent-jordan",
       "position": 1,
-      "updatedAt": "2026-03-23T17:20:00.000Z",
-      "taskId": "task-011-regression-cycle-2",
-      "ownerAgentId": "agent-jordan"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-011-2",
+      "taskId": "task-011-regression-cycle-2",
       "title": "Execute full regression on stable seed",
       "status": "BLOCKED",
       "ownerAgent": {
         "id": "agent-jordan",
         "name": "Jordan"
       },
+      "ownerAgentId": "agent-jordan",
       "position": 2,
-      "updatedAt": "2026-03-23T18:22:00.000Z",
-      "taskId": "task-011-regression-cycle-2",
-      "ownerAgentId": "agent-jordan"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-012-1",
+      "taskId": "task-012-creative-final-review",
       "title": "Review final ad set typography and spacing",
       "status": "DONE",
       "ownerAgent": {
         "id": "agent-sam",
         "name": "Sam"
       },
+      "ownerAgentId": "agent-sam",
       "position": 1,
-      "updatedAt": "2026-03-24T01:59:02.696Z",
-      "taskId": "task-012-creative-final-review",
-      "ownerAgentId": "agent-sam"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-012-2",
+      "taskId": "task-012-creative-final-review",
       "title": "Approve export package for marketing handoff",
       "status": "DONE",
       "ownerAgent": {
         "id": "agent-sam",
         "name": "Sam"
       },
+      "ownerAgentId": "agent-sam",
       "position": 2,
-      "updatedAt": "2026-03-24T01:59:05.404Z",
-      "taskId": "task-012-creative-final-review",
-      "ownerAgentId": "agent-sam"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-013-1",
+      "taskId": "task-013-campaign-budget-model",
       "title": "Model conservative budget split",
       "status": "TODO",
       "ownerAgent": {
         "id": "agent-casey",
         "name": "Casey"
       },
+      "ownerAgentId": "agent-casey",
       "position": 1,
-      "updatedAt": "2026-03-24T01:52:15.451Z",
-      "taskId": "task-013-campaign-budget-model",
-      "ownerAgentId": "agent-casey"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     },
     {
       "id": "subtask-013-2",
+      "taskId": "task-013-campaign-budget-model",
       "title": "Model aggressive growth scenario",
       "status": "TODO",
       "ownerAgent": {
         "id": "agent-casey",
         "name": "Casey"
       },
+      "ownerAgentId": "agent-casey",
       "position": 2,
-      "updatedAt": "2026-03-23T17:55:00.000Z",
-      "taskId": "task-013-campaign-budget-model",
-      "ownerAgentId": "agent-casey"
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-014-1",
+      "taskId": "task-014-onboarding-email-flow",
+      "title": "Map activation events and trigger points",
+      "status": "TODO",
+      "ownerAgent": {
+        "id": "agent-casey",
+        "name": "Casey"
+      },
+      "ownerAgentId": "agent-casey",
+      "position": 1,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-014-2",
+      "taskId": "task-014-onboarding-email-flow",
+      "title": "Write email 1: welcome and first action",
+      "status": "TODO",
+      "ownerAgent": {
+        "id": "agent-casey",
+        "name": "Casey"
+      },
+      "ownerAgentId": "agent-casey",
+      "position": 2,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-014-3",
+      "taskId": "task-014-onboarding-email-flow",
+      "title": "Define follow-up cadence for inactive users",
+      "status": "TODO",
+      "ownerAgent": {
+        "id": "agent-casey",
+        "name": "Casey"
+      },
+      "ownerAgentId": "agent-casey",
+      "position": 3,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-015-1",
+      "taskId": "task-015-analytics-event-map",
+      "title": "Audit existing event names across funnel",
+      "status": "TODO",
+      "ownerAgent": {
+        "id": "agent-morgan",
+        "name": "Morgan"
+      },
+      "ownerAgentId": "agent-morgan",
+      "position": 1,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-015-2",
+      "taskId": "task-015-analytics-event-map",
+      "title": "Consolidate duplicates and align naming convention",
+      "status": "TODO",
+      "ownerAgent": {
+        "id": "agent-morgan",
+        "name": "Morgan"
+      },
+      "ownerAgentId": "agent-morgan",
+      "position": 2,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-015-3",
+      "taskId": "task-015-analytics-event-map",
+      "title": "Document final event map and share with team",
+      "status": "TODO",
+      "ownerAgent": {
+        "id": "agent-morgan",
+        "name": "Morgan"
+      },
+      "ownerAgentId": "agent-morgan",
+      "position": 3,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-016-1",
+      "taskId": "task-016-help-center-outline",
+      "title": "List top 10 recurring support questions",
+      "status": "TODO",
+      "ownerAgent": {
+        "id": "agent-brian",
+        "name": "Brian"
+      },
+      "ownerAgentId": "agent-brian",
+      "position": 1,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-016-2",
+      "taskId": "task-016-help-center-outline",
+      "title": "Draft article outlines for installation section",
+      "status": "TODO",
+      "ownerAgent": {
+        "id": "agent-brian",
+        "name": "Brian"
+      },
+      "ownerAgentId": "agent-brian",
+      "position": 2,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-016-3",
+      "taskId": "task-016-help-center-outline",
+      "title": "Review outline structure with support lead",
+      "status": "TODO",
+      "ownerAgent": {
+        "id": "agent-brian",
+        "name": "Brian"
+      },
+      "ownerAgentId": "agent-brian",
+      "position": 3,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-017-1",
+      "taskId": "task-017-signup-form-validation",
+      "title": "Audit current validation rules per field",
+      "status": "DONE",
+      "ownerAgent": {
+        "id": "agent-alex",
+        "name": "Alex"
+      },
+      "ownerAgentId": "agent-alex",
+      "position": 1,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-017-2",
+      "taskId": "task-017-signup-form-validation",
+      "title": "Implement inline error messages",
+      "status": "DOING",
+      "ownerAgent": {
+        "id": "agent-alex",
+        "name": "Alex"
+      },
+      "ownerAgentId": "agent-alex",
+      "position": 2,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-017-3",
+      "taskId": "task-017-signup-form-validation",
+      "title": "QA validation edge cases on mobile",
+      "status": "TODO",
+      "ownerAgent": {
+        "id": "agent-alex",
+        "name": "Alex"
+      },
+      "ownerAgentId": "agent-alex",
+      "position": 3,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-018-1",
+      "taskId": "task-018-dashboard-kpi-refresh",
+      "title": "Profile current refresh latency per KPI widget",
+      "status": "DONE",
+      "ownerAgent": {
+        "id": "agent-morgan",
+        "name": "Morgan"
+      },
+      "ownerAgentId": "agent-morgan",
+      "position": 1,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-018-2",
+      "taskId": "task-018-dashboard-kpi-refresh",
+      "title": "Align cache TTL with API polling window",
+      "status": "DOING",
+      "ownerAgent": {
+        "id": "agent-morgan",
+        "name": "Morgan"
+      },
+      "ownerAgentId": "agent-morgan",
+      "position": 2,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-018-3",
+      "taskId": "task-018-dashboard-kpi-refresh",
+      "title": "Validate staleness indicators in UI",
+      "status": "TODO",
+      "ownerAgent": {
+        "id": "agent-morgan",
+        "name": "Morgan"
+      },
+      "ownerAgentId": "agent-morgan",
+      "position": 3,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-019-1",
+      "taskId": "task-019-agent-prompt-cleanup",
+      "title": "Identify duplicated instructions across prompts",
+      "status": "DONE",
+      "ownerAgent": {
+        "id": "agent-brian",
+        "name": "Brian"
+      },
+      "ownerAgentId": "agent-brian",
+      "position": 1,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-019-2",
+      "taskId": "task-019-agent-prompt-cleanup",
+      "title": "Rewrite role boundary sections for each agent",
+      "status": "DOING",
+      "ownerAgent": {
+        "id": "agent-brian",
+        "name": "Brian"
+      },
+      "ownerAgentId": "agent-brian",
+      "position": 2,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-019-3",
+      "taskId": "task-019-agent-prompt-cleanup",
+      "title": "Test updated prompts on sample task set",
+      "status": "TODO",
+      "ownerAgent": {
+        "id": "agent-brian",
+        "name": "Brian"
+      },
+      "ownerAgentId": "agent-brian",
+      "position": 3,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-020-1",
+      "taskId": "task-020-metrics-export-csv",
+      "title": "Design CSV schema for board snapshot",
+      "status": "DONE",
+      "ownerAgent": {
+        "id": "agent-morgan",
+        "name": "Morgan"
+      },
+      "ownerAgentId": "agent-morgan",
+      "position": 1,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-020-2",
+      "taskId": "task-020-metrics-export-csv",
+      "title": "Implement export endpoint with auth guard",
+      "status": "DONE",
+      "ownerAgent": {
+        "id": "agent-morgan",
+        "name": "Morgan"
+      },
+      "ownerAgentId": "agent-morgan",
+      "position": 2,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-020-3",
+      "taskId": "task-020-metrics-export-csv",
+      "title": "Validate output with sample data and deploy",
+      "status": "DONE",
+      "ownerAgent": {
+        "id": "agent-morgan",
+        "name": "Morgan"
+      },
+      "ownerAgentId": "agent-morgan",
+      "position": 3,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-021-1",
+      "taskId": "task-021-office-avatar-audit",
+      "title": "List all agent avatar assignments",
+      "status": "DONE",
+      "ownerAgent": {
+        "id": "agent-sam",
+        "name": "Sam"
+      },
+      "ownerAgentId": "agent-sam",
+      "position": 1,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-021-2",
+      "taskId": "task-021-office-avatar-audit",
+      "title": "Detect and resolve duplicate avatar IDs",
+      "status": "DONE",
+      "ownerAgent": {
+        "id": "agent-sam",
+        "name": "Sam"
+      },
+      "ownerAgentId": "agent-sam",
+      "position": 2,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-021-3",
+      "taskId": "task-021-office-avatar-audit",
+      "title": "Update office view to enforce unique assignments",
+      "status": "DONE",
+      "ownerAgent": {
+        "id": "agent-sam",
+        "name": "Sam"
+      },
+      "ownerAgentId": "agent-sam",
+      "position": 3,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-022-1",
+      "taskId": "task-022-release-note-template",
+      "title": "Review current template structure",
+      "status": "DONE",
+      "ownerAgent": {
+        "id": "agent-sam",
+        "name": "Sam"
+      },
+      "ownerAgentId": "agent-sam",
+      "position": 1,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-022-2",
+      "taskId": "task-022-release-note-template",
+      "title": "Add risk and rollback sections",
+      "status": "DONE",
+      "ownerAgent": {
+        "id": "agent-sam",
+        "name": "Sam"
+      },
+      "ownerAgentId": "agent-sam",
+      "position": 2,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-022-3",
+      "taskId": "task-022-release-note-template",
+      "title": "Team review and sign-off",
+      "status": "DOING",
+      "ownerAgent": {
+        "id": "agent-sam",
+        "name": "Sam"
+      },
+      "ownerAgentId": "agent-sam",
+      "position": 3,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-023-1",
+      "taskId": "task-023-payment-copy-legal-check",
+      "title": "Submit copy to legal for review",
+      "status": "DONE",
+      "ownerAgent": {
+        "id": "agent-jordan",
+        "name": "Jordan"
+      },
+      "ownerAgentId": "agent-jordan",
+      "position": 1,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-023-2",
+      "taskId": "task-023-payment-copy-legal-check",
+      "title": "Await legal sign-off feedback",
+      "status": "BLOCKED",
+      "ownerAgent": {
+        "id": "agent-jordan",
+        "name": "Jordan"
+      },
+      "ownerAgentId": "agent-jordan",
+      "position": 2,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-023-3",
+      "taskId": "task-023-payment-copy-legal-check",
+      "title": "Apply legal edits and update payment page",
+      "status": "TODO",
+      "ownerAgent": {
+        "id": "agent-jordan",
+        "name": "Jordan"
+      },
+      "ownerAgentId": "agent-jordan",
+      "position": 3,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-024-1",
+      "taskId": "task-024-webhook-retry-policy",
+      "title": "Reproduce intermittent failure scenarios",
+      "status": "DONE",
+      "ownerAgent": {
+        "id": "agent-morgan",
+        "name": "Morgan"
+      },
+      "ownerAgentId": "agent-morgan",
+      "position": 1,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-024-2",
+      "taskId": "task-024-webhook-retry-policy",
+      "title": "Configure exponential backoff and max retries",
+      "status": "DOING",
+      "ownerAgent": {
+        "id": "agent-morgan",
+        "name": "Morgan"
+      },
+      "ownerAgentId": "agent-morgan",
+      "position": 2,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
+    },
+    {
+      "id": "subtask-024-3",
+      "taskId": "task-024-webhook-retry-policy",
+      "title": "Set up dead-letter queue and alerting",
+      "status": "TODO",
+      "ownerAgent": {
+        "id": "agent-morgan",
+        "name": "Morgan"
+      },
+      "ownerAgentId": "agent-morgan",
+      "position": 3,
+      "updatedAt": "2026-03-24T14:48:43.047Z"
     }
   ],
   "comments": [
@@ -596,24 +1176,23 @@
       "taskId": "task-001-kickoff-plan",
       "authorType": "human",
       "authorId": "operator",
-      "body": "Necesito timeline claro por hora para hoy y riesgos principales.",
+      "body": "Need clear hourly timeline and main risks for today.",
       "requiresResponse": true,
       "status": "answered",
-      "createdAt": "2026-03-23T09:02:00.000Z",
-      "updatedAt": "2026-03-23T09:40:00.000Z",
-      "resolvedAt": "2026-03-23T09:40:00.000Z"
+      "createdAt": "2026-03-24T05:48:43.047Z",
+      "updatedAt": "2026-03-24T05:48:43.047Z",
+      "resolvedAt": "2026-03-24T05:48:43.047Z"
     },
     {
       "id": "comment-002",
       "taskId": "task-001-kickoff-plan",
       "authorType": "agent",
       "authorId": "agent-brian",
-      "body": "Timeline enviado: dise�o 10:30, build landing 14:30, QA regresi�n 17:30, review final 18:30.",
+      "body": "Timeline sent: design 10:30, landing build 14:30, QA regression 17:30, final review 18:30.",
       "requiresResponse": false,
       "status": "open",
-      "inReplyToId": "comment-001",
-      "createdAt": "2026-03-23T09:18:00.000Z",
-      "updatedAt": "2026-03-23T09:18:00.000Z",
+      "createdAt": "2026-03-24T06:06:43.047Z",
+      "updatedAt": "2026-03-24T06:06:43.047Z",
       "resolvedAt": null
     },
     {
@@ -621,11 +1200,11 @@
       "taskId": "task-004-landing-core-build",
       "authorType": "agent",
       "authorId": "agent-alex",
-      "body": "Landing casi lista. Falta copy final del CTA y ajuste en bloque de testimonios.",
+      "body": "Landing almost ready. Still need final CTA copy and testimonial block adjustment.",
       "requiresResponse": true,
       "status": "open",
-      "createdAt": "2026-03-23T14:05:00.000Z",
-      "updatedAt": "2026-03-23T14:05:00.000Z",
+      "createdAt": "2026-03-24T10:48:43.047Z",
+      "updatedAt": "2026-03-24T10:48:43.047Z",
       "resolvedAt": null
     },
     {
@@ -633,12 +1212,11 @@
       "taskId": "task-004-landing-core-build",
       "authorType": "human",
       "authorId": "operator",
-      "body": "Perfecto. Prioridad: CTA mas suave y conservar tono cercano.",
+      "body": "Perfect. Priority: softer CTA and keep the approachable tone.",
       "requiresResponse": false,
       "status": "open",
-      "inReplyToId": "comment-003",
-      "createdAt": "2026-03-23T14:12:00.000Z",
-      "updatedAt": "2026-03-23T14:12:00.000Z",
+      "createdAt": "2026-03-24T10:55:43.047Z",
+      "updatedAt": "2026-03-24T10:55:43.047Z",
       "resolvedAt": null
     },
     {
@@ -646,11 +1224,11 @@
       "taskId": "task-010-api-pagination-hotfix",
       "authorType": "agent",
       "authorId": "agent-morgan",
-      "body": "Hotfix de paginaci�n desplegado en staging. Necesito validaci�n de QA para cerrar.",
+      "body": "Pagination hotfix deployed to staging. Need QA validation to close.",
       "requiresResponse": true,
       "status": "open",
-      "createdAt": "2026-03-23T18:11:00.000Z",
-      "updatedAt": "2026-03-23T18:11:00.000Z",
+      "createdAt": "2026-03-24T14:19:43.047Z",
+      "updatedAt": "2026-03-24T14:19:43.047Z",
       "resolvedAt": null
     },
     {
@@ -658,11 +1236,11 @@
       "taskId": "task-011-regression-cycle-2",
       "authorType": "agent",
       "authorId": "agent-jordan",
-      "body": "Sigo bloqueado: el seed de staging viene inconsistente entre corridas.",
+      "body": "Still blocked: staging seed is inconsistent between runs.",
       "requiresResponse": true,
       "status": "open",
-      "createdAt": "2026-03-23T18:22:00.000Z",
-      "updatedAt": "2026-03-23T18:22:00.000Z",
+      "createdAt": "2026-03-24T14:40:43.047Z",
+      "updatedAt": "2026-03-24T14:40:43.047Z",
       "resolvedAt": null
     },
     {
@@ -670,12 +1248,11 @@
       "taskId": "task-011-regression-cycle-2",
       "authorType": "human",
       "authorId": "operator",
-      "body": "Recibido. Morgan y Brian, bloqueen 30 minutos para estabilizar seed y avisar a QA.",
+      "body": "Received. Morgan and Brian, block 30 minutes to stabilize seed and notify QA.",
       "requiresResponse": false,
       "status": "open",
-      "inReplyToId": "comment-006",
-      "createdAt": "2026-03-23T18:24:00.000Z",
-      "updatedAt": "2026-03-23T18:24:00.000Z",
+      "createdAt": "2026-03-24T14:42:43.047Z",
+      "updatedAt": "2026-03-24T14:42:43.047Z",
       "resolvedAt": null
     },
     {
@@ -683,11 +1260,11 @@
       "taskId": "task-012-creative-final-review",
       "authorType": "agent",
       "authorId": "agent-sam",
-      "body": "Estoy revisando variantes de creativos para ads y redes. Falta feedback final de marketing.",
+      "body": "Reviewing creative variants for ads and social. Waiting for final marketing feedback.",
       "requiresResponse": true,
       "status": "open",
-      "createdAt": "2026-03-23T18:16:00.000Z",
-      "updatedAt": "2026-03-23T18:16:00.000Z",
+      "createdAt": "2026-03-24T14:36:43.047Z",
+      "updatedAt": "2026-03-24T14:36:43.047Z",
       "resolvedAt": null
     },
     {
@@ -695,12 +1272,11 @@
       "taskId": "task-012-creative-final-review",
       "authorType": "agent",
       "authorId": "agent-casey",
-      "body": "Feedback enviado: usar enfoque problema->resultado en primer slide y CTA de agenda.",
+      "body": "Feedback sent: use problem->result approach on first slide and agenda CTA.",
       "requiresResponse": false,
       "status": "open",
-      "inReplyToId": "comment-008",
-      "createdAt": "2026-03-23T18:19:00.000Z",
-      "updatedAt": "2026-03-23T18:19:00.000Z",
+      "createdAt": "2026-03-24T14:39:43.047Z",
+      "updatedAt": "2026-03-24T14:39:43.047Z",
       "resolvedAt": null
     },
     {
@@ -708,11 +1284,11 @@
       "taskId": "task-013-campaign-budget-model",
       "authorType": "human",
       "authorId": "operator",
-      "body": "Necesito dos escenarios de presupuesto: conservador y agresivo.",
+      "body": "Need two budget scenarios: conservative and aggressive.",
       "requiresResponse": true,
       "status": "open",
-      "createdAt": "2026-03-23T17:52:00.000Z",
-      "updatedAt": "2026-03-23T17:52:00.000Z",
+      "createdAt": "2026-03-24T13:11:43.047Z",
+      "updatedAt": "2026-03-24T13:11:43.047Z",
       "resolvedAt": null
     },
     {
@@ -720,461 +1296,78 @@
       "taskId": "task-013-campaign-budget-model",
       "authorType": "agent",
       "authorId": "agent-casey",
-      "body": "Dejo primera versi�n con supuestos y CPA esperado por canal.",
+      "body": "Leaving first version with assumptions and expected CPA per channel.",
       "requiresResponse": false,
       "status": "open",
-      "inReplyToId": "comment-010",
-      "createdAt": "2026-03-23T17:58:00.000Z",
-      "updatedAt": "2026-03-23T17:58:00.000Z",
+      "createdAt": "2026-03-24T13:16:43.047Z",
+      "updatedAt": "2026-03-24T13:16:43.047Z",
       "resolvedAt": null
     }
   ],
   "activities": [
     {
-      "id": "activity-local-dev-427",
-      "summary": "Operator updated subtask \"Deploy hotfix to staging and open review\"",
-      "action": "subtask.updated",
-      "kind": "subtask",
-      "taskId": "task-010-api-pagination-hotfix",
-      "subtaskId": "subtask-010-2",
-      "agentId": "agent-morgan",
-      "actorType": "human",
-      "actorId": "operator",
-      "actorName": "Operator",
-      "occurredAt": "2026-03-24T01:59:10.482Z"
-    },
-    {
-      "id": "activity-local-dev-426",
-      "summary": "Operator updated subtask \"Approve export package for marketing handoff\"",
-      "action": "subtask.updated",
-      "kind": "subtask",
-      "taskId": "task-012-creative-final-review",
-      "subtaskId": "subtask-012-2",
-      "agentId": "agent-sam",
-      "actorType": "human",
-      "actorId": "operator",
-      "actorName": "Operator",
-      "occurredAt": "2026-03-24T01:59:05.404Z"
-    },
-    {
-      "id": "activity-local-dev-425",
-      "summary": "Operator updated subtask \"Approve export package for marketing handoff\"",
-      "action": "subtask.updated",
-      "kind": "subtask",
-      "taskId": "task-012-creative-final-review",
-      "subtaskId": "subtask-012-2",
-      "agentId": "agent-sam",
-      "actorType": "human",
-      "actorId": "operator",
-      "actorName": "Operator",
-      "occurredAt": "2026-03-24T01:59:03.508Z"
-    },
-    {
-      "id": "activity-local-dev-424",
-      "summary": "Operator updated subtask \"Review final ad set typography and spacing\"",
-      "action": "subtask.updated",
-      "kind": "subtask",
-      "taskId": "task-012-creative-final-review",
-      "subtaskId": "subtask-012-1",
-      "agentId": "agent-sam",
-      "actorType": "human",
-      "actorId": "operator",
-      "actorName": "Operator",
-      "occurredAt": "2026-03-24T01:59:02.696Z"
-    },
-    {
-      "id": "activity-local-dev-423",
-      "summary": "Operator updated subtask \"Model conservative budget split\"",
-      "action": "subtask.updated",
-      "kind": "subtask",
-      "taskId": "task-013-campaign-budget-model",
-      "subtaskId": "subtask-013-1",
-      "agentId": "agent-casey",
-      "actorType": "human",
-      "actorId": "operator",
-      "actorName": "Operator",
-      "occurredAt": "2026-03-24T01:52:15.451Z"
-    },
-    {
-      "id": "activity-local-dev-422",
-      "summary": "Operator updated subtask \"Model conservative budget split\"",
-      "action": "subtask.updated",
-      "kind": "subtask",
-      "taskId": "task-013-campaign-budget-model",
-      "subtaskId": "subtask-013-1",
-      "agentId": "agent-casey",
-      "actorType": "human",
-      "actorId": "operator",
-      "actorName": "Operator",
-      "occurredAt": "2026-03-24T01:52:13.806Z"
-    },
-    {
-      "id": "activity-local-dev-421",
-      "summary": "Operator updated subtask \"Model conservative budget split\"",
-      "action": "subtask.updated",
-      "kind": "subtask",
-      "taskId": "task-013-campaign-budget-model",
-      "subtaskId": "subtask-013-1",
-      "agentId": "agent-casey",
-      "actorType": "human",
-      "actorId": "operator",
-      "actorName": "Operator",
-      "occurredAt": "2026-03-24T01:52:11.959Z"
-    },
-    {
-      "id": "activity-001",
-      "summary": "Brian cre� Client Kickoff and Delivery Plan",
-      "action": "task.created",
+      "id": "activity-seed-001",
       "kind": "task",
-      "taskId": "task-001-kickoff-plan",
-      "agentId": "agent-brian",
-      "actorType": "agent",
-      "actorId": "agent-brian",
-      "actorName": "Brian",
-      "runId": "run-agency-001",
-      "occurredAt": "2026-03-23T09:00:00.000Z"
-    },
-    {
-      "id": "activity-002",
-      "summary": "Operator pidi� timeline por hora y riesgos principales",
-      "action": "comment.created",
-      "kind": "comment",
-      "taskId": "task-001-kickoff-plan",
-      "commentId": "comment-001",
-      "actorType": "human",
-      "actorId": "operator",
-      "actorName": "Operator",
-      "occurredAt": "2026-03-23T09:02:00.000Z"
-    },
-    {
-      "id": "activity-003",
-      "summary": "Sam inici� Landing Wireframe to Build Handoff",
       "action": "task.started",
-      "kind": "task",
-      "taskId": "task-002-landing-wire-setup",
-      "agentId": "agent-sam",
-      "actorType": "agent",
-      "actorId": "agent-sam",
-      "actorName": "Sam",
-      "runId": "run-agency-002",
-      "occurredAt": "2026-03-23T09:25:00.000Z"
-    },
-    {
-      "id": "activity-004",
-      "summary": "Brian cerr� Client Kickoff and Delivery Plan",
-      "action": "task.done",
-      "kind": "task",
-      "taskId": "task-001-kickoff-plan",
-      "agentId": "agent-brian",
-      "actorType": "agent",
-      "actorId": "agent-brian",
-      "actorName": "Brian",
-      "runId": "run-agency-003",
-      "occurredAt": "2026-03-23T09:35:00.000Z"
-    },
-    {
-      "id": "activity-005",
-      "summary": "Brian respondi� con timeline detallado al operador",
-      "action": "comment.created",
-      "kind": "comment",
-      "taskId": "task-001-kickoff-plan",
-      "commentId": "comment-002",
-      "actorType": "agent",
-      "actorId": "agent-brian",
-      "actorName": "Brian",
-      "occurredAt": "2026-03-23T09:18:00.000Z"
-    },
-    {
-      "id": "activity-006",
-      "summary": "Sam cerr� Landing Wireframe to Build Handoff",
-      "action": "task.done",
-      "kind": "task",
-      "taskId": "task-002-landing-wire-setup",
-      "agentId": "agent-sam",
-      "actorType": "agent",
-      "actorId": "agent-sam",
-      "actorName": "Sam",
+      "summary": "Alex started Landing Core Build and CMS Wiring",
+      "taskId": "task-004-landing-core-build",
+      "agentId": "agent-alex",
       "runId": "run-agency-004",
-      "occurredAt": "2026-03-23T10:20:00.000Z"
+      "actorType": "agent",
+      "actorId": "agent-alex",
+      "actorName": "Alex",
+      "occurredAt": "2026-03-24T08:48:43.047Z"
     },
     {
-      "id": "activity-007",
-      "summary": "Morgan inici� Auth Session Endpoint and Token Refresh",
-      "action": "task.started",
+      "id": "activity-seed-002",
       "kind": "task",
-      "taskId": "task-005-api-auth-session",
+      "action": "task.review",
+      "summary": "Morgan moved Staging Pagination Hotfix for QA to review",
+      "taskId": "task-010-api-pagination-hotfix",
       "agentId": "agent-morgan",
+      "runId": "run-agency-010",
       "actorType": "agent",
       "actorId": "agent-morgan",
       "actorName": "Morgan",
-      "runId": "run-agency-005",
-      "occurredAt": "2026-03-23T10:35:00.000Z"
+      "occurredAt": "2026-03-24T14:18:43.047Z"
     },
     {
-      "id": "activity-008",
-      "summary": "Sam cerr� Design Tokens and CTA Variants",
-      "action": "task.done",
+      "id": "activity-seed-003",
       "kind": "task",
-      "taskId": "task-003-design-token-pass",
-      "agentId": "agent-sam",
-      "actorType": "agent",
-      "actorId": "agent-sam",
-      "actorName": "Sam",
-      "runId": "run-agency-006",
-      "occurredAt": "2026-03-23T11:35:00.000Z"
-    },
-    {
-      "id": "activity-009",
-      "summary": "Morgan cerr� Auth Session Endpoint and Token Refresh",
-      "action": "task.done",
-      "kind": "task",
-      "taskId": "task-005-api-auth-session",
-      "agentId": "agent-morgan",
-      "actorType": "agent",
-      "actorId": "agent-morgan",
-      "actorName": "Morgan",
-      "runId": "run-agency-007",
-      "occurredAt": "2026-03-23T12:05:00.000Z"
-    },
-    {
-      "id": "activity-010",
-      "summary": "Casey inici� Paid Ads Brief and Channel Hypothesis",
-      "action": "task.started",
-      "kind": "task",
-      "taskId": "task-006-ad-brief-v1",
-      "agentId": "agent-casey",
-      "actorType": "agent",
-      "actorId": "agent-casey",
-      "actorName": "Casey",
-      "runId": "run-agency-008",
-      "occurredAt": "2026-03-23T12:12:00.000Z"
-    },
-    {
-      "id": "activity-011",
-      "summary": "Casey cerr� Paid Ads Brief and Channel Hypothesis",
-      "action": "task.done",
-      "kind": "task",
-      "taskId": "task-006-ad-brief-v1",
-      "agentId": "agent-casey",
-      "actorType": "agent",
-      "actorId": "agent-casey",
-      "actorName": "Casey",
-      "runId": "run-agency-009",
-      "occurredAt": "2026-03-23T13:00:00.000Z"
-    },
-    {
-      "id": "activity-012",
-      "summary": "Jordan cerr� QA Smoke Pass on Main Funnel",
-      "action": "task.done",
-      "kind": "task",
-      "taskId": "task-007-qa-smoke-pass",
+      "action": "task.blocked",
+      "summary": "Jordan blocked: Regression Cycle 2 waiting for stable staging seed",
+      "taskId": "task-011-regression-cycle-2",
       "agentId": "agent-jordan",
       "actorType": "agent",
       "actorId": "agent-jordan",
       "actorName": "Jordan",
-      "runId": "run-agency-010",
-      "occurredAt": "2026-03-23T13:25:00.000Z"
+      "occurredAt": "2026-03-24T14:40:43.047Z"
     },
     {
-      "id": "activity-013",
-      "summary": "Alex cerr� Landing Core Build and CMS Wiring",
-      "action": "task.done",
-      "kind": "task",
-      "taskId": "task-004-landing-core-build",
-      "agentId": "agent-alex",
-      "actorType": "agent",
-      "actorId": "agent-alex",
-      "actorName": "Alex",
-      "runId": "run-agency-011",
-      "occurredAt": "2026-03-23T14:15:00.000Z"
-    },
-    {
-      "id": "activity-014",
-      "summary": "Alex pidi� definici�n de copy final para CTA",
-      "action": "comment.created",
+      "id": "activity-seed-004",
       "kind": "comment",
-      "taskId": "task-004-landing-core-build",
-      "commentId": "comment-003",
-      "actorType": "agent",
-      "actorId": "agent-alex",
-      "actorName": "Alex",
-      "occurredAt": "2026-03-23T14:05:00.000Z"
-    },
-    {
-      "id": "activity-015",
-      "summary": "Operator confirm� prioridad de CTA con tono cercano",
       "action": "comment.created",
-      "kind": "comment",
-      "taskId": "task-004-landing-core-build",
-      "commentId": "comment-004",
-      "actorType": "human",
-      "actorId": "operator",
-      "actorName": "Operator",
-      "occurredAt": "2026-03-23T14:12:00.000Z"
+      "summary": "Sam is reviewing creative variants and waiting for marketing feedback",
+      "taskId": "task-012-creative-final-review",
+      "commentId": "comment-008",
+      "agentId": "agent-sam",
+      "actorType": "agent",
+      "actorId": "agent-sam",
+      "actorName": "Sam",
+      "occurredAt": "2026-03-24T14:36:43.047Z"
     },
     {
-      "id": "activity-016",
-      "summary": "Brian cerr� Midday Client Sync and Scope Reconfirm",
-      "action": "task.done",
+      "id": "activity-seed-005",
       "kind": "task",
-      "taskId": "task-008-client-sync-midday",
+      "action": "task.done",
+      "summary": "Brian closed Client Kickoff and Delivery Plan",
+      "taskId": "task-001-kickoff-plan",
       "agentId": "agent-brian",
+      "runId": "run-agency-001",
       "actorType": "agent",
       "actorId": "agent-brian",
       "actorName": "Brian",
-      "runId": "run-agency-012",
-      "occurredAt": "2026-03-23T15:05:00.000Z"
-    },
-    {
-      "id": "activity-017",
-      "summary": "Morgan inici� Staging Pagination Hotfix for QA",
-      "action": "task.started",
-      "kind": "task",
-      "taskId": "task-010-api-pagination-hotfix",
-      "agentId": "agent-morgan",
-      "actorType": "agent",
-      "actorId": "agent-morgan",
-      "actorName": "Morgan",
-      "runId": "run-agency-013",
-      "occurredAt": "2026-03-23T16:55:00.000Z"
-    },
-    {
-      "id": "activity-018",
-      "summary": "Jordan inici� Regression Cycle 2 on Staging",
-      "action": "task.started",
-      "kind": "task",
-      "taskId": "task-011-regression-cycle-2",
-      "agentId": "agent-jordan",
-      "actorType": "agent",
-      "actorId": "agent-jordan",
-      "actorName": "Jordan",
-      "runId": "run-agency-014",
-      "occurredAt": "2026-03-23T17:15:00.000Z"
-    },
-    {
-      "id": "activity-019",
-      "summary": "Jordan marc� Regression Cycle 2 como bloqueada por seed inconsistente",
-      "action": "task.blocked",
-      "kind": "task",
-      "taskId": "task-011-regression-cycle-2",
-      "agentId": "agent-jordan",
-      "actorType": "agent",
-      "actorId": "agent-jordan",
-      "actorName": "Jordan",
-      "runId": "run-agency-015",
-      "occurredAt": "2026-03-23T18:22:00.000Z"
-    },
-    {
-      "id": "activity-020",
-      "summary": "Jordan report� bloqueo por inconsistencia en staging",
-      "action": "comment.created",
-      "kind": "comment",
-      "taskId": "task-011-regression-cycle-2",
-      "commentId": "comment-006",
-      "actorType": "agent",
-      "actorId": "agent-jordan",
-      "actorName": "Jordan",
-      "occurredAt": "2026-03-23T18:22:00.000Z"
-    },
-    {
-      "id": "activity-021",
-      "summary": "Operator pidi� a Brian y Morgan destrabar seed en 30 minutos",
-      "action": "comment.created",
-      "kind": "comment",
-      "taskId": "task-011-regression-cycle-2",
-      "commentId": "comment-007",
-      "actorType": "human",
-      "actorId": "operator",
-      "actorName": "Operator",
-      "occurredAt": "2026-03-23T18:24:00.000Z"
-    },
-    {
-      "id": "activity-022",
-      "summary": "Sam movi� Creative Final Review for Ads and Social a revisi�n",
-      "action": "task.review",
-      "kind": "task",
-      "taskId": "task-012-creative-final-review",
-      "agentId": "agent-sam",
-      "actorType": "agent",
-      "actorId": "agent-sam",
-      "actorName": "Sam",
-      "runId": "run-agency-016",
-      "occurredAt": "2026-03-23T18:18:00.000Z"
-    },
-    {
-      "id": "activity-023",
-      "summary": "Morgan movi� Staging Pagination Hotfix for QA a review",
-      "action": "task.review",
-      "kind": "task",
-      "taskId": "task-010-api-pagination-hotfix",
-      "agentId": "agent-morgan",
-      "actorType": "agent",
-      "actorId": "agent-morgan",
-      "actorName": "Morgan",
-      "runId": "run-agency-017",
-      "occurredAt": "2026-03-23T18:10:00.000Z"
-    },
-    {
-      "id": "activity-024",
-      "summary": "Alex inici� Final Landing Copy Iteration",
-      "action": "task.started",
-      "kind": "task",
-      "taskId": "task-009-final-copy-iteration",
-      "agentId": "agent-alex",
-      "actorType": "agent",
-      "actorId": "agent-alex",
-      "actorName": "Alex",
-      "runId": "run-agency-018",
-      "occurredAt": "2026-03-23T18:12:00.000Z"
-    },
-    {
-      "id": "activity-025",
-      "summary": "Morgan solicit� validaci�n QA para cerrar hotfix",
-      "action": "comment.created",
-      "kind": "comment",
-      "taskId": "task-010-api-pagination-hotfix",
-      "commentId": "comment-005",
-      "actorType": "agent",
-      "actorId": "agent-morgan",
-      "actorName": "Morgan",
-      "occurredAt": "2026-03-23T18:11:00.000Z"
-    },
-    {
-      "id": "activity-026",
-      "summary": "Casey inici� Campaign Budget Model and Scenario Split",
-      "action": "task.started",
-      "kind": "task",
-      "taskId": "task-013-campaign-budget-model",
-      "agentId": "agent-casey",
-      "actorType": "agent",
-      "actorId": "agent-casey",
-      "actorName": "Casey",
-      "runId": "run-agency-019",
-      "occurredAt": "2026-03-23T17:42:00.000Z"
-    },
-    {
-      "id": "activity-027",
-      "summary": "Operator pidi� dos escenarios de presupuesto",
-      "action": "comment.created",
-      "kind": "comment",
-      "taskId": "task-013-campaign-budget-model",
-      "commentId": "comment-010",
-      "actorType": "human",
-      "actorId": "operator",
-      "actorName": "Operator",
-      "occurredAt": "2026-03-23T17:52:00.000Z"
-    },
-    {
-      "id": "activity-028",
-      "summary": "Casey confirm� entrega de primera versi�n de modelo",
-      "action": "comment.created",
-      "kind": "comment",
-      "taskId": "task-013-campaign-budget-model",
-      "commentId": "comment-011",
-      "actorType": "agent",
-      "actorId": "agent-casey",
-      "actorName": "Casey",
-      "occurredAt": "2026-03-23T17:58:00.000Z"
+      "occurredAt": "2026-03-24T06:23:43.047Z"
     }
   ]
 }
