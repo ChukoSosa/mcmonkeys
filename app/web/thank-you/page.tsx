@@ -1,17 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faCopy } from "@fortawesome/free-solid-svg-icons";
 import { Card } from "@/components/ui";
 
 export default function ThankYouPage() {
   const [copyState, setCopyState] = useState<"idle" | "copied" | "error">("idle");
-  const [origin, setOrigin] = useState("https://your-domain.com");
-
-  useEffect(() => {
-    setOrigin(window.location.origin);
-  }, []);
 
   const openClawPrompt = useMemo(
     () =>
@@ -50,7 +45,7 @@ export default function ThankYouPage() {
         "- if not possible, ask for user authorization with exact command and reason",
         "",
         "Download the installation package from the following URL:",
-        `  ${origin}/downloads/mcmonkeys-latest.zip`,
+        "  https://mcmonkeys.up.railway.app/downloads/mcmonkeys-latest.zip",
         "",
         "Once downloaded:",
         "- Extract the zip.",
@@ -157,7 +152,7 @@ export default function ThankYouPage() {
         "IMPLEMENTATION SEQUENCE FOR THIS MACHINE",
         "",
         "1. Download package:",
-        `   curl -L \"${origin}/downloads/mcmonkeys-latest.zip\" -o mcmonkeys-latest.zip`,
+        "   curl -L \"https://mcmonkeys.up.railway.app/downloads/mcmonkeys-latest.zip\" -o mcmonkeys-latest.zip",
         "",
         "2. Extract package inside your OpenClaw workspace:",
         "   unzip mcmonkeys-latest.zip -d mcmonkeys",
@@ -191,7 +186,7 @@ export default function ThankYouPage() {
         "   PATCH /api/tasks/{taskId} with { \"status\": \"REVIEW\" }",
         "   Wait for human approval before DONE.",
       ].join("\n"),
-    [origin],
+    [],
   );
 
   const handleCopy = async () => {

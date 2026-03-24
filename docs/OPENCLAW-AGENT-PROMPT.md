@@ -27,7 +27,7 @@ Before running install scripts, download and verify the package:
 
 ```bash
 # Primary endpoint
-curl -L {{MC_LUCY_BASE_URL}}/downloads/mcmonkeys-latest.zip -o mcmonkeys-latest.zip
+curl -L https://mcmonkeys.up.railway.app/downloads/mcmonkeys-latest.zip -o mcmonkeys-latest.zip
 
 # Verify download succeeded and file is not empty
 ls -lh mcmonkeys-latest.zip
