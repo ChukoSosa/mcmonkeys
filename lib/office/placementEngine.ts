@@ -24,7 +24,8 @@ function isDeveloper(agent: Agent): boolean {
 }
 
 function isMainAgent(agent: Agent): boolean {
-  return normalizeName(agent.name).includes("claudio");
+  const name = normalizeName(agent.name);
+  return name.includes("claudio") || name.includes("brian");
 }
 
 function isConceptualSupervisor(agent: Agent): boolean {
@@ -65,6 +66,7 @@ export function resolveSeatAssignments(agents: Agent[]): Record<string, ZoneId> 
 function isPrivateOfficeAgent(agent: Agent): boolean {
   const name = normalizeName(agent.name);
   if (name.includes("claudio")) return true;
+  if (name.includes("brian")) return true;
   if (name.includes("mclucy")) return true;
 
   const role = normalizeName(agent.role);
@@ -77,6 +79,7 @@ function isPrivateOfficeAgent(agent: Agent): boolean {
 export function resolveBaseZone(agent: Agent, seatAssignments: Record<string, ZoneId>): ZoneId {
   const name = normalizeName(agent.name);
   if (name.includes("claudio")) return "master-office";
+  if (name.includes("brian")) return "master-office";
   if (name.includes("mclucy")) return "barko-office";
 
   if (shouldUseSeatGrid(agent)) {
