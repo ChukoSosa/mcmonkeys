@@ -27,6 +27,7 @@ export default function PaymentPage() {
   const [cvv, setCvv] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [showPromoModal, setShowPromoModal] = useState(true);
 
   const teamImages = [
     "/office/mcmonkes-library/001.png",
@@ -86,10 +87,117 @@ export default function PaymentPage() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-20 px-6 py-16 sm:py-20">
+    <>
+      {/* ── Launch Promo Modal ── */}
+      {showPromoModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowPromoModal(false);
+          }}
+        >
+          <div className="relative w-full max-w-3xl overflow-hidden rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl">
+            {/* Close button */}
+            <button
+              type="button"
+              onClick={() => setShowPromoModal(false)}
+              className="absolute right-4 top-4 z-10 rounded-full p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white"
+              aria-label="Close promo"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+
+            <div className="grid grid-cols-1 md:grid-cols-2">
+              {/* Left column: image */}
+              <div className="relative hidden min-h-[460px] md:block">
+                <Image
+                  src="/office/imgs/scenes/3dolarstory.png"
+                  fill
+                  alt="3 Dollar Story – launch promo"
+                  className="object-cover"
+                />
+              </div>
+
+              {/* Right column: CTA */}
+              <div className="flex flex-col gap-5 p-8">
+                {/* Badge */}
+                <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-cyan-300">
+                  🚀 Launch Offer
+                </span>
+
+                {/* Headline */}
+                <div className="space-y-1">
+                  <h2 className="text-2xl font-bold leading-snug text-white">
+                    Save 40% with<br />the Annual Plan
+                  </h2>
+                  <p className="text-sm text-slate-400">
+                    For our launch, and to support an independent project.
+                  </p>
+                </div>
+
+                {/* Price comparison */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between rounded-lg border border-slate-700 bg-slate-800/60 px-4 py-3">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Monthly</p>
+                      <p className="text-lg font-semibold text-slate-300">
+                        $5 <span className="text-sm font-normal text-slate-500">/ month</span>
+                      </p>
+                    </div>
+                    <p className="text-sm font-medium text-slate-500">= $60 / year</p>
+                  </div>
+
+                  <div className="flex items-center justify-between rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-4 py-3 ring-1 ring-cyan-400/20">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-cyan-300">Annual · Founding Operator</p>
+                      <p className="text-lg font-bold text-white">
+                        $3 <span className="text-sm font-normal text-slate-400">/ month</span>
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold text-cyan-300">$36 / year</p>
+                      <p className="text-xs font-semibold text-cyan-400">Save $24 — 40% off</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Trust note */}
+                <p className="text-xs leading-relaxed text-slate-400">
+                  Early supporters lock in this price forever. No platform or VC behind this — just an independent project built while running real AI agents.
+                </p>
+
+                {/* CTAs */}
+                <div className="mt-auto flex flex-col gap-2.5 pt-2">
+                  <a
+                    href="https://mcmonkeys.lemonsqueezy.com/checkout/buy/d60e8f39-05f9-4832-a0b2-3190aa2095c6"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setShowPromoModal(false)}
+                    className="w-full rounded-md bg-cyan-400 py-2.5 text-center text-sm font-bold uppercase tracking-wide text-slate-950 transition hover:bg-cyan-300"
+                  >
+                    Grab the Annual Deal →
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => setShowPromoModal(false)}
+                    className="w-full text-center text-xs text-slate-500 transition hover:text-slate-300"
+                  >
+                    No thanks, I&apos;ll pay monthly
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="mx-auto w-full max-w-5xl space-y-20 px-6 py-16 sm:py-20">
 
       {/* ── Section 1: Hero ── */}
-      <header className="space-y-4 text-center">
+      <section className="flex flex-row gap-5 items-center justify-center">
         
         <div className="flex flex-row items-center gap-10">
           <div className="flex flex-col">
@@ -113,62 +221,9 @@ export default function PaymentPage() {
               <br />
               <span className="text-slate-300">No guessing. No invisible work.</span>
             </p>
-            <div className="flex flex-wrap justify-center gap-3 pt-2">
-              <Link
-                href="/app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-md bg-cyan-400 px-5 py-2.5 text-sm font-semibold uppercase tracking-[0.12em] text-slate-950 transition hover:bg-cyan-300"
-              >
-                View Live Demo
-              </Link>
-              <Link
-                href="/web/manual"
-                className="rounded-md border border-slate-700 px-5 py-2.5 text-sm font-semibold text-slate-200 transition hover:border-cyan-400 hover:text-cyan-200"
-              >
-                Read the Manual
-              </Link>
-            </div>
           </div>
         </div>
       
-      </header>
-
-      {/* ── Section 2: The $3 Story ── */}
-      <section className="rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-8 sm:p-10">
-        <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
-          <div className="space-y-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">The story</p>
-            <h2 className="text-2xl font-semibold text-white">Why $3?</h2>
-            <p className="text-sm leading-relaxed text-slate-300">MC-MONKEYS started with a simple idea.</p>
-            <div className="space-y-1 text-sm text-slate-200">
-              <p>$1 for the builder</p>
-              <p>$1 for Claudio — the agent who helped build it</p>
-              <p>$1 for the developer&apos;s wife — who has to hear about this project every day.</p>
-            </div>
-            <p className="text-sm leading-relaxed text-slate-300">
-              That&apos;s how the original price was imagined. So for the launch, we kept the spirit alive.
-              The annual plan is priced at <span className="font-semibold text-white">$3 per month</span>.
-            </p>
-            <p className="text-xs text-slate-500">Launch pricing is temporary and remains available only for the first 10,000 licenses sold.</p>
-            <p className="text-xs font-medium text-cyan-200">If you get the Founding Operator license now, you keep this price forever.</p>
-            <div className="inline-block rounded-full border border-cyan-400/40 bg-cyan-400/10 px-5 py-2 text-sm font-semibold text-cyan-200">
-              Launch pricing: $36 / year
-            </div>
-          </div>
-
-          <div className="flex min-h-[260px] items-center justify-center rounded-xl border border-dashed border-slate-600/70 bg-slate-900/50 p-4">
-            <div className="text-center">
-              <Image
-                src="/office/imgs/scenes/3dolarstory.png"
-                width={380}
-                height={280}
-                alt="MC-MONKEYS pricing"
-                className="h-auto w-full max-w-[380px]"
-              />
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* ── Section 3: Pricing + Form ── */}
@@ -297,7 +352,7 @@ export default function PaymentPage() {
             </div>
           ))}
         </div>
-      </section>
+      </section>      
 
       {/* ── Section 7: Final CTA ── */}
       <section className="space-y-5 rounded-2xl border border-slate-800 bg-slate-900/50 p-10 text-center">
@@ -336,5 +391,6 @@ export default function PaymentPage() {
           </section>
 
     </div>
+    </>
   );
 }
