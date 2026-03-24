@@ -6,8 +6,27 @@ const { spawnSync } = require("child_process");
 
 loadEnvConfig(process.cwd());
 
+function isLocalDatabaseUrl(value) {
+  if (!value) return false;
+
+  try {
+    const hostname = new URL(value).hostname.toLowerCase();
+    return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
+  } catch {
+    return false;
+  }
+}
+
 function getDemoDatabaseUrl() {
-  const value = process.env.DEMO_DATABASE_URL || process.env.DATABASE_URL;
+  const demo = process.env.DEMO_DATABASE_URL;
+  const primary = process.env.DATABASE_URL;
+
+  let value = demo || primary;
+
+  if (demo && primary && isLocalDatabaseUrl(demo) && !isLocalDatabaseUrl(primary)) {
+    value = primary;
+  }
+
   if (!value) {
     throw new Error("Missing DEMO_DATABASE_URL or DATABASE_URL");
   }

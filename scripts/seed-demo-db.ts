@@ -5,15 +5,36 @@ import { PrismaClient, TaskStatus, SubtaskStatus, AgentStatus } from "@prisma/cl
 
 loadEnvConfig(process.cwd());
 
+function isLocalDatabaseUrl(value?: string): boolean {
+  if (!value) return false;
+
+  try {
+    const hostname = new URL(value).hostname.toLowerCase();
+    return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
+  } catch {
+    return false;
+  }
+}
+
 function resolveSeedDatabaseUrl(): string {
   const explicit = process.env.SEED_DATABASE_URL;
   if (explicit) return explicit;
 
   const demo = process.env.DEMO_DATABASE_URL;
-  if (demo) return demo;
-
   const primary = process.env.DATABASE_URL;
+
+  // In Railway, .env may still provide a localhost DEMO_DATABASE_URL while
+  // the platform injects a real remote DATABASE_URL. Prefer the remote URL.
+  if (demo && primary) {
+    if (isLocalDatabaseUrl(demo) && !isLocalDatabaseUrl(primary)) {
+      return primary;
+    }
+
+    return demo;
+  }
+
   if (primary) return primary;
+  if (demo) return demo;
 
   throw new Error("Missing target database URL. Set SEED_DATABASE_URL, DEMO_DATABASE_URL, or DATABASE_URL.");
 }

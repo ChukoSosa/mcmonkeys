@@ -4,8 +4,24 @@ import type { NextRequest } from "next/server";
 
 loadEnvConfig(process.cwd());
 
+function isLocalDatabaseUrl(value?: string): boolean {
+  if (!value) return false;
+
+  try {
+    const hostname = new URL(value).hostname.toLowerCase();
+    return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
+  } catch {
+    return false;
+  }
+}
+
 async function verifySnapshotCounts() {
-  const demoDatabaseUrl = process.env.DEMO_DATABASE_URL || process.env.DATABASE_URL;
+  const demo = process.env.DEMO_DATABASE_URL;
+  const primary = process.env.DATABASE_URL;
+  const demoDatabaseUrl =
+    demo && primary && isLocalDatabaseUrl(demo) && !isLocalDatabaseUrl(primary)
+      ? primary
+      : (demo || primary);
 
   if (!demoDatabaseUrl) {
     throw new Error("Missing DEMO_DATABASE_URL or DATABASE_URL");
