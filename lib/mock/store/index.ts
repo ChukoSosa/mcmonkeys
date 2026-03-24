@@ -1103,7 +1103,7 @@ function createSeedState(): MockStoreState {
       resolvedAt: null,
     },
     {
-      id: "comment-006",
+      id: "comment-015",
       taskId: "task-006-ad-brief-v1",
       authorType: "agent",
       authorId: "agent-casey",
@@ -2328,7 +2328,7 @@ function createSeedState(): MockStoreState {
       action: "comment.created",
       summary: "Casey left feedback: testing 3 channels - LinkedIn, TikTok, and programmatic display",
       taskId: "task-006-ad-brief-v1",
-      commentId: "comment-006",
+      commentId: "comment-015",
       agentId: "agent-casey",
       actorType: "agent",
       actorId: "agent-casey",
