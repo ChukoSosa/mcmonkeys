@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastResetAt": "2026-03-24T14:48:43.047Z",
+  "lastResetAt": "2026-03-24T15:42:13.071Z",
   "counters": {
     "task": 24,
     "subtask": 59,
@@ -15,7 +15,7 @@
       "status": "WORKING",
       "statusMessage": "Coordinating sprint delivery from main desk",
       "avatarUrl": "/office/mcmonkes-library/013.png",
-      "heartbeatAt": "2026-03-24T14:48:43.047Z"
+      "heartbeatAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "agent-alex",
@@ -24,7 +24,7 @@
       "status": "WORKING",
       "statusMessage": "Implementing final landing sections and form integration",
       "avatarUrl": "/office/mcmonkes-library/002.png",
-      "heartbeatAt": "2026-03-24T14:48:43.047Z"
+      "heartbeatAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "agent-morgan",
@@ -33,7 +33,7 @@
       "status": "WORKING",
       "statusMessage": "Deploying API fixes and stabilizing staging",
       "avatarUrl": "/office/mcmonkes-library/003.png",
-      "heartbeatAt": "2026-03-24T14:48:43.047Z"
+      "heartbeatAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "agent-casey",
@@ -42,7 +42,7 @@
       "status": "WORKING",
       "statusMessage": "Building campaign strategy and budget split with marketing ops",
       "avatarUrl": "/office/mcmonkes-library/008.png",
-      "heartbeatAt": "2026-03-24T14:48:43.047Z"
+      "heartbeatAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "agent-jordan",
@@ -51,7 +51,7 @@
       "status": "BLOCKED",
       "statusMessage": "Blocked waiting for staging pagination hotfix",
       "avatarUrl": "/office/mcmonkes-library/009.png",
-      "heartbeatAt": "2026-03-24T14:48:43.047Z"
+      "heartbeatAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "agent-sam",
@@ -60,7 +60,7 @@
       "status": "REVIEWING",
       "statusMessage": "Reviewing latest creative and landing visual consistency",
       "avatarUrl": "/office/mcmonkes-library/011.png",
-      "heartbeatAt": "2026-03-24T14:48:43.047Z"
+      "heartbeatAt": "2026-03-24T15:42:13.071Z"
     }
   ],
   "tasks": [
@@ -75,7 +75,7 @@
         "id": "agent-brian",
         "name": "Brian"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
@@ -89,7 +89,7 @@
         "id": "agent-sam",
         "name": "Sam"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
@@ -103,7 +103,7 @@
         "id": "agent-sam",
         "name": "Sam"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
@@ -117,7 +117,7 @@
         "id": "agent-alex",
         "name": "Alex"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
@@ -131,7 +131,7 @@
         "id": "agent-morgan",
         "name": "Morgan"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
@@ -145,7 +145,7 @@
         "id": "agent-casey",
         "name": "Casey"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
@@ -159,7 +159,7 @@
         "id": "agent-jordan",
         "name": "Jordan"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
@@ -173,7 +173,7 @@
         "id": "agent-brian",
         "name": "Brian"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
@@ -187,7 +187,7 @@
         "id": "agent-alex",
         "name": "Alex"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
@@ -201,7 +201,7 @@
         "id": "agent-morgan",
         "name": "Morgan"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
@@ -215,7 +215,7 @@
         "id": "agent-jordan",
         "name": "Jordan"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
@@ -229,7 +229,7 @@
         "id": "agent-sam",
         "name": "Sam"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
@@ -243,7 +243,7 @@
         "id": "agent-casey",
         "name": "Casey"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
@@ -257,49 +257,49 @@
         "id": "agent-casey",
         "name": "Casey"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
       "id": "task-015-analytics-event-map",
       "title": "Analytics Event Mapping Review",
       "description": "Review and document event naming consistency across funnel steps.",
-      "status": "BACKLOG",
+      "status": "DONE",
       "priority": 2,
       "assignedAgentId": "agent-morgan",
       "assignedAgent": {
         "id": "agent-morgan",
         "name": "Morgan"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
       "id": "task-016-help-center-outline",
       "title": "Help Center Article Outline",
       "description": "Prepare initial article structure for common setup questions.",
-      "status": "BACKLOG",
+      "status": "DONE",
       "priority": 3,
       "assignedAgentId": "agent-brian",
       "assignedAgent": {
         "id": "agent-brian",
         "name": "Brian"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
       "id": "task-017-signup-form-validation",
       "title": "Signup Form Validation Tightening",
       "description": "Improve validation rules and field-level feedback in onboarding form.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "priority": 1,
       "assignedAgentId": "agent-alex",
       "assignedAgent": {
         "id": "agent-alex",
         "name": "Alex"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
@@ -313,21 +313,21 @@
         "id": "agent-morgan",
         "name": "Morgan"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
       "id": "task-019-agent-prompt-cleanup",
       "title": "Agent Prompt Cleanup Pass",
       "description": "Clean duplicated prompt instructions and tighten role boundaries.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "priority": 2,
       "assignedAgentId": "agent-brian",
       "assignedAgent": {
         "id": "agent-brian",
         "name": "Brian"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
@@ -341,7 +341,7 @@
         "id": "agent-morgan",
         "name": "Morgan"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
@@ -355,21 +355,21 @@
         "id": "agent-sam",
         "name": "Sam"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
       "id": "task-022-release-note-template",
       "title": "Release Notes Template Refresh",
       "description": "Refresh release-note template with clearer risk and rollback sections.",
-      "status": "REVIEW",
+      "status": "DONE",
       "priority": 2,
       "assignedAgentId": "agent-sam",
       "assignedAgent": {
         "id": "agent-sam",
         "name": "Sam"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
@@ -383,21 +383,21 @@
         "id": "agent-jordan",
         "name": "Jordan"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     },
     {
       "id": "task-024-webhook-retry-policy",
       "title": "Webhook Retry Policy Hardening",
       "description": "Tune retry windows and dead-letter handling for intermittent webhook failures.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "priority": 1,
       "assignedAgentId": "agent-morgan",
       "assignedAgent": {
         "id": "agent-morgan",
         "name": "Morgan"
       },
-      "updatedAt": "2026-03-24T14:48:43.047Z",
+      "updatedAt": "2026-03-24T15:42:13.071Z",
       "archivedAt": null
     }
   ],
@@ -413,7 +413,7 @@
       },
       "ownerAgentId": "agent-brian",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-001-2",
@@ -426,7 +426,7 @@
       },
       "ownerAgentId": "agent-brian",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-002-1",
@@ -439,7 +439,7 @@
       },
       "ownerAgentId": "agent-sam",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-002-2",
@@ -452,7 +452,7 @@
       },
       "ownerAgentId": "agent-sam",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-003-1",
@@ -465,7 +465,7 @@
       },
       "ownerAgentId": "agent-sam",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-003-2",
@@ -478,7 +478,7 @@
       },
       "ownerAgentId": "agent-sam",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-004-1",
@@ -491,7 +491,7 @@
       },
       "ownerAgentId": "agent-alex",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-004-2",
@@ -504,7 +504,7 @@
       },
       "ownerAgentId": "agent-alex",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-005-1",
@@ -517,7 +517,7 @@
       },
       "ownerAgentId": "agent-morgan",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-005-2",
@@ -530,7 +530,7 @@
       },
       "ownerAgentId": "agent-morgan",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-006-1",
@@ -543,7 +543,7 @@
       },
       "ownerAgentId": "agent-casey",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-006-2",
@@ -556,7 +556,7 @@
       },
       "ownerAgentId": "agent-casey",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-007-1",
@@ -569,7 +569,7 @@
       },
       "ownerAgentId": "agent-jordan",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-007-2",
@@ -582,7 +582,7 @@
       },
       "ownerAgentId": "agent-jordan",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-008-1",
@@ -595,7 +595,7 @@
       },
       "ownerAgentId": "agent-brian",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-008-2",
@@ -608,7 +608,7 @@
       },
       "ownerAgentId": "agent-brian",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-009-1",
@@ -621,7 +621,7 @@
       },
       "ownerAgentId": "agent-alex",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-009-2",
@@ -634,7 +634,7 @@
       },
       "ownerAgentId": "agent-alex",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-010-1",
@@ -647,7 +647,7 @@
       },
       "ownerAgentId": "agent-morgan",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-010-2",
@@ -660,7 +660,7 @@
       },
       "ownerAgentId": "agent-morgan",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-011-1",
@@ -673,7 +673,7 @@
       },
       "ownerAgentId": "agent-jordan",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-011-2",
@@ -686,7 +686,7 @@
       },
       "ownerAgentId": "agent-jordan",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-012-1",
@@ -699,7 +699,7 @@
       },
       "ownerAgentId": "agent-sam",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-012-2",
@@ -712,7 +712,7 @@
       },
       "ownerAgentId": "agent-sam",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-013-1",
@@ -725,7 +725,7 @@
       },
       "ownerAgentId": "agent-casey",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-013-2",
@@ -738,7 +738,7 @@
       },
       "ownerAgentId": "agent-casey",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-014-1",
@@ -751,7 +751,7 @@
       },
       "ownerAgentId": "agent-casey",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-014-2",
@@ -764,7 +764,7 @@
       },
       "ownerAgentId": "agent-casey",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-014-3",
@@ -777,7 +777,7 @@
       },
       "ownerAgentId": "agent-casey",
       "position": 3,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-015-1",
@@ -790,7 +790,7 @@
       },
       "ownerAgentId": "agent-morgan",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-015-2",
@@ -803,7 +803,7 @@
       },
       "ownerAgentId": "agent-morgan",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-015-3",
@@ -816,7 +816,7 @@
       },
       "ownerAgentId": "agent-morgan",
       "position": 3,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-016-1",
@@ -829,7 +829,7 @@
       },
       "ownerAgentId": "agent-brian",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-016-2",
@@ -842,7 +842,7 @@
       },
       "ownerAgentId": "agent-brian",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-016-3",
@@ -855,7 +855,7 @@
       },
       "ownerAgentId": "agent-brian",
       "position": 3,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-017-1",
@@ -868,7 +868,7 @@
       },
       "ownerAgentId": "agent-alex",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-017-2",
@@ -881,7 +881,7 @@
       },
       "ownerAgentId": "agent-alex",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-017-3",
@@ -894,7 +894,7 @@
       },
       "ownerAgentId": "agent-alex",
       "position": 3,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-018-1",
@@ -907,7 +907,7 @@
       },
       "ownerAgentId": "agent-morgan",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-018-2",
@@ -920,7 +920,7 @@
       },
       "ownerAgentId": "agent-morgan",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-018-3",
@@ -933,7 +933,7 @@
       },
       "ownerAgentId": "agent-morgan",
       "position": 3,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-019-1",
@@ -946,7 +946,7 @@
       },
       "ownerAgentId": "agent-brian",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-019-2",
@@ -959,7 +959,7 @@
       },
       "ownerAgentId": "agent-brian",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-019-3",
@@ -972,7 +972,7 @@
       },
       "ownerAgentId": "agent-brian",
       "position": 3,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-020-1",
@@ -985,7 +985,7 @@
       },
       "ownerAgentId": "agent-morgan",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-020-2",
@@ -998,7 +998,7 @@
       },
       "ownerAgentId": "agent-morgan",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-020-3",
@@ -1011,7 +1011,7 @@
       },
       "ownerAgentId": "agent-morgan",
       "position": 3,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-021-1",
@@ -1024,7 +1024,7 @@
       },
       "ownerAgentId": "agent-sam",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-021-2",
@@ -1037,7 +1037,7 @@
       },
       "ownerAgentId": "agent-sam",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-021-3",
@@ -1050,7 +1050,7 @@
       },
       "ownerAgentId": "agent-sam",
       "position": 3,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-022-1",
@@ -1063,7 +1063,7 @@
       },
       "ownerAgentId": "agent-sam",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-022-2",
@@ -1076,7 +1076,7 @@
       },
       "ownerAgentId": "agent-sam",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-022-3",
@@ -1089,7 +1089,7 @@
       },
       "ownerAgentId": "agent-sam",
       "position": 3,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-023-1",
@@ -1102,7 +1102,7 @@
       },
       "ownerAgentId": "agent-jordan",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-023-2",
@@ -1115,7 +1115,7 @@
       },
       "ownerAgentId": "agent-jordan",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-023-3",
@@ -1128,7 +1128,7 @@
       },
       "ownerAgentId": "agent-jordan",
       "position": 3,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-024-1",
@@ -1141,7 +1141,7 @@
       },
       "ownerAgentId": "agent-morgan",
       "position": 1,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-024-2",
@@ -1154,7 +1154,7 @@
       },
       "ownerAgentId": "agent-morgan",
       "position": 2,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     },
     {
       "id": "subtask-024-3",
@@ -1167,7 +1167,7 @@
       },
       "ownerAgentId": "agent-morgan",
       "position": 3,
-      "updatedAt": "2026-03-24T14:48:43.047Z"
+      "updatedAt": "2026-03-24T15:42:13.071Z"
     }
   ],
   "comments": [
@@ -1179,9 +1179,9 @@
       "body": "Need clear hourly timeline and main risks for today.",
       "requiresResponse": true,
       "status": "answered",
-      "createdAt": "2026-03-24T05:48:43.047Z",
-      "updatedAt": "2026-03-24T05:48:43.047Z",
-      "resolvedAt": "2026-03-24T05:48:43.047Z"
+      "createdAt": "2026-03-24T06:42:13.071Z",
+      "updatedAt": "2026-03-24T06:42:13.071Z",
+      "resolvedAt": "2026-03-24T06:42:13.071Z"
     },
     {
       "id": "comment-002",
@@ -1191,8 +1191,8 @@
       "body": "Timeline sent: design 10:30, landing build 14:30, QA regression 17:30, final review 18:30.",
       "requiresResponse": false,
       "status": "open",
-      "createdAt": "2026-03-24T06:06:43.047Z",
-      "updatedAt": "2026-03-24T06:06:43.047Z",
+      "createdAt": "2026-03-24T07:00:13.071Z",
+      "updatedAt": "2026-03-24T07:00:13.071Z",
       "resolvedAt": null
     },
     {
@@ -1203,8 +1203,8 @@
       "body": "Landing almost ready. Still need final CTA copy and testimonial block adjustment.",
       "requiresResponse": true,
       "status": "open",
-      "createdAt": "2026-03-24T10:48:43.047Z",
-      "updatedAt": "2026-03-24T10:48:43.047Z",
+      "createdAt": "2026-03-24T11:42:13.071Z",
+      "updatedAt": "2026-03-24T11:42:13.071Z",
       "resolvedAt": null
     },
     {
@@ -1215,8 +1215,8 @@
       "body": "Perfect. Priority: softer CTA and keep the approachable tone.",
       "requiresResponse": false,
       "status": "open",
-      "createdAt": "2026-03-24T10:55:43.047Z",
-      "updatedAt": "2026-03-24T10:55:43.047Z",
+      "createdAt": "2026-03-24T11:49:13.071Z",
+      "updatedAt": "2026-03-24T11:49:13.071Z",
       "resolvedAt": null
     },
     {
@@ -1227,8 +1227,8 @@
       "body": "Pagination hotfix deployed to staging. Need QA validation to close.",
       "requiresResponse": true,
       "status": "open",
-      "createdAt": "2026-03-24T14:19:43.047Z",
-      "updatedAt": "2026-03-24T14:19:43.047Z",
+      "createdAt": "2026-03-24T15:13:13.071Z",
+      "updatedAt": "2026-03-24T15:13:13.071Z",
       "resolvedAt": null
     },
     {
@@ -1239,8 +1239,8 @@
       "body": "Still blocked: staging seed is inconsistent between runs.",
       "requiresResponse": true,
       "status": "open",
-      "createdAt": "2026-03-24T14:40:43.047Z",
-      "updatedAt": "2026-03-24T14:40:43.047Z",
+      "createdAt": "2026-03-24T15:34:13.071Z",
+      "updatedAt": "2026-03-24T15:34:13.071Z",
       "resolvedAt": null
     },
     {
@@ -1251,8 +1251,8 @@
       "body": "Received. Morgan and Brian, block 30 minutes to stabilize seed and notify QA.",
       "requiresResponse": false,
       "status": "open",
-      "createdAt": "2026-03-24T14:42:43.047Z",
-      "updatedAt": "2026-03-24T14:42:43.047Z",
+      "createdAt": "2026-03-24T15:36:13.071Z",
+      "updatedAt": "2026-03-24T15:36:13.071Z",
       "resolvedAt": null
     },
     {
@@ -1263,8 +1263,8 @@
       "body": "Reviewing creative variants for ads and social. Waiting for final marketing feedback.",
       "requiresResponse": true,
       "status": "open",
-      "createdAt": "2026-03-24T14:36:43.047Z",
-      "updatedAt": "2026-03-24T14:36:43.047Z",
+      "createdAt": "2026-03-24T15:30:13.071Z",
+      "updatedAt": "2026-03-24T15:30:13.071Z",
       "resolvedAt": null
     },
     {
@@ -1275,8 +1275,8 @@
       "body": "Feedback sent: use problem->result approach on first slide and agenda CTA.",
       "requiresResponse": false,
       "status": "open",
-      "createdAt": "2026-03-24T14:39:43.047Z",
-      "updatedAt": "2026-03-24T14:39:43.047Z",
+      "createdAt": "2026-03-24T15:33:13.071Z",
+      "updatedAt": "2026-03-24T15:33:13.071Z",
       "resolvedAt": null
     },
     {
@@ -1287,8 +1287,8 @@
       "body": "Need two budget scenarios: conservative and aggressive.",
       "requiresResponse": true,
       "status": "open",
-      "createdAt": "2026-03-24T13:11:43.047Z",
-      "updatedAt": "2026-03-24T13:11:43.047Z",
+      "createdAt": "2026-03-24T14:05:13.071Z",
+      "updatedAt": "2026-03-24T14:05:13.071Z",
       "resolvedAt": null
     },
     {
@@ -1299,8 +1299,8 @@
       "body": "Leaving first version with assumptions and expected CPA per channel.",
       "requiresResponse": false,
       "status": "open",
-      "createdAt": "2026-03-24T13:16:43.047Z",
-      "updatedAt": "2026-03-24T13:16:43.047Z",
+      "createdAt": "2026-03-24T14:10:13.071Z",
+      "updatedAt": "2026-03-24T14:10:13.071Z",
       "resolvedAt": null
     }
   ],
@@ -1316,7 +1316,7 @@
       "actorType": "agent",
       "actorId": "agent-alex",
       "actorName": "Alex",
-      "occurredAt": "2026-03-24T08:48:43.047Z"
+      "occurredAt": "2026-03-24T09:42:13.071Z"
     },
     {
       "id": "activity-seed-002",
@@ -1329,7 +1329,7 @@
       "actorType": "agent",
       "actorId": "agent-morgan",
       "actorName": "Morgan",
-      "occurredAt": "2026-03-24T14:18:43.047Z"
+      "occurredAt": "2026-03-24T15:12:13.071Z"
     },
     {
       "id": "activity-seed-003",
@@ -1341,7 +1341,7 @@
       "actorType": "agent",
       "actorId": "agent-jordan",
       "actorName": "Jordan",
-      "occurredAt": "2026-03-24T14:40:43.047Z"
+      "occurredAt": "2026-03-24T15:34:13.071Z"
     },
     {
       "id": "activity-seed-004",
@@ -1354,7 +1354,7 @@
       "actorType": "agent",
       "actorId": "agent-sam",
       "actorName": "Sam",
-      "occurredAt": "2026-03-24T14:36:43.047Z"
+      "occurredAt": "2026-03-24T15:30:13.071Z"
     },
     {
       "id": "activity-seed-005",
@@ -1367,7 +1367,7 @@
       "actorType": "agent",
       "actorId": "agent-brian",
       "actorName": "Brian",
-      "occurredAt": "2026-03-24T06:23:43.047Z"
+      "occurredAt": "2026-03-24T07:17:13.071Z"
     }
   ]
 }
