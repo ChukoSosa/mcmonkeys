@@ -12,7 +12,10 @@ function resolveSeedDatabaseUrl(): string {
   const demo = process.env.DEMO_DATABASE_URL;
   if (demo) return demo;
 
-  throw new Error("Missing target database URL. Set SEED_DATABASE_URL or DEMO_DATABASE_URL.");
+  const primary = process.env.DATABASE_URL;
+  if (primary) return primary;
+
+  throw new Error("Missing target database URL. Set SEED_DATABASE_URL, DEMO_DATABASE_URL, or DATABASE_URL.");
 }
 
 function resolveSeedSnapshotPath(): string {

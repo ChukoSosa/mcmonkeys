@@ -5,10 +5,10 @@ import type { NextRequest } from "next/server";
 loadEnvConfig(process.cwd());
 
 async function verifySnapshotCounts() {
-  const demoDatabaseUrl = process.env.DEMO_DATABASE_URL;
+  const demoDatabaseUrl = process.env.DEMO_DATABASE_URL || process.env.DATABASE_URL;
 
   if (!demoDatabaseUrl) {
-    throw new Error("Missing DEMO_DATABASE_URL");
+    throw new Error("Missing DEMO_DATABASE_URL or DATABASE_URL");
   }
 
   const prisma = new PrismaClient({

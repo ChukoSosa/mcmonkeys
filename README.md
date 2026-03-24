@@ -207,6 +207,7 @@ NEXT_PUBLIC_RUNTIME_PROFILE=online-demo
 DATABASE_URL=postgresql://...
 NEXT_PUBLIC_MISSION_CONTROL_API_BASE_URL=https://<tu-servicio>.up.railway.app
 NEXT_PUBLIC_ENABLE_PAYMENT_ACTIVATION=true
+RUN_DEMO_DB_RESET_ON_BOOT=true
 ```
 
 Opcionales:
@@ -215,13 +216,17 @@ Opcionales:
 LEMON_SQUEEZY_API_KEY=...
 NEXT_PUBLIC_ALLOW_LEGACY_PROFILE_FALLBACK=false
 APP_ONLY_INSTALL=false
-NEXT_PUBLIC_USE_MOCK_DATA=true
+DEMO_DATABASE_URL=postgresql://...
+DEMO_DB_RESET_RETRIES=10
+DEMO_DB_RESET_DELAY_MS=5000
 ```
 
 Notas:
 - `npm run build` ya no empaqueta ZIP automáticamente en postbuild.
 - El ZIP instalable se genera solo con `npm run dist:build`.
 - `npm run start` usa `PORT` dinámico (Railway) y fallback a `3001` en local.
+- `online-demo` debe leer tasks/activity desde API + DB seed, no desde mocks estáticos del frontend.
+- Si `DEMO_DATABASE_URL` no está configurada, los scripts de demo usan `DATABASE_URL` como fallback.
 
 ### Rutas disponibles
 

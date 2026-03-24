@@ -7,7 +7,7 @@ This project supports three explicit runtime profiles controlled by `NEXT_PUBLIC
 | Profile | Primary Use | Data Source | Mutations | /web Pages | License | Onboarding Flow |
 |---|---|---|---|---|---|---|
 | `local-dev` | Developer sandbox | JSON mock store (`data/mock-state/local-dev.json`) | Enabled | Visible | Bypass / accept-any | Skipped |
-| `online-demo` | Public live demo | Seeded mock dataset | Read-only | Visible | Not required | Skipped |
+| `online-demo` | Public live demo | Seeded DB snapshot via read-only API | Read-only | Visible | Not required | Skipped |
 | `install-local` | Customer installed package | Real API + DB | Enabled | Hidden / stripped in ZIP | Required | Enabled |
 
 ## Commands

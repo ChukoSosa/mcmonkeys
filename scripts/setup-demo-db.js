@@ -7,9 +7,9 @@ const { spawnSync } = require("child_process");
 loadEnvConfig(process.cwd());
 
 function getDemoDatabaseUrl() {
-  const value = process.env.DEMO_DATABASE_URL;
+  const value = process.env.DEMO_DATABASE_URL || process.env.DATABASE_URL;
   if (!value) {
-    throw new Error("Missing DEMO_DATABASE_URL");
+    throw new Error("Missing DEMO_DATABASE_URL or DATABASE_URL");
   }
   return value;
 }
