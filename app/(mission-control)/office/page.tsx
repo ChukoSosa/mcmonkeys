@@ -314,7 +314,7 @@ function OfficeContent() {
     // First pass: count how many agents share each visual zone
     const withZones = derived.map((item) => {
       const position = agentPositions[item.agent.id];
-      const visualZone = position?.waypointZone ?? position?.targetZone ?? item.targetZone;
+      const visualZone = position?.waypointQueue?.[0] ?? position?.targetZone ?? item.targetZone;
       zoneCount[visualZone] = (zoneCount[visualZone] ?? 0) + 1;
       return { item, visualZone };
     });
@@ -352,7 +352,7 @@ function OfficeContent() {
   const selectedZone = useMemo(() => {
     if (!selected) return null;
     const pos = agentPositions[selected.agent.id];
-    return (pos?.waypointZone ?? pos?.targetZone ?? selected.targetZone) as ZoneId;
+    return (pos?.waypointQueue?.[0] ?? pos?.targetZone ?? selected.targetZone) as ZoneId;
   }, [agentPositions, selected]);
 
   const selectedAssignedTasks = useMemo(() => {

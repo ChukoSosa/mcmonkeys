@@ -3,11 +3,11 @@
 import { useEffect, useRef } from "react";
 import type { ZoneId } from "@/lib/office/zones";
 import { buildVisitDialogue } from "@/lib/office/officeEvents";
+import { computeWaypoints, estimateWalkMs } from "@/lib/office/lucyPath";
 
 const MCLUCY_ID = "mclucy-chief";
-const WALK_DURATION_MS = 4_000;
+const MCLUCY_BASE_ZONE: ZoneId = "barko-office";
 const CHAT_DURATION_MS = 7_000;
-const RETURN_WALK_MS = 4_500;
 
 interface AvailableAgent {
   id: string;
@@ -28,11 +28,11 @@ interface UseOfficeEventsOptions {
 }
 
 /**
- * Schedules random office events: mcLucy walks to a random agent,
- * they exchange speech bubbles, then she returns to her office.
+ * Schedules random office events: mcLucy walks to a random agent along the
+ * corridor path, they exchange speech bubbles, then she walks back.
  *
- * getAvailableAgents is called at event-fire time (via ref) so it always
- * reflects the current scene state without creating new effect deps.
+ * Walk times are derived from the actual path length so the bubbles appear
+ * only after Lucy has physically arrived at the destination.
  */
 export function useOfficeEvents(
   getAvailableAgents: () => AvailableAgent[],
@@ -69,22 +69,27 @@ export function useOfficeEvents(
       const { onZoneOverride, onSpeechBubbles, onClearBubbles, onClearOverrides } =
         callbacksRef.current;
 
-      // Phase 1: mcLucy walks to target agent's zone
+      // Compute walk time based on actual path length
+      const waypoints = computeWaypoints(MCLUCY_BASE_ZONE, target.zone);
+      const walkMs = estimateWalkMs(waypoints);
+      const returnMs = estimateWalkMs(waypoints) + 1_000; // return same path + buffer
+
+      // Phase 1: Lucy walks to the target agent's zone
       onZoneOverride({ [MCLUCY_ID]: target.zone });
 
-      // Phase 2: show speech bubbles after she arrives
+      // Phase 2: show speech bubbles once she has arrived
       after(() => {
         onSpeechBubbles(buildVisitDialogue(MCLUCY_ID, target.id));
-      }, WALK_DURATION_MS);
+      }, walkMs);
 
-      // Phase 3: end conversation, mcLucy walks back
+      // Phase 3: end conversation, Lucy walks back
       after(() => {
         onClearBubbles();
         onClearOverrides();
-      }, WALK_DURATION_MS + CHAT_DURATION_MS);
+      }, walkMs + CHAT_DURATION_MS);
 
       // Schedule next event after full cycle completes
-      after(scheduleNext, WALK_DURATION_MS + CHAT_DURATION_MS + RETURN_WALK_MS);
+      after(scheduleNext, walkMs + CHAT_DURATION_MS + returnMs);
     };
 
     const scheduleNext = () => {

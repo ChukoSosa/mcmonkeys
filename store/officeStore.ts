@@ -1,10 +1,11 @@
 import { create } from "zustand";
 import type { ZoneId } from "@/lib/office/zones";
+import { computeWaypoints } from "@/lib/office/lucyPath";
 
 export interface AgentPositionState {
   currentZone: ZoneId;
   targetZone: ZoneId;
-  waypointZone: ZoneId | null;
+  waypointQueue: ZoneId[];
   isMoving: boolean;
 }
 
@@ -48,7 +49,7 @@ export const useOfficeStore = create<OfficeStoreState>((set) => ({
           next[agentId] = {
             currentZone: targetZone,
             targetZone,
-            waypointZone: null,
+            waypointQueue: [],
             isMoving: false,
           };
           changed = true;
@@ -57,20 +58,18 @@ export const useOfficeStore = create<OfficeStoreState>((set) => ({
 
         if (existing.isMoving) {
           if (existing.targetZone !== targetZone) {
-            next[agentId] = {
-              ...existing,
-              targetZone,
-            };
+            next[agentId] = { ...existing, targetZone };
             changed = true;
           }
           return;
         }
 
         if (existing.currentZone !== targetZone) {
+          const waypointQueue = computeWaypoints(existing.currentZone, targetZone);
           next[agentId] = {
             currentZone: existing.currentZone,
             targetZone,
-            waypointZone: "hallway",
+            waypointQueue,
             isMoving: true,
           };
           changed = true;
@@ -85,7 +84,6 @@ export const useOfficeStore = create<OfficeStoreState>((set) => ({
       });
 
       if (!changed) return state;
-
       return { agentPositions: next };
     }),
 
@@ -96,17 +94,18 @@ export const useOfficeStore = create<OfficeStoreState>((set) => ({
 
       const next = { ...state.agentPositions };
 
-      if (existing.waypointZone === "hallway") {
+      if (existing.waypointQueue.length > 0) {
+        const [reached, ...remaining] = existing.waypointQueue;
         next[agentId] = {
           ...existing,
-          currentZone: "hallway",
-          waypointZone: null,
+          currentZone: reached,
+          waypointQueue: remaining,
         };
       } else {
         next[agentId] = {
           currentZone: existing.targetZone,
           targetZone: existing.targetZone,
-          waypointZone: null,
+          waypointQueue: [],
           isMoving: false,
         };
       }
