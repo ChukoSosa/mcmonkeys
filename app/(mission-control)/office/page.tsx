@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { DashboardShell } from "@/components/mission-control/dashboard/DashboardShell";
@@ -27,6 +27,7 @@ import {
 import { MOCK_AGENTS, MOCK_TASKS } from "@/lib/mock/data";
 import type { Agent, Task } from "@/types";
 import { getRealtimeRefetchInterval, isPublicDemoMode } from "@/lib/utils/demoMode";
+import { useOfficeEvents } from "@/lib/office/useOfficeEvents";
 
 const EMPTY_AGENTS: Agent[] = [];
 const EMPTY_TASKS: Task[] = [];
@@ -164,6 +165,8 @@ function OfficeContent() {
   const [lucyAvatarUrl, setLucyAvatarUrl] = useState<string>(MCLUCY_AVATAR_URL);
   const [avatarLibrary, setAvatarLibrary] = useState<string[]>([]);
   const [avatarSwitching, setAvatarSwitching] = useState(false);
+  const [zoneOverrides, setZoneOverrides] = useState<Record<string, ZoneId>>({});
+  const [speechBubbles, setSpeechBubbles] = useState<Record<string, string>>({});
 
   const selectedAgentId = useOfficeStore((s) => s.selectedAgentId);
   const agentPositions = useOfficeStore((s) => s.agentPositions);
@@ -277,13 +280,30 @@ function OfficeContent() {
   useEffect(() => {
     const targets: Record<string, ZoneId> = {};
     derived.forEach((item) => {
-      targets[item.agent.id] = item.targetZone;
+      targets[item.agent.id] = zoneOverrides[item.agent.id] ?? item.targetZone;
     });
     syncAgentTargets(targets);
-  }, [derived, syncAgentTargets]);
+  }, [derived, syncAgentTargets, zoneOverrides]);
+
+  const derivedRef = useRef(derived);
+  derivedRef.current = derived;
+
+  useOfficeEvents(
+    () =>
+      derivedRef.current
+        .filter((item) => item.agent.id !== MCLUCY_ID)
+        .map((item) => ({ id: item.agent.id, zone: item.targetZone })),
+    {
+      onZoneOverride: (overrides) => setZoneOverrides((prev) => ({ ...prev, ...overrides })),
+      onSpeechBubbles: setSpeechBubbles,
+      onClearBubbles: () => setSpeechBubbles({}),
+      onClearOverrides: () => setZoneOverrides({}),
+    },
+    { enabled: activeScenario === "live", minIntervalMs: 5_000, maxIntervalMs: 8_000 },
+  );
 
   const sceneAgents: OfficeAgentView[] = useMemo(() => {
-    const OFFSET_STEP = 9; // px between agents sharing a zone
+    const OFFSET_STEP = 62; // px between agents sharing a zone (avatar is 56px wide)
     const zoneCount: Record<string, number> = {};
     const zoneIndex: Record<string, number> = {};
 
@@ -315,6 +335,7 @@ function OfficeContent() {
             ? MCLUCY_AVATAR_URL
             : (avatarMapping[item.agent.id] ?? resolveAgentAvatarUrl(item.agent)),
         state: item.sceneState,
+        speechBubblePosition: item.agent.id === MCLUCY_ID ? "above" : "below",
       };
     });
   }, [agentPositions, avatarMapping, derived]);
@@ -402,6 +423,7 @@ function OfficeContent() {
           ) : (
             <OfficeScene
               agents={sceneAgents}
+              speechBubbles={speechBubbles}
               onSelectAgent={setSelectedAgentId}
               onReachedPosition={advanceAgentTransition}
             />

@@ -1,7 +1,7 @@
 "use client";
 
 import { memo, useEffect, useState } from "react";
-import { motion, useAnimationControls } from "framer-motion";
+import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 import Image from "next/image";
 import type { Agent, Task } from "@/types";
 import type { NormalizedSceneState } from "@/lib/office/sceneStateNormalizer";
@@ -38,6 +38,8 @@ interface AgentBubbleProps {
   slowMove?: boolean;
   avatarUrl?: string;
   state: NormalizedSceneState;
+  speechBubble?: string;
+  speechBubblePosition?: "above" | "below";
   onSelectAgent: (agentId: string) => void;
   onReachedPosition: (agentId: string) => void;
 }
@@ -52,6 +54,8 @@ function AgentBubbleComponent({
   slowMove = false,
   avatarUrl,
   state,
+  speechBubble,
+  speechBubblePosition = "below",
   onSelectAgent,
   onReachedPosition,
 }: AgentBubbleProps) {
@@ -120,6 +124,29 @@ function AgentBubbleComponent({
           </div>
         )}
       </motion.div>
+
+      <AnimatePresence>
+        {speechBubble && (
+          <motion.div
+            key={speechBubble}
+            initial={{ opacity: 0, scale: 0.85, y: speechBubblePosition === "above" ? 4 : -4 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.85, y: speechBubblePosition === "above" ? 4 : -4 }}
+            transition={{ type: "spring", stiffness: 300, damping: 22 }}
+            className={cn(
+              "pointer-events-none absolute left-1/2 z-40 w-max max-w-[140px] -translate-x-[65%] rounded-lg border border-cyan-400/40 bg-surface-900/95 px-2.5 py-1.5 text-center text-[10px] leading-snug text-slate-100 shadow-xl",
+              speechBubblePosition === "above" ? "bottom-full mb-2" : "top-full mt-2",
+            )}
+          >
+            {speechBubblePosition === "above" ? (
+              <span className="absolute left-1/2 top-full -translate-x-1/2 border-[5px] border-transparent border-t-surface-900/95" />
+            ) : (
+              <span className="absolute bottom-full left-1/2 -translate-x-1/2 border-[5px] border-transparent border-b-surface-900/95" />
+            )}
+            {speechBubble}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="pointer-events-none absolute left-1/2 top-full z-30 mt-2 hidden w-64 -translate-x-1/2 rounded border border-surface-700 bg-surface-900/95 p-2 text-left text-[11px] text-slate-200 shadow-2xl group-hover:block">
         <p className="font-semibold text-cyan-200">{agent.name}</p>
