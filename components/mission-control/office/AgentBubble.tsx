@@ -129,12 +129,12 @@ function AgentBubbleComponent({
         {speechBubble && (
           <motion.div
             key={speechBubble}
-            initial={{ opacity: 0, scale: 0.85, y: speechBubblePosition === "above" ? 4 : -4 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.85, y: speechBubblePosition === "above" ? 4 : -4 }}
+            initial={{ opacity: 0, scale: 0.85, x: "-50%", y: speechBubblePosition === "above" ? 4 : -4 }}
+            animate={{ opacity: 1, scale: 1, x: "-50%", y: 0 }}
+            exit={{ opacity: 0, scale: 0.85, x: "-50%", y: speechBubblePosition === "above" ? 4 : -4 }}
             transition={{ type: "spring", stiffness: 300, damping: 22 }}
             className={cn(
-              "pointer-events-none absolute left-1/2 z-40 w-max max-w-[140px] -translate-x-[65%] rounded-lg border border-cyan-400/40 bg-surface-900/95 px-2.5 py-1.5 text-center text-[10px] leading-snug text-slate-100 shadow-xl",
+              "pointer-events-none absolute left-1/2 z-40 w-max max-w-[140px] rounded-lg border border-cyan-400/40 bg-surface-900/95 px-2.5 py-1.5 text-center text-[10px] leading-snug text-slate-100 shadow-xl",
               speechBubblePosition === "above" ? "bottom-full mb-2" : "top-full mt-2",
             )}
           >
