@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { DashboardShell } from "@/components/mission-control/dashboard/DashboardShell";
@@ -27,6 +27,7 @@ import {
 import { MOCK_AGENTS, MOCK_TASKS } from "@/lib/mock/data";
 import type { Agent, Task } from "@/types";
 import { getRealtimeRefetchInterval, isPublicDemoMode } from "@/lib/utils/demoMode";
+import { useOfficeEvents } from "@/lib/office/useOfficeEvents";
 
 const EMPTY_AGENTS: Agent[] = [];
 const EMPTY_TASKS: Task[] = [];
@@ -164,6 +165,8 @@ function OfficeContent() {
   const [lucyAvatarUrl, setLucyAvatarUrl] = useState<string>(MCLUCY_AVATAR_URL);
   const [avatarLibrary, setAvatarLibrary] = useState<string[]>([]);
   const [avatarSwitching, setAvatarSwitching] = useState(false);
+  const [zoneOverrides, setZoneOverrides] = useState<Record<string, ZoneId>>({});
+  const [speechBubbles, setSpeechBubbles] = useState<Record<string, string>>({});
 
   const selectedAgentId = useOfficeStore((s) => s.selectedAgentId);
   const agentPositions = useOfficeStore((s) => s.agentPositions);
@@ -198,6 +201,10 @@ function OfficeContent() {
   useEffect(() => {
     hydrateAvatarMapping(readAvatarMappingFromStorage());
   }, [hydrateAvatarMapping]);
+
+  useEffect(() => {
+    setSelectedAgentId(MCLUCY_ID);
+  }, [setSelectedAgentId]);
 
   useEffect(() => {
     let cancelled = false;
@@ -277,23 +284,47 @@ function OfficeContent() {
   useEffect(() => {
     const targets: Record<string, ZoneId> = {};
     derived.forEach((item) => {
-      targets[item.agent.id] = item.targetZone;
+      targets[item.agent.id] = zoneOverrides[item.agent.id] ?? item.targetZone;
     });
     syncAgentTargets(targets);
-  }, [derived, syncAgentTargets]);
+  }, [derived, syncAgentTargets, zoneOverrides]);
+
+  const derivedRef = useRef(derived);
+  derivedRef.current = derived;
+
+  useOfficeEvents(
+    () =>
+      derivedRef.current
+        .filter((item) => item.agent.id !== MCLUCY_ID)
+        .map((item) => ({ id: item.agent.id, zone: item.targetZone })),
+    {
+      onZoneOverride: (overrides) => setZoneOverrides((prev) => ({ ...prev, ...overrides })),
+      onSpeechBubbles: setSpeechBubbles,
+      onClearBubbles: () => setSpeechBubbles({}),
+      onClearOverrides: () => setZoneOverrides({}),
+    },
+    { enabled: activeScenario === "live", minIntervalMs: 5_000, maxIntervalMs: 8_000 },
+  );
 
   const sceneAgents: OfficeAgentView[] = useMemo(() => {
-    const OFFSET_STEP = 9; // px between agents sharing a zone
+    const OFFSET_STEP = 62; // px between agents sharing a zone (avatar is 56px wide)
     const zoneCount: Record<string, number> = {};
     const zoneIndex: Record<string, number> = {};
+
+    // Right-column seats: Lucy should sit to the RIGHT of the visited agent
+    const RIGHT_COLUMN_SEATS = new Set(["dev-seat-2", "dev-seat-4", "dev-seat-6"]);
 
     // First pass: count how many agents share each visual zone
     const withZones = derived.map((item) => {
       const position = agentPositions[item.agent.id];
-      const visualZone = position?.waypointZone ?? position?.targetZone ?? item.targetZone;
+      const visualZone = position?.waypointQueue?.[0] ?? position?.targetZone ?? item.targetZone;
       zoneCount[visualZone] = (zoneCount[visualZone] ?? 0) + 1;
       return { item, visualZone };
     });
+
+    // Which zone is Lucy currently in? Used to detect when she's visiting a right-column seat.
+    const lucyVisualZone = withZones.find((z) => z.item.agent.id === MCLUCY_ID)?.visualZone;
+    const lucyOnRightColumn = lucyVisualZone !== undefined && RIGHT_COLUMN_SEATS.has(lucyVisualZone);
 
     // Second pass: assign per-zone index and compute offset
     return withZones.map(({ item, visualZone }) => {
@@ -301,7 +332,14 @@ function OfficeContent() {
       const idx = zoneIndex[visualZone] ?? 0;
       zoneIndex[visualZone] = idx + 1;
       const zoneConfig = OFFICE_ZONES[visualZone] ?? OFFICE_ZONES.hallway;
-      const offsetX = count > 1 ? (idx - (count - 1) / 2) * OFFSET_STEP : 0;
+
+      // When Lucy visits a right-column seat, reverse index so she lands on the right side.
+      // For left-column seats the default order (Lucy left, agent right) is already correct.
+      const effectiveIdx =
+        lucyOnRightColumn && visualZone === lucyVisualZone && count > 1
+          ? count - 1 - idx
+          : idx;
+      const offsetX = count > 1 ? (effectiveIdx - (count - 1) / 2) * OFFSET_STEP : 0;
 
       return {
         agent: item.agent,
@@ -315,6 +353,7 @@ function OfficeContent() {
             ? MCLUCY_AVATAR_URL
             : (avatarMapping[item.agent.id] ?? resolveAgentAvatarUrl(item.agent)),
         state: item.sceneState,
+        speechBubblePosition: item.agent.id === MCLUCY_ID ? "above" : "below",
       };
     });
   }, [agentPositions, avatarMapping, derived]);
@@ -327,7 +366,7 @@ function OfficeContent() {
   const selectedZone = useMemo(() => {
     if (!selected) return null;
     const pos = agentPositions[selected.agent.id];
-    return (pos?.waypointZone ?? pos?.targetZone ?? selected.targetZone) as ZoneId;
+    return (pos?.waypointQueue?.[0] ?? pos?.targetZone ?? selected.targetZone) as ZoneId;
   }, [agentPositions, selected]);
 
   const selectedAssignedTasks = useMemo(() => {
@@ -402,6 +441,7 @@ function OfficeContent() {
           ) : (
             <OfficeScene
               agents={sceneAgents}
+              speechBubbles={speechBubbles}
               onSelectAgent={setSelectedAgentId}
               onReachedPosition={advanceAgentTransition}
             />
