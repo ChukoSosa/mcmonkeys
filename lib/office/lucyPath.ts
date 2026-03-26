@@ -18,25 +18,33 @@ import type { ZoneId } from "@/lib/office/zones";
  */
 const PATH_GRAPH: Record<string, string[]> = {
   "barko-office": ["nav-tr"],
-  // top horizontal corridor — prefer going DOWN (nav-r1) before going LEFT (nav-tl)
-  // so BFS naturally routes Lucy down the right corridor first
-  "nav-tr": ["barko-office", "nav-r1", "nav-tl"],
-  "nav-tl": ["nav-tr", "nav-l1"],
-  // right vertical — prefer continuing down before crossing left
-  "nav-r1": ["nav-tr", "nav-r2", "nav-l1", "dev-seat-2"],
-  "nav-r2": ["nav-r1", "nav-r3", "nav-l2", "dev-seat-4"],
-  "nav-r3": ["nav-r2", "nav-l3", "dev-seat-6"],
+  // top corridor — go DOWN first (nav-r1), left branch (nav-tl) only when needed
+  "nav-tr":  ["barko-office", "nav-r1", "nav-tl"],
+  "nav-tl":  ["nav-tr", "nav-l1", "review-zone"],
+  // right vertical — each node also bridges directly to the opposite-column seat at
+  // the same row so Lucy never overshoots leftward past the seat
+  "nav-r1":  ["nav-tr", "nav-r2", "nav-l1", "dev-seat-2", "dev-seat-1"],
+  "nav-r2":  ["nav-r1", "nav-r3", "nav-l2", "dev-seat-4", "dev-seat-3"],
+  "nav-r3":  ["nav-r2", "nav-l3", "dev-seat-6", "dev-seat-5", "idle-zone", "game-area"],
   // left vertical
-  "nav-l1": ["nav-r1", "nav-tl", "nav-l2", "dev-seat-1"],
-  "nav-l2": ["nav-r2", "nav-l1", "nav-l3", "dev-seat-3"],
-  "nav-l3": ["nav-r3", "nav-l2", "dev-seat-5"],
-  // dev seats (leaf nodes)
-  "dev-seat-1": ["nav-l1"],
+  "nav-l1":  ["nav-r1", "nav-tl", "nav-l2", "dev-seat-1", "thinking-zone"],
+  "nav-l2":  ["nav-r2", "nav-l1", "nav-l3", "dev-seat-3"],
+  "nav-l3":  ["nav-r3", "nav-l2", "dev-seat-5", "blocked-zone-a", "blocked-zone-b"],
+  // dev seats (leaf nodes — right column)
   "dev-seat-2": ["nav-r1"],
-  "dev-seat-3": ["nav-l2"],
   "dev-seat-4": ["nav-r2"],
-  "dev-seat-5": ["nav-l3"],
   "dev-seat-6": ["nav-r3"],
+  // dev seats (leaf nodes — left column, reachable from right corridor without detour)
+  "dev-seat-1": ["nav-r1", "nav-l1"],
+  "dev-seat-3": ["nav-r2", "nav-l2"],
+  "dev-seat-5": ["nav-r3", "nav-l3"],
+  // special state zones
+  "review-zone":    ["nav-tl"],
+  "thinking-zone":  ["nav-l1"],
+  "idle-zone":      ["nav-r3"],
+  "game-area":      ["nav-r3"],
+  "blocked-zone-a": ["nav-l3"],
+  "blocked-zone-b": ["nav-l3"],
 };
 
 /** BFS — returns full path [from, ...intermediates, to] or null if unreachable. */
