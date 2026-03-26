@@ -203,6 +203,10 @@ function OfficeContent() {
   }, [hydrateAvatarMapping]);
 
   useEffect(() => {
+    setSelectedAgentId(MCLUCY_ID);
+  }, [setSelectedAgentId]);
+
+  useEffect(() => {
     let cancelled = false;
 
     const loadLucyAvatar = async () => {

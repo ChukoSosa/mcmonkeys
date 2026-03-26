@@ -99,7 +99,20 @@ function AgentBubbleComponent({
       }}
       aria-label={`Open inspector for ${agent.name}`}
     >
-      <motion.div
+      <div className="relative h-14 w-14">
+        <AnimatePresence>
+          {speechBubble && (
+            <motion.div
+              key="speaking-ring"
+              initial={{ scale: 1, opacity: 0.7 }}
+              animate={{ scale: 1.5, opacity: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.1, repeat: Infinity, ease: "easeOut" }}
+              className="absolute inset-0 rounded-full border-2 border-cyan-400 pointer-events-none"
+            />
+          )}
+        </AnimatePresence>
+        <motion.div
         initial={{ y: 0, scale: 1 }}
         animate={bubbleControls}
         className={cn(
@@ -124,6 +137,7 @@ function AgentBubbleComponent({
           </div>
         )}
       </motion.div>
+      </div>
 
       <AnimatePresence>
         {speechBubble && (
