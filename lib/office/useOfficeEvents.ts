@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import type { ZoneId } from "@/lib/office/zones";
 import { buildVisitDialogue } from "@/lib/office/officeEvents";
-import { computeWaypoints, estimateWalkMs } from "@/lib/office/lucyPath";
+import { computeWaypoints, estimateWalkMs, LUCY_APPROACH_ZONE } from "@/lib/office/lucyPath";
 
 const MCLUCY_ID = "mclucy-chief";
 const MCLUCY_BASE_ZONE: ZoneId = "barko-office";
@@ -69,13 +69,16 @@ export function useOfficeEvents(
       const { onZoneOverride, onSpeechBubbles, onClearBubbles, onClearOverrides } =
         callbacksRef.current;
 
+      // For zones where arriving exactly causes layout issues, stop one step earlier
+      const lucyDestination = LUCY_APPROACH_ZONE[target.zone] ?? target.zone;
+
       // Compute walk time based on actual path length
-      const waypoints = computeWaypoints(MCLUCY_BASE_ZONE, target.zone);
+      const waypoints = computeWaypoints(MCLUCY_BASE_ZONE, lucyDestination);
       const walkMs = estimateWalkMs(waypoints);
       const returnMs = estimateWalkMs(waypoints) + 1_000; // return same path + buffer
 
-      // Phase 1: Lucy walks to the target agent's zone
-      onZoneOverride({ [MCLUCY_ID]: target.zone });
+      // Phase 1: Lucy walks to the destination (may be one step before the agent's zone)
+      onZoneOverride({ [MCLUCY_ID]: lucyDestination });
 
       // Phase 2: show speech bubbles once she has arrived
       after(() => {
