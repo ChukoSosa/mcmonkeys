@@ -311,6 +311,9 @@ function OfficeContent() {
     const zoneCount: Record<string, number> = {};
     const zoneIndex: Record<string, number> = {};
 
+    // Right-column seats: Lucy should sit to the RIGHT of the visited agent
+    const RIGHT_COLUMN_SEATS = new Set(["dev-seat-2", "dev-seat-4", "dev-seat-6"]);
+
     // First pass: count how many agents share each visual zone
     const withZones = derived.map((item) => {
       const position = agentPositions[item.agent.id];
@@ -319,13 +322,24 @@ function OfficeContent() {
       return { item, visualZone };
     });
 
+    // Which zone is Lucy currently in? Used to detect when she's visiting a right-column seat.
+    const lucyVisualZone = withZones.find((z) => z.item.agent.id === MCLUCY_ID)?.visualZone;
+    const lucyOnRightColumn = lucyVisualZone !== undefined && RIGHT_COLUMN_SEATS.has(lucyVisualZone);
+
     // Second pass: assign per-zone index and compute offset
     return withZones.map(({ item, visualZone }) => {
       const count = zoneCount[visualZone] ?? 1;
       const idx = zoneIndex[visualZone] ?? 0;
       zoneIndex[visualZone] = idx + 1;
       const zoneConfig = OFFICE_ZONES[visualZone] ?? OFFICE_ZONES.hallway;
-      const offsetX = count > 1 ? (idx - (count - 1) / 2) * OFFSET_STEP : 0;
+
+      // When Lucy visits a right-column seat, reverse index so she lands on the right side.
+      // For left-column seats the default order (Lucy left, agent right) is already correct.
+      const effectiveIdx =
+        lucyOnRightColumn && visualZone === lucyVisualZone && count > 1
+          ? count - 1 - idx
+          : idx;
+      const offsetX = count > 1 ? (effectiveIdx - (count - 1) / 2) * OFFSET_STEP : 0;
 
       return {
         agent: item.agent,
