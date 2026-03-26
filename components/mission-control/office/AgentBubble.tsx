@@ -106,7 +106,7 @@ function AgentBubbleComponent({
               key="speaking-ring"
               initial={{ scale: 1, opacity: 0.7 }}
               animate={{ scale: 1.5, opacity: 0 }}
-              exit={{ opacity: 0 }}
+              exit={{ scale: 1, opacity: 0, transition: { duration: 0.2, repeat: 0 } }}
               transition={{ duration: 1.1, repeat: Infinity, ease: "easeOut" }}
               className="absolute inset-0 rounded-full border-2 border-cyan-400 pointer-events-none"
             />
