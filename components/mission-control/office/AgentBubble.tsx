@@ -84,7 +84,7 @@ function AgentBubbleComponent({
   return (
     <motion.button
       type="button"
-      className="group absolute z-20"
+      className={cn("group absolute", speechBubble ? "z-30" : "z-20")}
       style={{ transform: `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))` }}
       animate={{ left: `${x}%`, top: `${y}%` }}
       transition={
