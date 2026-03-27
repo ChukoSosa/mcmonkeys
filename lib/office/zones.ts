@@ -17,7 +17,17 @@ export type ZoneId =
   | "thinking-zone"
   | "review-zone"
   | "blocked-zone-a"
-  | "blocked-zone-b";
+  | "blocked-zone-b"
+  // Lucy's walking path corridor nodes
+  | "nav-tr"
+  | "nav-tl"
+  | "nav-r1"
+  | "nav-l1"
+  | "nav-r2"
+  | "nav-l2"
+  | "nav-r3"
+  | "nav-l3"
+  | "nav-l-blocked";
 
 export interface ZoneConfig {
   id: ZoneId;
@@ -55,4 +65,14 @@ export const OFFICE_ZONES: Record<ZoneId, ZoneConfig> = {
   "review-zone": { id: "review-zone", label: "Review Zone", x: 18, y: 19 },
   "blocked-zone-a": { id: "blocked-zone-a", label: "Blocked (A)", x: 12, y: 82 },
   "blocked-zone-b": { id: "blocked-zone-b", label: "Blocked (B)", x: 16, y: 86 },
+  // Lucy's walking path corridor nodes (invisible waypoints)
+  "nav-tr": { id: "nav-tr", label: "Corridor", x: 72, y: 32 },
+  "nav-tl": { id: "nav-tl", label: "Corridor", x: 32, y: 32 },
+  "nav-r1": { id: "nav-r1", label: "Corridor", x: 72, y: 45 },
+  "nav-l1": { id: "nav-l1", label: "Corridor", x: 32, y: 45 },
+  "nav-r2": { id: "nav-r2", label: "Corridor", x: 72, y: 61 },
+  "nav-l2": { id: "nav-l2", label: "Corridor", x: 32, y: 61 },
+  "nav-r3": { id: "nav-r3", label: "Corridor", x: 72, y: 79 },
+  "nav-l3": { id: "nav-l3", label: "Corridor", x: 32, y: 79 },
+  "nav-l-blocked": { id: "nav-l-blocked", label: "Corridor", x: 22, y: 82 },
 };
